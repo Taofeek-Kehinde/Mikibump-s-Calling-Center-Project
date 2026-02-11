@@ -12,6 +12,7 @@ function Admin() {
     isLive,
     setIsLive,
     currentMusic,
+    setCurrentMusic,
     isMusicPlaying,
     volume,
     setVolume,
@@ -55,13 +56,23 @@ function Admin() {
   const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const musicUrl = URL.createObjectURL(file);
-      // Ensure volume is at least 30% when uploading
-      if (volume < 30) {
-        setVolume(30);
-      }
-      // Load the music (will play in dashboard when audio is allowed)
-      playAudio(musicUrl).catch(() => {});
+      // Convert file to base64 for persistent storage
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64Data = event.target?.result as string;
+        // Store the base64 data with MIME type
+        const musicData = `data:${file.type};base64,${base64Data.split(',')[1]}`;
+        setCurrentMusic(musicData);
+        // Ensure volume is at least 30% when uploading
+        if (volume < 30) {
+          setVolume(30);
+        }
+        // Enable audio and play the music
+        setIsAudioAllowed(true);
+        playAudio(musicData).catch(() => {});
+        showAlert('Music uploaded successfully! It is now playing.', 'success');
+      };
+      reader.readAsDataURL(file);
     }
   };
 

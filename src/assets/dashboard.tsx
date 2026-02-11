@@ -33,12 +33,12 @@ function Dashboard() {
   useEffect(() => {
     // enable audible playback when dashboard is mounted
     setIsAudioAllowed(true);
-    // If there's music and it should be playing, play it
-    if (currentMusic && isMusicPlaying) {
+    // If there's music, play it
+    if (currentMusic) {
       playAudio().catch(() => {});
     }
     return () => setIsAudioAllowed(false); //false
-  }, [setIsAudioAllowed, currentMusic, isMusicPlaying, playAudio]);
+  }, [setIsAudioAllowed, currentMusic, playAudio]);
 
   // Control playback based on isMusicPlaying state
   useEffect(() => {
@@ -116,7 +116,7 @@ function Dashboard() {
     }, totalCycle);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   return (
     <div className="dashboard">
@@ -244,7 +244,13 @@ function Dashboard() {
               <input
                 type="text"
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
+                onChange={(e) => {
+                  setCode(e.target.value);
+                  // Play music on user interaction if available and not playing
+                  if (currentMusic && !isMusicPlaying) {
+                    playAudio().catch(() => {});
+                  }
+                }}
                 placeholder="ENTER CODE"
                 className="code-input"
                 required

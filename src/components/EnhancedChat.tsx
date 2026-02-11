@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 
 const EnhancedChat: React.FC = () => {
-  const [messages, setMessages] = useState<Array<{text: string, isUser: boolean}>>([]);
+  const [messages, setMessages] = useState<Array<{text: string, isUser: boolean}>>([{ text: "Hello! I'm your AI assistant. How can I help you today?", isUser: false }]);
   const [input, setInput] = useState('');
   const { isLive } = useAppContext();
-
-  useEffect(() => {
-    // Initialize with welcome message
-    setMessages([{ text: "Hello! I'm your AI assistant. How can I help you today?", isUser: false }]);
-  }, []);
 
   const handleSend = () => {
     if (!input.trim()) return;

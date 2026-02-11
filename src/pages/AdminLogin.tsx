@@ -1,16 +1,26 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Admin from '../Admin.tsx';
 import './AdminLogin.css';
 // import { useNavigate } from 'react-router-dom';
 
-const ADMIN_PASSWORD = 'mikibumps123'; 
+const ADMIN_PASSWORD = 'mikibumps123';
 
 function AdminLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const floatingDots = useMemo(() => {
+    return [...Array(12)].map((_, i) => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      background: i % 2 === 0 ? '#667eea' : '#764ba2',
+      duration: 2 + Math.random() * 2,
+      delay: i * 0.2,
+    }));
+  }, []);
 
   useEffect(() => {
     // Clear authentication on mount to force login every time
@@ -173,23 +183,23 @@ function AdminLogin() {
 
       {/* Background animation */}
       <div className="background-animation">
-        {[...Array(12)].map((_, i) => (
+        {floatingDots.map((dot, i) => (
           <motion.div
             key={i}
             className="floating-dot"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              background: i % 2 === 0 ? '#667eea' : '#764ba2'
+              left: dot.left,
+              top: dot.top,
+              background: dot.background
             }}
             animate={{
               y: [0, -20, 0],
               opacity: [0.3, 0.6, 0.3]
             }}
             transition={{
-              duration: 2 + Math.random() * 2,
+              duration: dot.duration,
               repeat: Infinity,
-              delay: i * 0.2
+              delay: dot.delay
             }}
           />
         ))}
