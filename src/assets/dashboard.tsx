@@ -161,12 +161,23 @@ function Dashboard() {
         transition={{ duration: 1.2, ease: "easeOut", type: "spring", stiffness: 100 }}
       >
         {/* Header with Live Indicator */}
-        <motion.div 
+        <motion.div
           className="dashboard-header"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
+          {/* Admin Button */}
+          <motion.button
+            className="admin-btn"
+            onClick={() => navigate('/admin/login')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Go to Admin Login"
+          >
+            Admin
+          </motion.button>
+
           <div className="header-content">
             {isLive ? (
               <>
