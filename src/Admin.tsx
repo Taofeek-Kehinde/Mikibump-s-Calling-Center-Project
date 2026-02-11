@@ -67,10 +67,7 @@ function Admin() {
         if (volume < 30) {
           setVolume(30);
         }
-        // Enable audio and play the music
-        setIsAudioAllowed(true);
-        playAudio(musicData).catch(() => {});
-        showAlert('Music uploaded successfully! It is now playing.', 'success');
+        // Music will play on the main dashboard
       };
       reader.readAsDataURL(file);
     }
