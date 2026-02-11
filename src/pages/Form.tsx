@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../context/useAppContext';
 import './Form.css';
 
 interface FormData {
@@ -101,6 +101,10 @@ function Form() {
       });
 
       showAlert('Message sent Successfully, we will get back to you soon', 'success');
+      // Navigate to dashboard after successful submission
+      setTimeout(() => {
+        navigate('/');
+      }, 2000); // Wait 2 seconds to show the success message
     } catch (error) {
       console.error('Error sending message:', error);
       showAlert('Error sending message. Please try again.', 'error');
@@ -150,7 +154,7 @@ function Form() {
       {/* Background carousel */}
       {backgroundImages.length > 0 && (
         <div className="form-background-carousel">
-          {backgroundImages.map((image, index) => (
+          {backgroundImages.map((image: string, index: number) => (
             <div
               key={index}
               className="form-background-image"

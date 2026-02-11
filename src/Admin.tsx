@@ -3,7 +3,7 @@ import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun, faArrowRightFromBracket, faPlay, faPause, faStop, faVolumeHigh, faUpload} from '@fortawesome/free-solid-svg-icons';
-import { useAppContext } from './context/AppContext';
+import { useAppContext } from './context/useAppContext';
 import { showAlert } from './utils/showAlert';
 import './Admin.css';
 
@@ -14,6 +14,7 @@ function Admin() {
     currentMusic,
     setCurrentMusic,
     isMusicPlaying,
+    setIsMusicPlaying,
     volume,
     setVolume,
     isDarkMode,
@@ -56,20 +57,18 @@ function Admin() {
   const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Convert file to base64 for persistent storage
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64Data = event.target?.result as string;
-        // Store the base64 data with MIME type
-        const musicData = `data:${file.type};base64,${base64Data.split(',')[1]}`;
-        setCurrentMusic(musicData);
-        // Ensure volume is at least 30% when uploading
-        if (volume < 30) {
-          setVolume(30);
-        }
-        // Music will play on the main dashboard
-      };
-      reader.readAsDataURL(file);
+      // Validate that the file is an audio file
+      if (!file.type.startsWith('audio/')) {
+        showAlert('Please upload a valid audio file.', 'error');
+        return;
+      }
+      // Create a blob URL for the audio file
+      const musicData = URL.createObjectURL(file);
+      setCurrentMusic(musicData);
+      setIsMusicPlaying(true);
+      // Set volume to 50% when uploading
+      setVolume(50);
+      // Music will play on the main dashboard
     }
   };
 
@@ -100,7 +99,7 @@ function Admin() {
     const files = e.target.files;
     if (files && files.length > 0) {
       const newImageUrls = Array.from(files).map(file => URL.createObjectURL(file));
-      setBackgroundImages(prev => [...prev, ...newImageUrls]);
+      setBackgroundImages((prev: string[]) => [...prev, ...newImageUrls]);
       showAlert(`Uploaded ${files.length} background image(s)`, 'success');
     }
   };

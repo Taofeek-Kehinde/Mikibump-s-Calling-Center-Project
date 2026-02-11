@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../context/useAppContext';
 
 const EnhancedChat: React.FC = () => {
   const [messages, setMessages] = useState<Array<{text: string, isUser: boolean}>>([{ text: "Hello! I'm your AI assistant. How can I help you today?", isUser: false }]);

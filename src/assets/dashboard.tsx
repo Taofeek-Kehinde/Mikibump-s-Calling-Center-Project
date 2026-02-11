@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../context/useAppContext';
 import { showAlert } from '../utils/showAlert';
 import './dashboard.css';
 import af1 from '../assets/af1.jpg';
@@ -21,7 +21,19 @@ function Dashboard() {
   const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [pulse, setPulse] = useState(true);
-  const { isLive, setIsLive, currentMusic, isMusicPlaying, setIsAudioAllowed, playAudio, stopAudio, countdownTime, setCountdownTime, isCountdownActive, setIsCountdownActive } = useAppContext();
+  const { 
+    isLive, 
+    setIsLive, 
+    currentMusic, 
+    isMusicPlaying, 
+    setIsAudioAllowed, 
+    playAudio, 
+    stopAudio, 
+    countdownTime, 
+    setCountdownTime, 
+    isCountdownActive, 
+    setIsCountdownActive 
+  } = useAppContext();
   const prevIsLiveRef = useRef(isLive);
 
   const formatTime = (seconds: number): string => {
@@ -37,7 +49,7 @@ function Dashboard() {
     if (currentMusic) {
       playAudio().catch(() => {});
     }
-    return () => setIsAudioAllowed(false); //false
+    return () => setIsAudioAllowed(false);
   }, [setIsAudioAllowed, currentMusic, playAudio]);
 
   // Control playback based on isMusicPlaying state
@@ -67,7 +79,7 @@ function Dashboard() {
     if (!isCountdownActive) return;
 
     const interval = setInterval(() => {
-      setCountdownTime(prev => {
+      setCountdownTime((prev: number) => {
         if (prev > 0) {
           return prev - 1;
         } else {
@@ -87,8 +99,6 @@ function Dashboard() {
     }
     prevIsLiveRef.current = isLive;
   }, [isLive]);
-
-  // Audio playback is handled centrally in AppContext (playAudio/stopAudio)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,15 +130,6 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      {/* Countdown Timer */}
-      {isLive && (
-        <div className="countdown-timer">
-          LIVE ENDS IN {formatTime(countdownTime)}
-        </div>
-      )}
-
-      {/* Audio is handled in AppContext (single element) */}
-
       {/* Background with zoom animation and crossfade */}
       <motion.div
         className="background-carousel"
@@ -175,12 +176,14 @@ function Dashboard() {
                   onClick={() => navigate('/form')}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/form'); }}
+                  onKeyDown={(e) => { 
+                    if (e.key === 'Enter' || e.key === ' ') navigate('/form'); 
+                  }}
                 >
                   <FontAwesomeIcon icon={faHandPointLeft} className="hand-icon" />
                 </div>
 
-                <motion.div 
+                <motion.div
                   className="live-indicator-container"
                   animate={{ scale: pulse ? 1 : 1.05 }}
                   transition={{ duration: 1.5, repeat: Infinity }}
@@ -195,15 +198,16 @@ function Dashboard() {
                 >
                   <div className="live-indicator">
                     <span className="live-dot"></span>
-                    LIVE
+                    <span className="live-texts">LIVE</span>
+                    {formatTime(countdownTime)}
                   </div>
-                  <motion.div 
+                  <motion.div
                     className="live-pulse"
-                    animate={{ 
+                    animate={{
                       scale: [1, 2],
                       opacity: [0.7, 0]
                     }}
-                    transition={{ 
+                    transition={{
                       duration: 1.5,
                       repeat: Infinity,
                       ease: "easeOut"
@@ -228,7 +232,7 @@ function Dashboard() {
         </motion.div>
 
         {/* Code Input Section */}
-        <motion.form 
+        <motion.form
           className="code-input-section"
           onSubmit={handleSubmit}
           initial={{ opacity: 0, y: 20 }}
@@ -236,12 +240,12 @@ function Dashboard() {
           transition={{ delay: 0.5, duration: 0.6 }}
         >
           <div className="input-container">
-            <motion.div 
+            <motion.div
               className="input-wrapper"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <input
+              {/* <input
                 type="text"
                 value={code}
                 onChange={(e) => {
@@ -251,20 +255,35 @@ function Dashboard() {
                     playAudio().catch(() => {});
                   }
                 }}
-                placeholder="ENTER CODE"
+                
                 className="code-input"
                 required
-              />
-              
-              <motion.div 
+              /> */}
+             <div className='placeholder'>LIFE IS SWEET!</div> 
+
+
+              <motion.div
                 className="input-decoration"
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
                 transition={{ delay: 1, duration: 1 }}
               />
             </motion.div>
+
+            {/* <motion.button
+              type="submit"
+              className="submit-button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.7, duration: 0.5 }}
+            >
+              Submit
+            </motion.button> */}
           </div>
         </motion.form>
+
       </motion.div>
     </div>
   );

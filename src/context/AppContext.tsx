@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 
-interface AppContextType {
+export interface AppContextType {
   isLive: boolean;
   setIsLive: (value: boolean) => void;
   currentMusic: string;
@@ -24,7 +24,7 @@ interface AppContextType {
   setBackgroundImages: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isLive, setIsLive] = useState<boolean>(() => {
@@ -84,9 +84,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('isLive', JSON.stringify(isLive));
-  }, [isLive]);
+
 
   useEffect(() => {
     localStorage.setItem('currentMusic', currentMusic);
@@ -103,20 +101,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = Math.max(0, Math.min(1, volume / 100));
-      // mute if audio isn't allowed in current view
-      audioRef.current.muted = !isAudioAllowed;
     }
   }, [volume]);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isAudioAllowed;
-      // If audio is now allowed and should be playing, ensure it plays
-      if (isAudioAllowed && isMusicPlaying && currentMusic) {
-        audioRef.current.play().catch(() => {});
-      }
-    }
-  }, [isAudioAllowed, isMusicPlaying, currentMusic]);
 
   useEffect(() => {
     localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
@@ -139,6 +125,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     localStorage.setItem('backgroundImages', JSON.stringify(backgroundImages));
   }, [backgroundImages]);
+
+  useEffect(() => {
+    localStorage.setItem('isLive', JSON.stringify(isLive));
+  }, [isLive]);
 
   // Playback helpers
   const playAudio = useCallback(async (url?: string) => {
@@ -170,7 +160,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             resolve(void 0);
           };
 
-          const onError = (_e: Event) => {
+          const onError = () => {
             audioRef.current?.removeEventListener('canplay', onCanPlay);
             audioRef.current?.removeEventListener('error', onError);
             reject(new Error('Audio failed to load'));
@@ -189,13 +179,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       }
 
       audioRef.current.volume = Math.max(0, Math.min(1, volume / 100));
-      // ensure mute state matches allowed flag
-      audioRef.current.muted = !isAudioAllowed;
 
-      // Always try to play if audio is allowed
-      if (isAudioAllowed) {
-        await audioRef.current.play();
-      }
+      // Always try to play
+      await audioRef.current.play();
       setIsMusicPlaying(true);
     } catch (err) {
       console.error('playAudio error:', err);
@@ -268,10 +254,4 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error('useAppContext must be used within AppProvider');
-  }
-  return context;
-};
+

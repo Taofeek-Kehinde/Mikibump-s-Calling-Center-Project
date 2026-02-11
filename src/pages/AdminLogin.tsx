@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect, useMemo } from 'react';
+import { useState } from 'react';
 import Admin from '../Admin.tsx';
 import './AdminLogin.css';
-// import { useNavigate } from 'react-router-dom';
 
 const ADMIN_PASSWORD = 'mikibumps123';
 
@@ -10,29 +9,19 @@ function AdminLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const floatingDots = useMemo(() => {
-    return [...Array(12)].map((_, i) => ({
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      background: i % 2 === 0 ? '#667eea' : '#764ba2',
-      duration: 2 + Math.random() * 2,
-      delay: i * 0.2,
-    }));
-  }, []);
-
-  useEffect(() => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
     // Clear authentication on mount to force login every time
     localStorage.removeItem('admin_authenticated');
-    setIsAuthenticated(false);
-  }, []);
+    return false;
+  });
 
-  useEffect(() => {
-    // Check authentication status
-    const authStatus = localStorage.getItem('admin_authenticated') === 'true';
-    setIsAuthenticated(authStatus);
-  }, []);
+  const [floatingDots] = useState(() => [...Array(12)].map((_, i) => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    background: i % 2 === 0 ? '#667eea' : '#764ba2',
+    duration: 2 + Math.random() * 2,
+    delay: i * 0.2,
+  })));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
