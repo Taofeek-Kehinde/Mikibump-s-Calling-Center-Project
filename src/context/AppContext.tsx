@@ -91,14 +91,15 @@ const setIsLive = (value: boolean) => {
 }, []);
 
 
-useEffect(() => {
+  useEffect(() => {
   if (!isCountdownActive) return;
 
   const timer = setInterval(() => {
     setCountdownTime(prev => {
       if (prev <= 1) {
-        const now = new Date().toISOString();
-        set(ref(db, "liveStatus/isLive"), false);
+        const now = new Date().toISOString();       
+        // set(ref(db, "liveStatus/isLive"), false);
+
         set(ref(db, "liveStatus/remaining"), 0);
         set(ref(db, "liveStatus/lastSeen"), now);
         setLastSeen(now);
@@ -113,7 +114,6 @@ useEffect(() => {
 
   return () => clearInterval(timer);
 }, [isCountdownActive]);
-
 
 
 
