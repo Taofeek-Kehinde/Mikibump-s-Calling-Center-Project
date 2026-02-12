@@ -54,10 +54,15 @@ const formatTime = (time: number) => {
 };
 
 
-  // const lastSeen = localStorage.getItem('lastSeen');
-const lastSeenFormatted = lastSeen
-  ? new Date(lastSeen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-  : '';
+  const formatLastSeen = (isoString: string | null) => {
+    if (!isoString) return '--:--:--';
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return '--:--:--';
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  };
 
 
   useEffect(() => {
@@ -334,7 +339,7 @@ useEffect(() => {
                  <span className='live-text'>OFFLINE</span> 
                 </div>
                <span className="time">
-      LAST SEEN{lastSeenFormatted || '--:--:--'}
+      LAST SEEN {formatLastSeen(lastSeen)}
     </span>
     
                 </div>
