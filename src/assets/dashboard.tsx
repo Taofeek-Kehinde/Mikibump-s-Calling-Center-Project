@@ -72,15 +72,6 @@ const lastSeenFormatted = lastSeen
   });
 }, []);
 
-// Auto-play whenever currentMusic changes
-useEffect(() => {
-  if (currentMusic) {
-    playAudio(currentMusic).catch(() => {
-      console.log("User must interact to start music");
-    });
-  }
-}, [currentMusic, playAudio]);
-
 useEffect(() => {
     // enable audible playback when dashboard is mounted
     setIsAudioAllowed(true);

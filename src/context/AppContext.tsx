@@ -137,7 +137,11 @@ useEffect(() => {
 
 
   useEffect(() => {
-    localStorage.setItem('currentMusic', currentMusic);
+    try {
+      localStorage.setItem('currentMusic', currentMusic);
+    } catch (e) {
+      console.error('Failed to save currentMusic to localStorage:', e);
+    }
   }, [currentMusic]);
 
   useEffect(() => {
@@ -206,10 +210,10 @@ const [liveStartTime, setLiveStartTime] = useState<number | null>(() => {
       audio.volume = Math.max(0, Math.min(1, volume / 100));
       await audio.play();
       setIsMusicPlaying(true);
-    } catch (err) {
-      console.error("playAudio error:", err);
-      setIsMusicPlaying(false);
-    }
+  } catch (err) {
+    console.log("playAudio error:", err);
+    setIsMusicPlaying(false);
+  }
   }, [currentMusic, volume]);
 
   const pauseAudio = useCallback(() => {
