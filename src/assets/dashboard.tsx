@@ -37,7 +37,6 @@ function Dashboard() {
     playAudio,
     stopAudio,
     setLastSeen,
-    lastSeen,
     liveStartTime,
     setLiveStartTime,
     countdownTime,
@@ -53,17 +52,6 @@ const formatTime = (time: number) => {
     .toString()
     .padStart(2, "0")}`;
 };
-
-
-  const formatLastSeen = (isoString: string | null) => {
-    if (!isoString) return '--:--:--';
-    const date = new Date(isoString);
-    if (isNaN(date.getTime())) return '--:--:--';
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
-  };
 
 
   useEffect(() => {
