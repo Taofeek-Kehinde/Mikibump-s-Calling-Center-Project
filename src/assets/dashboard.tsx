@@ -24,6 +24,7 @@ function Dashboard() {
   const [code, setCode] = useState('');
   const [pulse, setPulse] = useState(true);
   const [typedText, setTypedText] = useState('');
+  const [userHasInteracted, setUserHasInteracted] = useState(false);
 
   const { 
     isLive, 
@@ -66,13 +67,13 @@ const lastSeenFormatted = lastSeen
 
     setCurrentMusic(data.url);
 
-    if (data.playing) {
+    if (data.playing && userHasInteracted) {
       playAudio(data.url).catch(() => {});
     } else {
       stopAudio();
     }
   });
-}, []);
+}, [userHasInteracted]);
 
 useEffect(() => {
     // enable audible playback when dashboard is mounted
@@ -190,6 +191,23 @@ useEffect(() => {
 
     return () => clearInterval(typeInterval);
   }, [isLive]);
+
+  // Track user interaction
+  useEffect(() => {
+    const handleInteraction = () => {
+      setUserHasInteracted(true);
+    };
+
+    document.addEventListener('click', handleInteraction);
+    document.addEventListener('keydown', handleInteraction);
+    document.addEventListener('touchstart', handleInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('keydown', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+    };
+  }, []);
 
   return (
     <div className="dashboard">
