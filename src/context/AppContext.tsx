@@ -90,11 +90,9 @@ useEffect(() => {
   const timer = setInterval(() => {
     setCountdownTime(prev => {
       if (prev <= 1) {
-        set(ref(db, "liveStatus"), {
-          isLive: false,
-          remaining: 0,
-          lastSeen: new Date().toISOString()
-        });
+        set(ref(db, "liveStatus/isLive"), false);
+        set(ref(db, "liveStatus/remaining"), 0);
+        set(ref(db, "liveStatus/lastSeen"), new Date().toISOString());
         return 0;
       }
 

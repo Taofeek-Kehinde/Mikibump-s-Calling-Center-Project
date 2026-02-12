@@ -26,21 +26,23 @@ function Dashboard() {
   const [typedText, setTypedText] = useState('');
   const [userHasInteracted, setUserHasInteracted] = useState(false);
 
-  const { 
-    isLive, 
-    setIsLive, 
-    currentMusic, 
+  const {
+    isLive,
+    setIsLive,
+    currentMusic,
     setCurrentMusic,
-    isMusicPlaying, 
-    setIsAudioAllowed, 
-    playAudio, 
-    stopAudio, 
-    liveStartTime,      
-    setLiveStartTime, 
-    countdownTime, 
-    setCountdownTime, 
-    // isCountdownActive, 
-    setIsCountdownActive 
+    isMusicPlaying,
+    setIsAudioAllowed,
+    playAudio,
+    stopAudio,
+    setLastSeen,
+    lastSeen,
+    liveStartTime,
+    setLiveStartTime,
+    countdownTime,
+    setCountdownTime,
+    // isCountdownActive,
+    setIsCountdownActive
   } = useAppContext();
   const prevIsLiveRef = useRef(isLive);
 const formatTime = (time: number) => {
@@ -52,7 +54,7 @@ const formatTime = (time: number) => {
 };
 
 
-  const lastSeen = localStorage.getItem('lastSeen');
+  // const lastSeen = localStorage.getItem('lastSeen');
 const lastSeenFormatted = lastSeen
   ? new Date(lastSeen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
   : '';
@@ -135,6 +137,17 @@ useEffect(() => {
 }, [isLive, liveStartTime]);
 
 
+useEffect(() => {
+  const liveRef = ref(db, "liveStatus");
+  onValue(liveRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      setIsLive(data.isLive);
+      setCountdownTime(data.remaining || 900);
+      setLastSeen(data.lastSeen || null); // <-- store in local state
+    }
+  });
+}, []);
 
 
   // Detect when live ends and show alert
@@ -320,7 +333,10 @@ useEffect(() => {
                   <span className="live-dot" style={{ background: '#dc3545' }}></span>
                  <span className='live-text'>OFFLINE</span> 
                 </div>
-              <span className="time">LAST SEEN {lastSeenFormatted}</span>
+               <span className="time">
+      LAST SEEN: {lastSeenFormatted || '--:--:--'}
+    </span>
+    
                 </div>
               </motion.div>
             )}
