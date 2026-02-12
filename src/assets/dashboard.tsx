@@ -334,7 +334,7 @@ useEffect(() => {
                  <span className='live-text'>OFFLINE</span> 
                 </div>
                <span className="time">
-      LAST SEEN: {lastSeenFormatted || '--:--:--'}
+      LAST SEEN{lastSeenFormatted || '--:--:--'}
     </span>
     
                 </div>
