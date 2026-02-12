@@ -25,6 +25,7 @@ function Dashboard() {
   const [pulse, setPulse] = useState(true);
   const [typedText] = useState('');
   const [userHasInteracted, setUserHasInteracted] = useState(false);
+  const [offlineElapsedTime, setOfflineElapsedTime] = useState<number>(0);
 
   const {
     isLive,
@@ -162,6 +163,20 @@ useEffect(() => {
     prevIsLiveRef.current = isLive;
   }, [isLive]);
 
+  // Offline elapsed time counter
+  useEffect(() => {
+    if (isLive) {
+      setOfflineElapsedTime(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setOfflineElapsedTime(prev => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isLive]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim()) {
@@ -288,11 +303,9 @@ useEffect(() => {
                 >
                   <div className="live-indicator">
   <div className="live-row">
-    <span className="live-texts"></span>
     <span className="live-dot"></span>
+    <span className="live-time">{formatTime(countdownTime)}</span>
   </div>
-
-  <span className="live-time">{formatTime(countdownTime)}</span>
 </div>
                   <motion.div
                     className="live-pulse"
@@ -317,13 +330,9 @@ useEffect(() => {
               >
                 <div className="live-indicator">
                   <div className="live-rows">
-                  <span className="live-dot" style={{ background: '#dc3545' }}></span>
-                 <span className='live-text'></span> 
-                </div>
-               <span className="time">
-       {formatLastSeen(lastSeen)}
-    </span>
-    
+                    <span className="live-dot" style={{ background: '#dc3545' }}></span>
+                    <span className="time">{formatTime(offlineElapsedTime)}</span>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -358,7 +367,7 @@ useEffect(() => {
                 className="code-input"
                 required
               /> */}
-             <div className='placeholder'>LIFE IS SWEET!</div> 
+             <div className='placeholder'>LET CANDY DO THE TALKING</div> 
 
 
               <motion.div

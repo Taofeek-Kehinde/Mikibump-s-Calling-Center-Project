@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Admin from '../Admin.tsx';
 import './AdminLogin.css';
 
-const ADMIN_PASSWORD = 'mikibumps123';
+const ADMIN_PASSWORD = '123';
 
 function AdminLogin() {
   const [password, setPassword] = useState('');
