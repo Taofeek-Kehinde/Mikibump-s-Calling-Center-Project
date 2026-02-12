@@ -127,7 +127,6 @@ useEffect(() => {
     } else {
       // AUTO OFFLINE
       setCountdownTime(0);
-      setIsLive(false);
       setIsCountdownActive(false);
 
       const now = new Date();

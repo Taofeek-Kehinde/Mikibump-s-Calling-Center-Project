@@ -39,7 +39,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   });
 
 const setIsLive = (value: boolean) => {
-  set(ref(db, "liveStatus/isLive"), value);
+  _setIsLive(value); 
   if (!value) {
     const now = new Date().toISOString();
     set(ref(db, "liveStatus/lastSeen"), now);
