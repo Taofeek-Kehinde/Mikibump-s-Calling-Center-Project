@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun, faArrowRightFromBracket, faPlay, faPause, faStop, faVolumeHigh, faUpload} from '@fortawesome/free-solid-svg-icons';
 import { useAppContext } from './context/useAppContext';
 import { showAlert } from './utils/showAlert';
+import { ref, set } from "firebase/database";
+import { db } from "./firebase";
 import './Admin.css';
 
 function Admin() {
   const {
     isLive,
-    setIsLive,
+    // setIsLive,
     currentMusic,
     setCurrentMusic,
     isMusicPlaying,
@@ -23,10 +25,12 @@ function Admin() {
     pauseAudio,
     stopAudio,
     setIsAudioAllowed,
-    setIsCountdownActive,
-    setCountdownTime,
+    // setIsCountdownActive,
+    // setCountdownTime,
     backgroundImages,
     setBackgroundImages,
+    // liveStartTime,
+    // setLiveStartTime,
   } = useAppContext();
 
   useEffect(() => {
@@ -41,36 +45,40 @@ function Admin() {
 
   
 
-  const handleGoLive = () => {
-    setIsLive(true);
-    setIsCountdownActive(true);
-    // Reset countdown time to 15 minutes (900 seconds) when going live
-    setCountdownTime(900);
+const handleGoLive = () => {
+  set(ref(db, "liveStatus"), {
+    isLive: true,
+    remaining: 900,
+    lastSeen: null
+  });
+};
+
+const handleGoOffline = () => {
+  set(ref(db, "liveStatus"), {
+    isLive: false,
+    remaining: 0,
+    lastSeen: new Date().toISOString()
+  });
+}
+
+const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = async () => {
+    const base64 = reader.result as string;
+
+    await set(ref(db, "music"), {
+      url: base64,
+      playing: true
+    });
   };
 
-  const handleGoOffline = () => {
-    setIsLive(false);
-    setIsCountdownActive(false);
-    // showAlert('LIVE HAS ENDED');
-  };
+  reader.readAsDataURL(file); // converts audio to Base64
+};
 
-  const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate that the file is an audio file
-      if (!file.type.startsWith('audio/')) {
-        showAlert('Please upload a valid audio file.', 'error');
-        return;
-      }
-      // Create a blob URL for the audio file
-      const musicData = URL.createObjectURL(file);
-      setCurrentMusic(musicData);
-      setIsMusicPlaying(true);
-      // Set volume to 50% when uploading
-      setVolume(50);
-      // Music will play on the main dashboard
-    }
-  };
 
   const handlePlayPauseMusic = () => {
     if (isMusicPlaying) {

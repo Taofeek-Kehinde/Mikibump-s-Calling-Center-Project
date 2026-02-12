@@ -220,7 +220,7 @@ function Form() {
                 name="yourContact"
                 value={formData.yourContact}
                 onChange={handleChange}
-                placeholder="Phone number or email"
+                placeholder="Whatsapp number"
                 className={errors.yourContact ? 'error' : ''}
               />
               {errors.yourContact && <span className="error-text">{errors.yourContact}</span>}

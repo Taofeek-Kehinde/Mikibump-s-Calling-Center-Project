@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
 import { useAppContext } from '../context/useAppContext';
 import { showAlert } from '../utils/showAlert';
+import { ref, onValue } from "firebase/database";
+import { db } from "../firebase";
 import './dashboard.css';
 import af1 from '../assets/af1.jpg';
 import af2 from '../assets/af2.jpg';
@@ -25,22 +27,51 @@ function Dashboard() {
     isLive, 
     setIsLive, 
     currentMusic, 
+    setCurrentMusic,
     isMusicPlaying, 
     setIsAudioAllowed, 
     playAudio, 
     stopAudio, 
+    liveStartTime,      
+    setLiveStartTime, 
     countdownTime, 
     setCountdownTime, 
-    isCountdownActive, 
+    // isCountdownActive, 
     setIsCountdownActive 
   } = useAppContext();
   const prevIsLiveRef = useRef(isLive);
+const formatTime = (time: number) => {
+  const m = Math.floor(time / 60);
+  const s = time % 60;
+  return `${m.toString().padStart(2, "0")}:${s
+    .toString()
+    .padStart(2, "0")}`;
+};
 
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
+
+  const lastSeen = localStorage.getItem('lastSeen');
+const lastSeenFormatted = lastSeen
+  ? new Date(lastSeen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+  : '';
+
+
+  useEffect(() => {
+  const musicRef = ref(db, "music");
+
+  return onValue(musicRef, (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    setCurrentMusic(data.url);
+
+    if (data.playing) {
+      playAudio(data.url).catch(() => {});
+    } else {
+      stopAudio();
+    }
+  });
+}, []);
+
 
   useEffect(() => {
     // enable audible playback when dashboard is mounted
@@ -75,22 +106,34 @@ function Dashboard() {
   }, [isLive]);
 
   // Countdown timer decrement
-  useEffect(() => {
-    if (!isCountdownActive) return;
+useEffect(() => {
+  if (!isLive || !liveStartTime) return;
 
-    const interval = setInterval(() => {
-      setCountdownTime((prev: number) => {
-        if (prev > 0) {
-          return prev - 1;
-        } else {
-          setIsLive(false);
-          setIsCountdownActive(false);
-          return 0;
-        }
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isCountdownActive, setCountdownTime, setIsLive, setIsCountdownActive]);
+  const interval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - liveStartTime) / 1000);
+    const remaining = 900 - elapsed; // 15 minutes
+
+    if (remaining > 0) {
+      setCountdownTime(remaining);
+    } else {
+      // AUTO OFFLINE
+      setCountdownTime(0);
+      setIsLive(false);
+      setIsCountdownActive(false);
+
+      const now = new Date();
+      localStorage.setItem("lastSeen", now.toISOString());
+
+      setLiveStartTime(null);
+      localStorage.removeItem("liveStartTime");
+    }
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [isLive, liveStartTime]);
+
+
+
 
   // Detect when live ends and show alert
   useEffect(() => {
@@ -161,6 +204,17 @@ function Dashboard() {
         animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
         transition={{ duration: 1.2, ease: "easeOut", type: "spring", stiffness: 100 }}
       >
+     <div className="live-hint-wrapper">
+  <div
+    className={`live-hint-text ${isLive ? "live" : "offline"}`}
+    key={isLive ? "live" : "offline"} // optional, triggers re-render
+  >
+    {isLive
+      ? "Click the LIVE button to fill the form"
+      : "We are currently OFFLINE, we will get back to you as soon as possible"}
+  </div>
+</div>
+
         {/* Header with Live Indicator */}
         <motion.div
           className="dashboard-header"
@@ -197,10 +251,13 @@ function Dashboard() {
                   }}
                 >
                   <div className="live-indicator">
-                    <span className="live-dot"></span>
-                    <span className="live-texts">LIVE</span>
-                    {formatTime(countdownTime)}
-                  </div>
+  <div className="live-row">
+    <span className="live-texts">LIVE</span>
+    <span className="live-dot"></span>
+  </div>
+
+  <span className="live-time">{formatTime(countdownTime)}</span>
+</div>
                   <motion.div
                     className="live-pulse"
                     animate={{
@@ -223,8 +280,11 @@ function Dashboard() {
                 transition={{ duration: 0.5 }}
               >
                 <div className="live-indicator">
+                  <div className="live-rows">
                   <span className="live-dot" style={{ background: '#dc3545' }}></span>
-                  Live Ended
+                 <span className='live-text'>OFFLINE</span> 
+                </div>
+              <span className="time">LAST SEEN {lastSeenFormatted}</span>
                 </div>
               </motion.div>
             )}

@@ -1,4 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { ref, onValue, set } from "firebase/database";
+import { db } from "../firebase";
 
 export interface AppContextType {
   isLive: boolean;
@@ -22,15 +24,21 @@ export interface AppContextType {
   setIsCountdownActive: (value: boolean) => void;
   backgroundImages: string[];
   setBackgroundImages: React.Dispatch<React.SetStateAction<string[]>>;
+  // liveStartTime: number | null;
+  // setLiveStartTime: React.Dispatch<React.SetStateAction<number | null>>;
+liveStartTime: number | null;
+setLiveStartTime: (v: number | null) => void;
+
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [isLive, setIsLive] = useState<boolean>(() => {
-    const saved = localStorage.getItem('isLive');
-    return saved !== null ? JSON.parse(saved) : false;
-  });
+  const [isLive, _setIsLive] = useState(false);
+
+const setIsLive = (value: boolean) => {
+  set(ref(db, "liveStatus/isLive"), value);
+};
   const [currentMusic, setCurrentMusic] = useState<string>(() => {
     return localStorage.getItem('currentMusic') || '';
   });
@@ -40,7 +48,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   });
   const [volume, setVolume] = useState<number>(() => {
     const saved = localStorage.getItem('volume');
-    return saved !== null ? JSON.parse(saved) : 50;
+    return saved !== null ? JSON.parse(saved) : 20;
   });
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('isDarkMode');
@@ -60,6 +68,48 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return saved !== null ? JSON.parse(saved) : [];
   });
 
+
+  useEffect(() => {
+  const statusRef = ref(db, "liveStatus");
+
+  return onValue(statusRef, (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    _setIsLive(data.isLive);
+    setCountdownTime(data.remaining ?? 900);
+    setIsCountdownActive(data.isLive);
+  });
+}, []);
+
+
+useEffect(() => {
+  if (!isCountdownActive) return;
+
+  const timer = setInterval(() => {
+    setCountdownTime(prev => {
+      if (prev <= 1) {
+        set(ref(db, "liveStatus"), {
+          isLive: false,
+          remaining: 0,
+          lastSeen: new Date().toISOString()
+        });
+        return 0;
+      }
+
+      const next = prev - 1;
+      set(ref(db, "liveStatus/remaining"), next);
+      return next;
+    });
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [isCountdownActive]);
+
+
+
+
+
   // Centralized audio element so play() can be invoked from user gesture handlers
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
@@ -71,7 +121,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     audioRef.current = a;
 
     const onPlay = () => setIsMusicPlaying(true);
-    const onPause = () => setIsMusicPlaying(false);
+    const onPause = () => setIsMusicPlaying(true);
 
     a.addEventListener('play', onPlay);
     a.addEventListener('pause', onPause);
@@ -129,6 +179,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     localStorage.setItem('isLive', JSON.stringify(isLive));
   }, [isLive]);
+
+
+const [liveStartTime, setLiveStartTime] = useState<number | null>(() => {
+  const saved = localStorage.getItem("liveStartTime");
+  return saved ? JSON.parse(saved) : null;
+});
 
   // Playback helpers
   const playAudio = useCallback(async (url?: string) => {
@@ -216,14 +272,21 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   }, [setCurrentMusic, setIsMusicPlaying]);
 
   // Listen for storage changes to sync across tabs
-  useEffect(() => {
-    const handleStorageChange = () => {
-      // Implementation removed for simplicity
-    };
+useEffect(() => {
+  const handleStorageChange = () => {
+    const savedLive = localStorage.getItem("isLive");
+    const savedCountdown = localStorage.getItem("countdownTime");
+    const savedActive = localStorage.getItem("isCountdownActive");
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+    if (savedLive !== null) setIsLive(JSON.parse(savedLive));
+    if (savedCountdown !== null) setCountdownTime(JSON.parse(savedCountdown));
+    if (savedActive !== null) setIsCountdownActive(JSON.parse(savedActive));
+  };
+
+  window.addEventListener("storage", handleStorageChange);
+  return () => window.removeEventListener("storage", handleStorageChange);
+}, []);
+
 
   return (
     <AppContext.Provider value={{
@@ -248,6 +311,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       setIsCountdownActive,
       backgroundImages,
       setBackgroundImages,
+      liveStartTime,
+      setLiveStartTime,
     }}>
       {children}
     </AppContext.Provider>
