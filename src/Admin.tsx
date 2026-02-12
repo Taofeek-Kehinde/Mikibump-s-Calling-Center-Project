@@ -26,7 +26,7 @@ function Admin() {
     backgroundImages,
     setBackgroundImages,
     // liveStartTime,
-    // setLiveStartTime,
+    setLiveStartTime,
   } = useAppContext();
 
   useEffect(() => {
@@ -42,11 +42,15 @@ function Admin() {
   
 
 const handleGoLive = () => {
+  const now = Date.now();
   set(ref(db, "liveStatus"), {
     isLive: true,
     remaining: 900,
     lastSeen: null
   });
+  // Set live start time and countdown
+  setLiveStartTime(now);
+  localStorage.setItem("liveStartTime", now.toString());
   // Set the hardcoded music when going live
   set(ref(db, 'music'), { url: '/music/music.mp3', playing: true });
 };
