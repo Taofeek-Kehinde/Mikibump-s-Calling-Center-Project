@@ -40,7 +40,7 @@ function Admin() {
   }, [setIsAudioAllowed, pauseAudio]);
 
   const navigate = useNavigate();
-  const musicFileInputRef = useRef<HTMLInputElement>(null);
+  // const musicFileInputRef = useRef<HTMLInputElement>(null);
   const imageFileInputRef = useRef<HTMLInputElement>(null);
 
   
@@ -61,22 +61,12 @@ const handleGoOffline = () => {
   });
 }
 
-const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = async () => {
-    const base64 = reader.result as string;
-
-    await set(ref(db, "music"), {
-      url: base64,
-      playing: true
-    });
-  };
-
-  reader.readAsDataURL(file); // converts audio to Base64
+const handleMusicUpload = (fileName: string) => {
+  // Only store the URL string in Firebase
+  const url = `/music/${fileName}`;
+  set(ref(db, 'currentMusic'), url)
+    .then(() => alert(`Music set: ${fileName}`))
+    .catch(err => console.error(err));
 };
 
 
@@ -307,7 +297,7 @@ const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
               <span className="volume-value">{volume}%</span>
             </div>
 
-            <div className="music-upload">
+            {/* <div className="music-upload">
               <input
                 type="file"
                 ref={musicFileInputRef}
@@ -324,8 +314,12 @@ const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
                 <FontAwesomeIcon icon={faUpload} />
                 Upload Music File
               </motion.button>
-            </div>
+            </div> */}
 
+<select onChange={(e) => handleMusicUpload(e.target.value)}>
+  <option value="song1.mp3">Song 1</option>
+  <option value="song2.mp3">Song 2</option>
+</select>
 
           </div>
         </motion.div>

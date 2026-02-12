@@ -188,63 +188,29 @@ const [liveStartTime, setLiveStartTime] = useState<number | null>(() => {
 
   // Playback helpers
   const playAudio = useCallback(async (url?: string) => {
-    if (!audioRef.current) return;
+    if (!audioRef.current) audioRef.current = new Audio();
+
     try {
-      let needsLoad = false;
-      if (url) {
-        setCurrentMusic(url);
-        if (audioRef.current.src !== url) {
-          audioRef.current.src = url;
-          needsLoad = true;
-        }
-      } else if (currentMusic) {
-        if (audioRef.current.src !== currentMusic) {
-          audioRef.current.src = currentMusic;
-          needsLoad = true;
-        }
+      const audio = audioRef.current;
+
+      // Determine which URL to play
+      const musicUrl = url || currentMusic;
+      if (!musicUrl) return;
+
+      // Only reload if URL changed
+      if (!audio.src.includes(musicUrl)) {
+        audio.src = musicUrl;
+        audio.load();
       }
 
-      if (needsLoad) {
-        audioRef.current.load();
-        // Wait for the audio to be ready
-        await new Promise((resolve, reject) => {
-          if (!audioRef.current) return reject(new Error('No audio element'));
-
-          const onCanPlay = () => {
-            audioRef.current?.removeEventListener('canplay', onCanPlay);
-            audioRef.current?.removeEventListener('error', onError);
-            resolve(void 0);
-          };
-
-          const onError = () => {
-            audioRef.current?.removeEventListener('canplay', onCanPlay);
-            audioRef.current?.removeEventListener('error', onError);
-            reject(new Error('Audio failed to load'));
-          };
-
-          audioRef.current.addEventListener('canplay', onCanPlay);
-          audioRef.current.addEventListener('error', onError);
-
-          // Timeout after 10 seconds
-          setTimeout(() => {
-            audioRef.current?.removeEventListener('canplay', onCanPlay);
-            audioRef.current?.removeEventListener('error', onError);
-            reject(new Error('Audio load timeout'));
-          }, 10000);
-        });
-      }
-
-      audioRef.current.volume = Math.max(0, Math.min(1, volume / 100));
-
-      // Always try to play
-      await audioRef.current.play();
+      audio.volume = Math.max(0, Math.min(1, volume / 100));
+      await audio.play();
       setIsMusicPlaying(true);
     } catch (err) {
-      console.error('playAudio error:', err);
+      console.error("playAudio error:", err);
       setIsMusicPlaying(false);
-      throw err; // Re-throw to allow caller to handle
     }
-  }, [currentMusic, volume, isAudioAllowed, setCurrentMusic, setIsMusicPlaying]);
+  }, [currentMusic, volume]);
 
   const pauseAudio = useCallback(() => {
     if (!audioRef.current) return;
