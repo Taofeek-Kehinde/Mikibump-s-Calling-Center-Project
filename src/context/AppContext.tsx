@@ -5,6 +5,8 @@ import { db } from "../firebase";
 export interface AppContextType {
   isLive: boolean;
   setIsLive: (value: boolean) => void;
+  lastSeen: string | null;
+  setLastSeen: (value: string | null) => void;
   currentMusic: string;
   setCurrentMusic: (url: string) => void;
   isMusicPlaying: boolean;
@@ -24,17 +26,15 @@ export interface AppContextType {
   setIsCountdownActive: (value: boolean) => void;
   backgroundImages: string[];
   setBackgroundImages: React.Dispatch<React.SetStateAction<string[]>>;
-  // liveStartTime: number | null;
-  // setLiveStartTime: React.Dispatch<React.SetStateAction<number | null>>;
-liveStartTime: number | null;
-setLiveStartTime: (v: number | null) => void;
-
+  liveStartTime: number | null;
+  setLiveStartTime: (v: number | null) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isLive, _setIsLive] = useState(false);
+  const [lastSeen, setLastSeen] = useState<string | null>(null);
 
 const setIsLive = (value: boolean) => {
   set(ref(db, "liveStatus/isLive"), value);
@@ -79,6 +79,7 @@ const setIsLive = (value: boolean) => {
     _setIsLive(data.isLive);
     setCountdownTime(data.remaining ?? 900);
     setIsCountdownActive(data.isLive);
+    setLastSeen(data.lastSeen || null);
   });
 }, []);
 
@@ -262,6 +263,8 @@ useEffect(() => {
     <AppContext.Provider value={{
       isLive,
       setIsLive,
+      lastSeen,
+      setLastSeen,
       currentMusic,
       setCurrentMusic,
       isMusicPlaying,

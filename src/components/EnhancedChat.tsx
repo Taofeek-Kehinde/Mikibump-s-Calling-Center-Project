@@ -5,7 +5,15 @@ import { useAppContext } from '../context/useAppContext';
 const EnhancedChat: React.FC = () => {
   const [messages, setMessages] = useState<Array<{text: string, isUser: boolean}>>([{ text: "Hello! I'm your AI assistant. How can I help you today?", isUser: false }]);
   const [input, setInput] = useState('');
-  const { isLive } = useAppContext();
+  const { isLive, lastSeen } = useAppContext();
+
+  const formatLastSeen = (isoString: string) => {
+    const date = new Date(isoString);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  };
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -38,7 +46,7 @@ const EnhancedChat: React.FC = () => {
       <div className="chat-header">
         <h2>Enhanced AI Chat</h2>
         <div className={`status-indicator ${isLive ? 'live' : 'offline'}`}>
-          {isLive ? '🟢 Live' : '🔴 Offline'}
+          {isLive ? '🟢 Live' : lastSeen ? `🔴 Last seen ${formatLastSeen(lastSeen)}` : '🔴 Offline'}
         </div>
       </div>
 
