@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun, faArrowRightFromBracket, faPlay, faPause, faStop, faVolumeHigh, faUpload} from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faSun, faArrowRightFromBracket, faUpload} from '@fortawesome/free-solid-svg-icons';
 import { useAppContext } from './context/useAppContext';
 import { showAlert } from './utils/showAlert';
 import { ref, set } from "firebase/database";
@@ -17,13 +17,9 @@ function Admin() {
     // setCurrentMusic,
     isMusicPlaying,
     // setIsMusicPlaying,
-    volume,
-    setVolume,
     isDarkMode,
     setIsDarkMode,
-    playAudio,
     pauseAudio,
-    stopAudio,
     setIsAudioAllowed,
     // setIsCountdownActive,
     // setCountdownTime,
@@ -72,38 +68,7 @@ const handleGoOffline = () => {
   set(ref(db, 'music'), { url: '/music/music.mp3', playing: false });
 };
 
-const handleMusicUpload = (fileName: string) => {
-  // Store the URL and playing status in Firebase
-  const url = `/music/${fileName}`;
-  set(ref(db, 'music'), { url, playing: true })
-    .then(() => showAlert(`Music set: ${fileName}`, 'success'))
-    .catch(err => console.error(err));
-};
 
-
-  const handlePlayPauseMusic = () => {
-    if (isMusicPlaying) {
-      // If playing, pause
-      pauseAudio();
-    } else {
-      // If not playing, play
-      if (!currentMusic) {
-        showAlert('Please upload or select a music file first', 'error');
-        return;
-      }
-      // Ensure volume is at least 30% when playing
-      if (volume < 30) {
-        setVolume(30);
-      }
-      playAudio().catch(() => {});
-    }
-  };
-
-
-  const handleStopMusic = () => {
-    set(ref(db, 'music/playing'), false);
-    stopAudio();
-  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
