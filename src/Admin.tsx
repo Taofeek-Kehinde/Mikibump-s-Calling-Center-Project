@@ -51,6 +51,8 @@ const handleGoLive = () => {
     remaining: 900,
     lastSeen: null
   });
+  // Set the hardcoded music when going live
+  set(ref(db, 'music'), { url: '/music/music.mp3', playing: true });
 };
 
 const handleGoOffline = () => {
@@ -66,6 +68,8 @@ const handleGoOffline = () => {
     remaining: 0,
     lastSeen: timeString // <-- store hh:mm:ss directly
   });
+  // Stop music when going offline
+  set(ref(db, 'music'), { url: '/music/music.mp3', playing: false });
 };
 
 const handleMusicUpload = (fileName: string) => {
@@ -256,79 +260,6 @@ const handleMusicUpload = (fileName: string) => {
               <span className="btn-icon">🔴</span>
               <span className="btn-text">GO OFFLINE</span>
             </motion.button>
-          </div>
-        </motion.div>
-
-        {/* Music Control Section */}
-        <motion.div 
-          className="music-section"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <h2 className="section-title">Background Music Control</h2>
-          
-          <div className="music-controls">
-            <div className="music-buttons">
-              <motion.button
-                className="music-btn play"
-                onClick={handlePlayPauseMusic}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FontAwesomeIcon icon={isMusicPlaying ? faPause : faPlay} />
-                {isMusicPlaying ? 'Pause Music' : 'Play Music'}
-              </motion.button>
-
-
-              <motion.button
-                className="music-btn stop"
-                onClick={handleStopMusic}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FontAwesomeIcon icon={faStop} />
-                Stop Music
-              </motion.button>
-            </div>
-
-            <div className="volume-control">
-              <FontAwesomeIcon icon={faVolumeHigh} />
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume}
-                onChange={(e) => setVolume(Number(e.target.value))}
-                className="volume-slider"
-              />
-              <span className="volume-value">{volume}%</span>
-            </div>
-
-            {/* <div className="music-upload">
-              <input
-                type="file"
-                ref={musicFileInputRef}
-                accept="audio/*"
-                onChange={handleMusicUpload}
-                style={{ display: 'none' }}
-              />
-              <motion.button
-                className="upload-btn"
-                onClick={() => musicFileInputRef.current?.click()}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FontAwesomeIcon icon={faUpload} />
-                Upload Music File
-              </motion.button>
-            </div> */}
-
-<select onChange={(e) => handleMusicUpload(e.target.value)}>
-  <option value="song1.mp3">Song 1</option>
-  <option value="song2.mp3">Song 2</option>
-</select>
-
           </div>
         </motion.div>
 

@@ -158,7 +158,7 @@ useEffect(() => {
   // Detect when live ends and show alert
   useEffect(() => {
     if (prevIsLiveRef.current && !isLive) {
-      showAlert('LIVE HAS ENDED');
+      // showAlert('LIVE HAS ENDED');
     }
     prevIsLiveRef.current = isLive;
   }, [isLive]);
@@ -194,8 +194,8 @@ useEffect(() => {
   // Typing animation for live hint text
   useEffect(() => {
     const fullText = isLive
-      ? "Tap the button to to join LIVE "
-      : "We are OFFLINE, we will get back to you soon!";
+      ? "GOTCHA... TAP TO JOIN!"
+      : "OOPS... YOU MISSED!";
 
     let index = 0;
 
@@ -226,6 +226,13 @@ useEffect(() => {
       document.removeEventListener('touchstart', handleInteraction);
     };
   }, []);
+
+  // Automatically allow interaction when live to enable music autoplay
+  useEffect(() => {
+    if (isLive) {
+      setUserHasInteracted(true);
+    }
+  }, [isLive]);
 
   return (
     <div className="dashboard">
