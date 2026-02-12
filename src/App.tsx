@@ -90,7 +90,7 @@ function App(): JSX.Element {
                   transition: { duration: 0.2 }
                 }}
               >
-                mikibumps
+                TALKIN CANDY
               </motion.h1>
 
               <motion.div

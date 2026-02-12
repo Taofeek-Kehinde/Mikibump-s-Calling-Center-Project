@@ -63,13 +63,13 @@ const formatTime = (time: number) => {
 
     setCurrentMusic(data.url);
 
-    if (data.playing && userHasInteracted) {
+    if (data.playing && isLive && userHasInteracted) {
       playAudio(data.url).catch(() => {});
     } else {
       stopAudio();
     }
   });
-}, [userHasInteracted]);
+}, [userHasInteracted, isLive]);
 
 useEffect(() => {
     // enable audible playback when dashboard is mounted
@@ -355,7 +355,7 @@ useEffect(() => {
                 className="code-input"
                 required
               /> */}
-             <div className='placeholder'>LET CANDY DO THE TALKING</div> 
+             <div className='placeholder'>LET CANDY DO THE TALKIN</div> 
 
 
               <motion.div

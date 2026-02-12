@@ -1,7 +1,13 @@
-# TODO: Implement "Last Seen" Feature
+# TODO: Modify Music Playback Logic
 
-## Tasks
-- [ ] Add `lastSeen` state to AppContext interface and provider
-- [ ] Update Firebase listener in AppContext to fetch and set `lastSeen`
-- [ ] Modify EnhancedChat component to display "Last seen HH:MM:SS" when offline
-- [ ] Test the feature to ensure it shows the correct time when going offline
+## Tasks:
+- [x] Modify dashboard.tsx: in music useEffect, only play music if data.playing and isLive, set currentMusic to data.url (which will be '/music/music.mp3')
+- [x] Modify Admin.tsx: in handleGoLive, set Firebase music to { url: '/music/music.mp3', playing: true }
+- [x] Modify Admin.tsx: in handleGoOffline, set Firebase music playing: false
+- [x] Ensure music persists across refresh via Firebase
+- [x] Test on localhost and Vercel
+
+## Notes:
+- Keep Firebase music saving for persistence
+- Music only plays when LIVE, automatically
+- Hardcode URL to '/music/music.mp3' in Admin

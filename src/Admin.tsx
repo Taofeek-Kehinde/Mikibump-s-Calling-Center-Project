@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun, faArrowRightFromBracket, faPlay, faPause, faStop, faVolumeHigh, faUpload} from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faSun, faArrowRightFromBracket, faUpload} from '@fortawesome/free-solid-svg-icons';
 import { useAppContext } from './context/useAppContext';
 import { showAlert } from './utils/showAlert';
 import { ref, set } from "firebase/database";
@@ -13,17 +13,9 @@ function Admin() {
   const {
     isLive,
     // setIsLive,
-    currentMusic,
-    // setCurrentMusic,
-    isMusicPlaying,
-    // setIsMusicPlaying,
-    volume,
-    setVolume,
     isDarkMode,
     setIsDarkMode,
-    playAudio,
     pauseAudio,
-    stopAudio,
     setIsAudioAllowed,
     // setIsCountdownActive,
     // setCountdownTime,
@@ -51,6 +43,8 @@ const handleGoLive = () => {
     remaining: 900,
     lastSeen: null
   });
+  // Set music to play automatically when live
+  set(ref(db, 'music'), { url: '/music/music.mp3', playing: true });
 };
 
 const handleGoOffline = () => {
@@ -66,40 +60,9 @@ const handleGoOffline = () => {
     remaining: 0,
     lastSeen: timeString // <-- store hh:mm:ss directly
   });
+  // Stop music when going offline
+  set(ref(db, 'music'), { url: '/music/music.mp3', playing: false });
 };
-
-const handleMusicUpload = (fileName: string) => {
-  // Store the URL and playing status in Firebase
-  const url = `/music/${fileName}`;
-  set(ref(db, 'music'), { url, playing: true })
-    .then(() => showAlert(`Music set: ${fileName}`, 'success'))
-    .catch(err => console.error(err));
-};
-
-
-  const handlePlayPauseMusic = () => {
-    if (isMusicPlaying) {
-      // If playing, pause
-      pauseAudio();
-    } else {
-      // If not playing, play
-      if (!currentMusic) {
-        showAlert('Please upload or select a music file first', 'error');
-        return;
-      }
-      // Ensure volume is at least 30% when playing
-      if (volume < 30) {
-        setVolume(30);
-      }
-      playAudio().catch(() => {});
-    }
-  };
-
-
-  const handleStopMusic = () => {
-    set(ref(db, 'music/playing'), false);
-    stopAudio();
-  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -199,22 +162,7 @@ const handleMusicUpload = (fileName: string) => {
             </span>
           </div>
           
-          <div className="music-status">
-            <div className="music-wave">
-              {isMusicPlaying && currentMusic && (
-                <>
-                  <motion.div animate={{ height: ['10px', '20px', '10px'] }} transition={{ duration: 0.5, repeat: Infinity }} />
-                  <motion.div animate={{ height: ['15px', '25px', '15px'] }} transition={{ duration: 0.5, repeat: Infinity, delay: 0.1 }} />
-                  <motion.div animate={{ height: ['20px', '30px', '20px'] }} transition={{ duration: 0.5, repeat: Infinity, delay: 0.2 }} />
-                  <motion.div animate={{ height: ['15px', '25px', '15px'] }} transition={{ duration: 0.5, repeat: Infinity, delay: 0.3 }} />
-                  <motion.div animate={{ height: ['10px', '20px', '10px'] }} transition={{ duration: 0.5, repeat: Infinity, delay: 0.4 }} />
-                </>
-              )}
-            </div>
-            <span className="music-status-text">
-              Music: <strong>{isMusicPlaying ? 'PLAYING' : 'STOPPED'}</strong>
-            </span>
-          </div>
+
         </motion.div>
 
         {/* Live Control Buttons */}
@@ -256,79 +204,6 @@ const handleMusicUpload = (fileName: string) => {
               <span className="btn-icon">🔴</span>
               <span className="btn-text">GO OFFLINE</span>
             </motion.button>
-          </div>
-        </motion.div>
-
-        {/* Music Control Section */}
-        <motion.div 
-          className="music-section"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <h2 className="section-title">Background Music Control</h2>
-          
-          <div className="music-controls">
-            <div className="music-buttons">
-              <motion.button
-                className="music-btn play"
-                onClick={handlePlayPauseMusic}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FontAwesomeIcon icon={isMusicPlaying ? faPause : faPlay} />
-                {isMusicPlaying ? 'Pause Music' : 'Play Music'}
-              </motion.button>
-
-
-              <motion.button
-                className="music-btn stop"
-                onClick={handleStopMusic}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FontAwesomeIcon icon={faStop} />
-                Stop Music
-              </motion.button>
-            </div>
-
-            <div className="volume-control">
-              <FontAwesomeIcon icon={faVolumeHigh} />
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume}
-                onChange={(e) => setVolume(Number(e.target.value))}
-                className="volume-slider"
-              />
-              <span className="volume-value">{volume}%</span>
-            </div>
-
-            {/* <div className="music-upload">
-              <input
-                type="file"
-                ref={musicFileInputRef}
-                accept="audio/*"
-                onChange={handleMusicUpload}
-                style={{ display: 'none' }}
-              />
-              <motion.button
-                className="upload-btn"
-                onClick={() => musicFileInputRef.current?.click()}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FontAwesomeIcon icon={faUpload} />
-                Upload Music File
-              </motion.button>
-            </div> */}
-
-<select onChange={(e) => handleMusicUpload(e.target.value)}>
-  <option value="song1.mp3">Song 1</option>
-  <option value="song2.mp3">Song 2</option>
-</select>
-
           </div>
         </motion.div>
 
