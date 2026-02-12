@@ -34,10 +34,17 @@ export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isLive, _setIsLive] = useState(false);
-  const [lastSeen, setLastSeen] = useState<string | null>(null);
+  const [lastSeen, setLastSeen] = useState<string | null>(() => {
+    return localStorage.getItem('lastSeen') || null;
+  });
 
 const setIsLive = (value: boolean) => {
   set(ref(db, "liveStatus/isLive"), value);
+  if (!value) {
+    const now = new Date().toISOString();
+    set(ref(db, "liveStatus/lastSeen"), now);
+    setLastSeen(now);
+  }
 };
   const [currentMusic, setCurrentMusic] = useState<string>(() => {
     return localStorage.getItem('currentMusic') || '';
@@ -90,9 +97,11 @@ useEffect(() => {
   const timer = setInterval(() => {
     setCountdownTime(prev => {
       if (prev <= 1) {
+        const now = new Date().toISOString();
         set(ref(db, "liveStatus/isLive"), false);
         set(ref(db, "liveStatus/remaining"), 0);
-        set(ref(db, "liveStatus/lastSeen"), new Date().toISOString());
+        set(ref(db, "liveStatus/lastSeen"), now);
+        setLastSeen(now);
         return 0;
       }
 
