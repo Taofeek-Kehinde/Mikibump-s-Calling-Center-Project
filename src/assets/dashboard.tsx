@@ -23,7 +23,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [pulse, setPulse] = useState(true);
-  const [typedText, setTypedText] = useState('');
+  const [typedText] = useState('');
   const [userHasInteracted, setUserHasInteracted] = useState(false);
 
   const {
@@ -191,23 +191,6 @@ useEffect(() => {
   }, [images.length]);
 
   // Typing animation for live hint text
-  useEffect(() => {
-    const fullText = isLive
-      ? "GOTCHA... TAP TO JOIN!"
-      : "OOPS... YOU MISSED!";
-
-    let index = 0;
-
-    const typeInterval = setInterval(() => {
-      setTypedText(fullText.slice(0, index + 1));
-      index++;
-      if (index === fullText.length) {
-        clearInterval(typeInterval);
-      }
-    }, 100); // Typing speed
-
-    return () => clearInterval(typeInterval);
-  }, [isLive]);
 
   // Track user interaction
   useEffect(() => {
@@ -305,7 +288,7 @@ useEffect(() => {
                 >
                   <div className="live-indicator">
   <div className="live-row">
-    <span className="live-texts">LIVE</span>
+    <span className="live-texts"></span>
     <span className="live-dot"></span>
   </div>
 
@@ -335,10 +318,10 @@ useEffect(() => {
                 <div className="live-indicator">
                   <div className="live-rows">
                   <span className="live-dot" style={{ background: '#dc3545' }}></span>
-                 <span className='live-text'>OFFLINE</span> 
+                 <span className='live-text'></span> 
                 </div>
                <span className="time">
-      LAST SEEN {formatLastSeen(lastSeen)}
+       {formatLastSeen(lastSeen)}
     </span>
     
                 </div>

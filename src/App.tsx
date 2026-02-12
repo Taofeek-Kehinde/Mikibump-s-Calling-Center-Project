@@ -16,7 +16,7 @@ function App(): JSX.Element {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [decorationVisible, setDecorationVisible] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
-  const fullText = "Welcome to Mikibump's Booking Center";
+  const fullText = '';
 
   useEffect(() => {
     const startTyping = () => {
