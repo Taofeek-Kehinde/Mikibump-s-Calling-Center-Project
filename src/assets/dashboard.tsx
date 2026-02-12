@@ -195,17 +195,33 @@ useEffect(() => {
 
   // Typing animation for live hint text
 
-  // Track user interaction
+  // Track user interaction, sync across tabs
   useEffect(() => {
     const handleInteraction = () => {
       setUserHasInteracted(true);
+      localStorage.setItem('userHasInteracted', 'true');
     };
 
+    // Check localStorage on mount
+    const saved = localStorage.getItem('userHasInteracted');
+    if (saved === 'true') {
+      setUserHasInteracted(true);
+    }
+
+    // Listen to storage changes for cross-tab sync
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'userHasInteracted' && e.newValue === 'true') {
+        setUserHasInteracted(true);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
     document.addEventListener('click', handleInteraction);
     document.addEventListener('keydown', handleInteraction);
     document.addEventListener('touchstart', handleInteraction);
 
     return () => {
+      window.removeEventListener('storage', handleStorageChange);
       document.removeEventListener('click', handleInteraction);
       document.removeEventListener('keydown', handleInteraction);
       document.removeEventListener('touchstart', handleInteraction);
