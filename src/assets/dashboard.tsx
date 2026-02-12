@@ -23,6 +23,8 @@ function Dashboard() {
   const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [pulse, setPulse] = useState(true);
+  const [typedText, setTypedText] = useState('');
+
   const { 
     isLive, 
     setIsLive, 
@@ -170,6 +172,25 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, [images.length]);
 
+  // Typing animation for live hint text
+  useEffect(() => {
+    const fullText = isLive
+      ? "Tap the button to to join LIVE "
+      : "We are OFFLINE, we will get back to you soon!";
+
+    let index = 0;
+
+    const typeInterval = setInterval(() => {
+      setTypedText(fullText.slice(0, index + 1));
+      index++;
+      if (index === fullText.length) {
+        clearInterval(typeInterval);
+      }
+    }, 100); // Typing speed
+
+    return () => clearInterval(typeInterval);
+  }, [isLive]);
+
   return (
     <div className="dashboard">
       {/* Background with zoom animation and crossfade */}
@@ -208,9 +229,7 @@ useEffect(() => {
     className={`live-hint-text ${isLive ? "live" : "offline"}`}
     key={isLive ? "live" : "offline"} // optional, triggers re-render
   >
-    {isLive
-      ? "Click the LIVE button to fill the form"
-      : "We are currently OFFLINE, we will get back to you as soon as possible"}
+    {typedText}
   </div>
 </div>
 

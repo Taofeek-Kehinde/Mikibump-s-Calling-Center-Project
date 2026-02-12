@@ -742,7 +742,6 @@ pointer-events: auto;
   font-weight: 600;
   color: #28a745;
   text-shadow: 0 0 6px rgba(40, 167, 69, 0.6);
-  animation: slideHint 8s linear infinite;
 }
 
 
@@ -776,7 +775,6 @@ pointer-events: auto;
   padding: 5px 10px;
   font-weight: 600;
   font-size: 14px;
-  animation: slide-right-to-left 10s linear infinite;
   text-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 

@@ -62,10 +62,10 @@ const handleGoOffline = () => {
 }
 
 const handleMusicUpload = (fileName: string) => {
-  // Only store the URL string in Firebase
+  // Store the URL and playing status in Firebase
   const url = `/music/${fileName}`;
-  set(ref(db, 'currentMusic'), url)
-    .then(() => alert(`Music set: ${fileName}`))
+  set(ref(db, 'music'), { url, playing: true })
+    .then(() => showAlert(`Music set: ${fileName}`, 'success'))
     .catch(err => console.error(err));
 };
 
@@ -90,6 +90,7 @@ const handleMusicUpload = (fileName: string) => {
 
 
   const handleStopMusic = () => {
+    set(ref(db, 'music/playing'), false);
     stopAudio();
   };
 
