@@ -227,13 +227,6 @@ useEffect(() => {
     };
   }, []);
 
-  // Automatically allow interaction when live to enable music autoplay
-  useEffect(() => {
-    if (isLive) {
-      setUserHasInteracted(true);
-    }
-  }, [isLive]);
-
   return (
     <div className="dashboard">
       {/* Background with zoom animation and crossfade */}
