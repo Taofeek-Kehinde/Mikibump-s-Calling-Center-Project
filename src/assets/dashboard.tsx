@@ -44,6 +44,7 @@ function Dashboard() {
     // isCountdownActive,
     setIsCountdownActive
   } = useAppContext();
+
   const prevIsLiveRef = useRef(isLive);
 const formatTime = (time: number) => {
   const m = Math.floor(time / 60);
@@ -54,7 +55,17 @@ const formatTime = (time: number) => {
 };
 
 
-  useEffect(() => {
+const formatOfflineTime = (time: number) => {
+  const h = Math.floor(time / 3600);
+  const m = Math.floor((time % 3600) / 60);
+  const s = time % 60;
+
+  return `${h}:${m.toString().padStart(2, "0")}:${s
+    .toString()
+    .padStart(2, "0")}`;
+};
+
+useEffect(() => {
   const musicRef = ref(db, "music");
 
   return onValue(musicRef, (snap) => {
@@ -335,7 +346,7 @@ useEffect(() => {
                 <div className="live-indicator">
                   <div className="live-rows">
                     <span className="live-dot" style={{ background: '#dc3545' }}></span>
-                    <span className="time">{formatTime(offlineElapsedTime)}</span>
+                    <span className="time">{formatOfflineTime(offlineElapsedTime)}</span>
                   </div>
                 </div>
               </motion.div>
@@ -397,6 +408,11 @@ useEffect(() => {
         </motion.form>
 
       </motion.div>
+
+  <div className="global-footer">
+  ©️ MIKI +2349033666403
+</div>
+
     </div>
   );
 }

@@ -10,6 +10,7 @@ import Form from './pages/Form.tsx';
 import EnhancedChat from './components/EnhancedChat.tsx';
 // import { useAppContext } from './context/AppContext';
 import type { JSX } from 'react';
+import Canyform from './pages/canyform.tsx';
 
 function App(): JSX.Element {
   const [typedText, setTypedText] = useState('');
@@ -60,6 +61,7 @@ function App(): JSX.Element {
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin" element={<AdminLogin />} />
       <Route path="/form" element={<Form />} />
+      <Route path="/canyform" element={<Canyform />} />
       <Route path="/chat" element={<EnhancedChat />} />
       <Route path="/" element={
         <div>

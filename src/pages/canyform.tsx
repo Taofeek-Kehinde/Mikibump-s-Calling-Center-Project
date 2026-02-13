@@ -7,7 +7,6 @@ import { showAlert } from '../utils/showAlert';
 import { useAppContext } from '../context/useAppContext';
 import './Form.css';
 
-
 interface FormData {
   yourName: string;
   yourContact: string;
@@ -101,7 +100,7 @@ function Form() {
         }),
       });
 
-      showAlert('Message sent Successfully, we will get back to you soon', 'success');
+      showAlert('CANDY sent Successfully, we will get back to you soon', 'success');
       // Navigate to dashboard after successful submission
       setTimeout(() => {
         navigate('/');
@@ -125,7 +124,7 @@ function Form() {
     }, 500);
   };
 
-  const noteWords = formData.note.trim().split(/\s+/).filter(word => word.length > 0).length;
+  // const noteWords = formData.note.trim().split(/\s+/).filter(word => word.length > 0).length;
 
   useEffect(() => {
     if (backgroundImages.length === 0) return;
@@ -178,7 +177,7 @@ function Form() {
         {/* Back Button */}
         <motion.button
           className="back-btn"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(-2)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           title="Go back"
@@ -187,18 +186,7 @@ function Form() {
           Back
         </motion.button>
 
-
-        <motion.button
-    className="cany-btn"
-    onClick={() => navigate('/canyform')}
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    title="Open Cany Form"
-  >
-    Free Candy →
-  </motion.button>
-
-        <h1 className="form-title">BOOK YOUR FREE CALLS</h1>
+        <h1 className="form-title">SAY IT WITH CANDY. NO WORDS NEEDED</h1>
 
         <form onSubmit={handleSubmit}>
           {/* Your Details Section */}
@@ -271,28 +259,12 @@ function Form() {
                 name="recipientContact"
                 value={formData.recipientContact}
                 onChange={handleChange}
-                placeholder="Phone number"
+                placeholder="Whatsapp number "
                 className={errors.recipientContact ? 'error' : ''}
               />
               {errors.recipientContact && <span className="error-text">{errors.recipientContact}</span>}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="note">Note</label>
-              <textarea
-                id="note"
-                name="note"
-                value={formData.note}
-                onChange={handleChange}
-                placeholder="Your message (maximum 15 words)"
-                className={errors.note ? 'error' : ''}
-                rows={3}
-              />
-              <span className={`word-count ${noteWords > 15 ? 'exceeded' : ''}`}>
-                {noteWords} / 15 words
-              </span>
-              {errors.note && <span className="error-text">{errors.note}</span>}
-            </div>
           </motion.div>
 
           {/* Relationship Section */}
@@ -302,7 +274,7 @@ function Form() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h2 className="section-title">RELATIONSHIP</h2>
+            <h2 className="section-title">CANDY INTENTION/GIFT</h2>
             
             <div className="relationship-options">
               <motion.button
@@ -312,7 +284,7 @@ function Form() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="relationship-emoji">❤️</span>
+                <span className="relationship-emoji">🔴</span>
                 <span>Love</span>
               </motion.button>
               
@@ -323,7 +295,7 @@ function Form() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="relationship-emoji">🧡</span>
+                <span className="relationship-emoji">🟡</span>
                 <span>Friend</span>
               </motion.button>
             </div>
@@ -336,7 +308,7 @@ function Form() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h2 className="section-title">SELECT TIME OF CALL</h2>
+            <h2 className="section-title">SELECT TIME WE REVEAL YOUR IDENTITY</h2>
             
             <div className="form-group">
               <div className="time-options">
@@ -368,8 +340,9 @@ function Form() {
             transition={{ delay: 0.5 }}
           >
             <FontAwesomeIcon icon={faHeart} />
-            SUBMIT
+            SUBMIT CANDY
           </motion.button>
+          <p className='statement'>(NB: CANDY will be delivered 6am to Recipient WhatsApp,  while your IDENTITY will be revealed at the time you selected)</p>
         </form>
       </motion.div>
     </motion.div>
