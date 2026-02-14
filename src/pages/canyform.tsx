@@ -12,7 +12,6 @@ interface FormData {
   yourContact: string;
   recipientName: string;
   recipientContact: string;
-  note: string;
   relationship: 'CHOCOLATE' | 'LOLLIPOP';
   callTime: string;
 }
@@ -25,7 +24,6 @@ function Form() {
     yourContact: '',
     recipientName: '',
     recipientContact: '',
-    note: '',
     relationship: 'CHOCOLATE',
     callTime: '',
   });
@@ -39,15 +37,7 @@ function Form() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
-    // Limit note to 15 words - block input if exceeding limit
-    if (name === 'note') {
-      const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
-      if (wordCount > 15) {
-        // Silently reject input - don't update state or show alert
-        return;
-      }
-    }
+  
 
     setFormData(prev => ({
       ...prev,
@@ -70,7 +60,6 @@ function Form() {
     if (!formData.yourContact.trim()) newErrors.yourContact = 'Contact is required';
     if (!formData.recipientName.trim()) newErrors.recipientName = 'Recipient name is required';
     if (!formData.recipientContact.trim()) newErrors.recipientContact = 'Recipient contact is required';
-    if (!formData.note.trim()) newErrors.note = 'Note is required';
     if (!formData.callTime) newErrors.callTime = 'Call time is required';
 
     setErrors(newErrors);
@@ -97,7 +86,6 @@ function Form() {
           yourContact: formData.yourContact,
           recipientName: formData.recipientName,
           recipientContact: formData.recipientContact,
-          note: formData.note,
           relationship: formData.relationship,
           callTime: formData.callTime,
         }),
@@ -120,9 +108,8 @@ function Form() {
         yourContact: '',
         recipientName: '',
         recipientContact: '',
-        note: '',
         relationship: 'CHOCOLATE',
-        callTime: '',
+        callTime: ''
       });
     }, 500);
   };
@@ -233,20 +220,6 @@ function Form() {
               {errors.recipientContact && <span className="error-text">{errors.recipientContact}</span>}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="note">Note (max 15 words)</label>
-              <textarea
-                id="note"
-                name="note"
-                value={formData.note}
-                onChange={handleChange}
-                placeholder="Write a sweet message..."
-                className={errors.note ? 'error' : ''}
-                rows={3}
-              />
-              {errors.note && <span className="error-text">{errors.note}</span>}
-              <span className="help-text">{formData.note.trim().split(/\s+/).filter(word => word.length > 0).length}/15 words</span>
-            </div>
 
           </motion.div>
 

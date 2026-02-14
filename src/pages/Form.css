@@ -63,22 +63,20 @@
 }
 
 
-.form-titless{
+.form-titless {
   font-size: 2.2rem;
   font-weight: 700;
   color: #fff;
   text-align: center;
-  /* text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); */
   margin-bottom: 40px;
-  font-family: '';
-  margin-top: 30px;
+  margin-top: clamp(70px, 12vw, 110px);
   background: linear-gradient(45deg, #f1ecec, #444, #666);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-    font-family: 'Dancing script', cursive;
-}
 
+  font-family: 'Dancing Script', cursive;
+}
 form {
   display: flex;
   flex-direction: column;
@@ -449,35 +447,43 @@ form {
 
 .cany-btn {
   position: absolute;
-  top: 12px;
-  right: 20px;
+  top: 1rem;          /* instead of 12px */
+  right: 1.2rem;     /* instead of 20px */
+
   background: rgb(236, 156, 8);
   border: none;
   color: #fff;
-  padding: 10px 18px;
+
+  width: clamp(48px, 8vw, 70px);
+  height: clamp(48px, 8vw, 70px);
+  font-size: clamp(0.7rem, 2vw, 0.9rem);
+
   border-radius: 50%;
-  height: 70px;
-  width: 70px;
-  font-size: 0.9rem;
   cursor: pointer;
   font-weight: 600;
+
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
-   animation: candy 1.5s ease-in-out infinite;
-   font-family: 'Dansing script', cursive;
-}
+  animation: candy 1.5s ease-in-out infinite;
 
+  font-family: 'Dancing Script', cursive;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 @keyframes candy {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 15px rgba(243, 159, 3, 0.6);
+    box-shadow: 0 0 10px rgba(243, 159, 3, 0.6);
   }
   50% {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
   }
 }
+
 
 .cany-btn:hover {
   transform: translateY(-1px) scale(1.05);
