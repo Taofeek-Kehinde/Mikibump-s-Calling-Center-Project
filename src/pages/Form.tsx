@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faHeart } from '@fortawesome/free-solid-svg-icons';
+import {  faHeart } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 import { useAppContext } from '../context/useAppContext';
 import './Form.css';
@@ -174,20 +174,7 @@ function Form() {
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-      >
-        {/* Back Button */}
-        <motion.button
-          className="back-btn"
-          onClick={() => navigate(-1)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          title="Go back"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} />
-          Back
-        </motion.button>
-
-
+      >     
         <motion.button
     className="cany-btn"
     onClick={() => navigate('/canyform')}
@@ -195,7 +182,7 @@ function Form() {
     whileTap={{ scale: 0.95 }}
     title="Open Cany Form"
   >
-    Free Candy →
+    Free Candy 
   </motion.button>
 
         <h1 className="form-title">BOOK YOUR FREE CALLS</h1>

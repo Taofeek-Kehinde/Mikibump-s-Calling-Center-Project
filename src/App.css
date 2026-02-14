@@ -10,7 +10,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #ffffff 0%, #efefef 50%, #f5f5f5 100%);
+  background: rgb(236, 156, 8);
   padding: 20px;
   overflow: hidden;
   position: relative;
@@ -55,7 +55,7 @@
   }
 }
 
-.subtitle {
+/* .subtitle {
   font-family: 'Arial', sans-serif;
   font-size: 1.2rem;
   color: #222;
@@ -63,12 +63,11 @@
   max-width: 500px;
   line-height: 1.6;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.8);
   border-radius: 20px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-}
+} */
 
 .decoration {
   display: flex;

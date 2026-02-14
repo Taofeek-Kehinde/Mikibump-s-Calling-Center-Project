@@ -30,7 +30,7 @@ function App(): JSX.Element {
           clearInterval(timer);
           setIsTypingComplete(true);
         }
-      }, 50);
+      }, 60);
     };
 
     const delayTimer = setTimeout(startTyping, 0);
@@ -51,7 +51,7 @@ function App(): JSX.Element {
       // Wait 1 second after typing completes, then show dashboard
       const timer = setTimeout(() => {
         setShowDashboard(true);
-      }, 1000);
+      }, 15000);
       return () => clearTimeout(timer);
     }
   }, [isTypingComplete]);

@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState,useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
-import { useAppContext } from '../context/useAppContext';
-import './Form.css';
+// import { useAppContext } from '../context/useAppContext';
+import './candyform.css';
 
 interface FormData {
   yourName: string;
@@ -13,24 +13,27 @@ interface FormData {
   recipientName: string;
   recipientContact: string;
   note: string;
-  relationship: 'love' | 'friend';
+  relationship: 'CHOCOLATE' | 'LOLLIPOP';
   callTime: string;
 }
 
 function Form() {
+
   const navigate = useNavigate();
-  const { backgroundImages } = useAppContext();
-  const [bgIndex, setBgIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     yourName: '',
     yourContact: '',
     recipientName: '',
     recipientContact: '',
     note: '',
-    relationship: 'love',
+    relationship: 'CHOCOLATE',
     callTime: '',
   });
+
+  useEffect(() => {
+  document.body.classList.add('candyform-page');
+  return () => document.body.classList.remove('candyform-page');
+}, []);
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
 
@@ -118,7 +121,7 @@ function Form() {
         recipientName: '',
         recipientContact: '',
         note: '',
-        relationship: 'love',
+        relationship: 'CHOCOLATE',
         callTime: '',
       });
     }, 500);
@@ -126,50 +129,15 @@ function Form() {
 
   // const noteWords = formData.note.trim().split(/\s+/).filter(word => word.length > 0).length;
 
-  useEffect(() => {
-    if (backgroundImages.length === 0) return;
-
-    const displayTime = 3700; // display image for 3.7s
-    const fadeTime = 300; // fade for 0.3s
-    const totalCycle = displayTime + fadeTime; // 4s total
-
-    const interval = setInterval(() => {
-      setIsFading(true); // start fade
-      setTimeout(() => {
-        setBgIndex(i => (i + 1) % backgroundImages.length); // change image
-        setIsFading(false); // fade in
-      }, fadeTime);
-    }, totalCycle);
-
-    return () => clearInterval(interval);
-  }, [backgroundImages]);
-
   return (
     <motion.div
-      className="form-container"
+      className="form-containers"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Background carousel */}
-      {backgroundImages.length > 0 && (
-        <div className="form-background-carousel">
-          {backgroundImages.map((image: string, index: number) => (
-            <div
-              key={index}
-              className="form-background-image"
-              style={{
-                backgroundImage: `url(${image})`,
-                opacity: index === bgIndex ? (isFading ? 0 : 1) : (index === (bgIndex + 1) % backgroundImages.length && isFading ? 1 : 0),
-              }}
-            />
-          ))}
-          <div className="form-image-overlay"></div>
-        </div>
-      )}
-
       <motion.div
-        className="form-panel"
+        className="form-panels"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -279,24 +247,24 @@ function Form() {
             <div className="relationship-options">
               <motion.button
                 type="button"
-                className={`relationship-btn ${formData.relationship === 'love' ? 'active' : ''}`}
-                onClick={() => setFormData(prev => ({ ...prev, relationship: 'love' }))}
+                className={`relationship-btn ${formData.relationship === 'CHOCOLATE' ? 'active' : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, relationship: 'CHOCOLATE' }))}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <span className="relationship-emoji">🔴</span>
-                <span>Love</span>
+                <span>CHOCOLATE</span>
               </motion.button>
               
               <motion.button
                 type="button"
-                className={`relationship-btn ${formData.relationship === 'friend' ? 'active' : ''}`}
-                onClick={() => setFormData(prev => ({ ...prev, relationship: 'friend' }))}
+                className={`relationship-btn ${formData.relationship === 'LOLLIPOP' ? 'active' : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, relationship: 'LOLLIPOP' }))}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <span className="relationship-emoji">🟡</span>
-                <span>Friend</span>
+                <span>LOLLIPOP</span>
               </motion.button>
             </div>
           </motion.div>
