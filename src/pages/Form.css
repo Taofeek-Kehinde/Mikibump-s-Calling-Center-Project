@@ -495,3 +495,19 @@ form {
   color: #555;
   text-align: center;
 }
+
+.hand {
+  font-size: 1.6rem;
+  color: orange;
+  transform-origin: center;
+  margin-right: 120px;
+  position: absolute;
+  animation: hand-point 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+}
+
+@keyframes hand-point {
+  0% { transform: rotate(12deg); }
+  50% { transform: rotate(-12deg); }
+  100% { transform: rotate(12deg); }
+}

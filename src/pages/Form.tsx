@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faHeart } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 import { useAppContext } from '../context/useAppContext';
+import { faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import './Form.css';
 
 
@@ -181,7 +182,13 @@ function Form() {
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
     title="Open Cany Form"
+
+    
   >
+
+    <FontAwesomeIcon icon={faHandPointRight} className="hand" />
+
+
     Free Candy 
   </motion.button>
 
