@@ -233,6 +233,21 @@ function Form() {
               {errors.recipientContact && <span className="error-text">{errors.recipientContact}</span>}
             </div>
 
+            <div className="form-group">
+              <label htmlFor="note">Note (max 15 words)</label>
+              <textarea
+                id="note"
+                name="note"
+                value={formData.note}
+                onChange={handleChange}
+                placeholder="Write a sweet message..."
+                className={errors.note ? 'error' : ''}
+                rows={3}
+              />
+              {errors.note && <span className="error-text">{errors.note}</span>}
+              <span className="help-text">{formData.note.trim().split(/\s+/).filter(word => word.length > 0).length}/15 words</span>
+            </div>
+
           </motion.div>
 
           {/* Relationship Section */}
