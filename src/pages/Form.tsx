@@ -185,7 +185,7 @@ function Form() {
     Free Candy 
   </motion.button>
 
-        <h1 className="form-title">BOOK YOUR FREE CALLS</h1>
+        <h1 className="form-titless">BOOK YOUR FREE CALLS</h1>
 
         <form onSubmit={handleSubmit}>
           {/* Your Details Section */}
