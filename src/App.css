@@ -10,7 +10,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: rgb(236, 156, 8);
+  background: orange;
   padding: 20px;
   overflow: hidden;
   position: relative;
@@ -19,7 +19,7 @@
 .mikibumps-title {
   font-family: 'Dancing Script', cursive;
   font-size: 5rem;
-  font-weight: 700;
+  font-weight: 900;
   color: #111;
   text-shadow: 
     0 2px 5px rgba(0, 0, 0, 0.05),

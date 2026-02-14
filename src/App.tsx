@@ -51,7 +51,7 @@ function App(): JSX.Element {
       // Wait 1 second after typing completes, then show dashboard
       const timer = setTimeout(() => {
         setShowDashboard(true);
-      }, 15000);
+      }, 9000);
       return () => clearTimeout(timer);
     }
   }, [isTypingComplete]);

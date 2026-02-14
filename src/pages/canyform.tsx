@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useState,useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 // import { useAppContext } from '../context/useAppContext';
 import './candyform.css';
@@ -252,7 +252,7 @@ function Form() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="relationship-emoji">🔴</span>
+                <span className="relationship-emoji">🟤</span>
                 <span>CHOCOLATE</span>
               </motion.button>
               
@@ -307,7 +307,7 @@ function Form() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <FontAwesomeIcon icon={faHeart} />
+            <FontAwesomeIcon icon={faCircle} />
             SUBMIT CANDY
           </motion.button>
           <p className='statement'>(NB: CANDY will be delivered 6am to Recipient WhatsApp,  while your IDENTITY will be revealed at the time you selected)</p>
