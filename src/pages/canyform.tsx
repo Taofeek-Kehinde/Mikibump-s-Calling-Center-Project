@@ -257,7 +257,7 @@ function Form() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h2 className="section-title">CANDY INTENTION/GIFT</h2>
+            <h2 className="section-title">SELECT CANDY TYPE</h2>
             
             <div className="relationship-options">
               <motion.button
@@ -323,7 +323,7 @@ function Form() {
             transition={{ delay: 0.5 }}
           >
             <FontAwesomeIcon icon={faCircle} />
-            SUBMIT CANDY
+            CANDY IT
           </motion.button>
           <p className='statement'>(NB: CANDY will be delivered 6am to Recipient WhatsApp,  while your IDENTITY will be revealed at the time you selected)</p>
         </form>
