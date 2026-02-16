@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "./view.css";
+import "./View.css";
 
 export default function View() {
   const { id } = useParams();
