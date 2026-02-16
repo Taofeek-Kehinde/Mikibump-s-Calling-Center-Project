@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase2";
 import "./Qrform.css";
 
 export default function Qrform() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [note, setNote] = useState("");
