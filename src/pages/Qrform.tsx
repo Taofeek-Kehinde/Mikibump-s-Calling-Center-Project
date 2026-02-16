@@ -13,7 +13,7 @@ export default function Qrform() {
 
   const [savedData, setSavedData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess] = useState(false);
   const [isChecking, setIsChecking] = useState(true); 
 
  
