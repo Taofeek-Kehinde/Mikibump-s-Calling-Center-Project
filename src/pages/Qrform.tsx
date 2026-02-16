@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase2";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./Qrform.css";
 
 export default function Qrform() {
@@ -11,7 +11,7 @@ export default function Qrform() {
     const [name, setName] = useState("");
     const [contact, setContact] = useState("");
     const [note, setNote] = useState("");
-    const [images, setImages] = useState<File[]>([]);
+    // const [images, setImages] = useState<File[]>([]);
     const [savedData, setSavedData] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -91,17 +91,17 @@ export default function Qrform() {
 
         setIsSubmitting(true);
 
-        try {
-            const storage = getStorage(); 
-            const uploadedUrls: string[] = [];
+        // try {
+        //     const storage = getStorage(); 
+        //     const uploadedUrls: string[] = [];
 
-            // Upload images if any
-            for (let img of images) {
-                const imgRef = ref(storage, `submissions/${id}/${Date.now()}_${img.name}`);
-                await uploadBytes(imgRef, img);
-                const url = await getDownloadURL(imgRef);
-                uploadedUrls.push(url);
-            }
+        //     // Upload images if any
+        //     for (let img of images) {
+        //         const imgRef = ref(storage, `submissions/${id}/${Date.now()}_${img.name}`);
+        //         await uploadBytes(imgRef, img);
+        //         const url = await getDownloadURL(imgRef);
+        //         uploadedUrls.push(url);
+        //     }
 
             // Save to Firestore
             const docRef = doc(db, "submissions", id!);
@@ -110,7 +110,7 @@ export default function Qrform() {
                 name,
                 contact,
                 note,
-                images: uploadedUrls,
+                // images: uploadedUrls,
                 submittedAt: Date.now(),
             });
 
@@ -121,15 +121,15 @@ export default function Qrform() {
                 name,
                 contact,
                 note,
-                images: uploadedUrls
+                // images: uploadedUrls
             });
 
-        } catch (err) {
-            console.error(err);
-            alert("Error submitting form. Please try again.");
-        } finally {
-            setIsSubmitting(false);
-        }
+        // } catch (err) {
+        //     console.error(err);
+        //     alert("Error submitting form. Please try again.");
+        // } finally {
+        //     setIsSubmitting(false);
+        // }
     };
 
 
@@ -167,7 +167,7 @@ export default function Qrform() {
                         />
                     </div>
 
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label>Upload Images</label>
                         <input
                             type="file"
@@ -175,7 +175,7 @@ export default function Qrform() {
                             accept="image/*"
                             onChange={(e) => setImages([...e.target.files!])}
                         />
-                    </div>
+                    </div> */}
 
                     <button type="submit" className="submit-btn" disabled={isSubmitting}>
                         {isSubmitting ? "Submitting..." : "Submit"}
