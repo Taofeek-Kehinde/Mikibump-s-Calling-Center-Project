@@ -87,7 +87,7 @@ export default function Qrform() {
         <div className="success-content">
           <h2>✓ Thank You!</h2>
           <p>Your response has been submitted successfully.</p>
-          <p className="close-message">This window will close automatically...</p>
+          {/* <p className="close-message">This window will close automatically...</p> */}
         </div>
       </div>
     );
