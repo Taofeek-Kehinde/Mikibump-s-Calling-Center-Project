@@ -13,7 +13,7 @@ export default function Qrform() {
 
   const [savedData, setSavedData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isChecking, setIsChecking] = useState(true); 
 
  
@@ -68,11 +68,11 @@ export default function Qrform() {
         submittedAt: Date.now(),
       });
 
-    //   setIsSuccess(true);
+      setIsSuccess(true);
 
-    //   setTimeout(() => {
-    //     window.close();
-    //   }, 2000);
+      setTimeout(() => {
+        // window.close();
+      }, 2000);
 
     } catch (err) {
       console.error(err);
