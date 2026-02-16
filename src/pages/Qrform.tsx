@@ -6,59 +6,39 @@ import "./Qrform.css";
 
 export default function Qrform() {
   const { id } = useParams();
+
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [note, setNote] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
   const [savedData, setSavedData] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isChecking, setIsChecking] = useState(true); 
 
-  // 🔍 Load existing data for this QR
+ 
   useEffect(() => {
-    const loadData = async () => {
+    const checkQR = async () => {
       if (!id) return;
+
       const ref = doc(db, "submissions", id);
       const snap = await getDoc(ref);
 
       if (snap.exists()) {
-        setSavedData(snap.data());
+        setSavedData(snap.data()); 
       }
+
+      setIsChecking(false);
     };
-    loadData();
+
+    checkQR();
   }, [id]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !contact) return alert("Please fill in required fields");
+  if (isChecking) {
+    return null; 
+  }
 
-    setIsSubmitting(true);
-    try {
-      const ref = doc(db, "submissions", id!);
 
-      await setDoc(ref, {
-        name,
-        contact,
-        note,
-        submittedAt: Date.now()
-      });
-
-      setSavedData({ name, contact, note });
-      setIsSuccess(true);
-
-      setTimeout(() => {
-        window.close();
-      }, 2000);
-
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("This QR has already been filled.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // 🔒 SHOW SAVED DATA INSTEAD OF FORM
   if (savedData) {
     return (
       <div className="qrform-container">
@@ -72,7 +52,35 @@ export default function Qrform() {
     );
   }
 
-  // 🎉 SUCCESS MESSAGE
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !contact) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const ref = doc(db, "submissions", id!);
+
+      await setDoc(ref, {
+        name,
+        contact,
+        note,
+        submittedAt: Date.now(),
+      });
+
+      setIsSuccess(true);
+
+      setTimeout(() => {
+        window.close();
+      }, 2000);
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (isSuccess) {
     return (
       <div className="qrform-success">
@@ -85,6 +93,7 @@ export default function Qrform() {
     );
   }
 
+
   return (
     <div className="qrform-container">
       <div className="qrform-card">
@@ -96,7 +105,6 @@ export default function Qrform() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
               required
             />
           </div>
@@ -107,7 +115,6 @@ export default function Qrform() {
               type="tel"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
-              placeholder="Enter your phone number"
               required
             />
           </div>
@@ -117,7 +124,6 @@ export default function Qrform() {
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Any additional notes..."
               rows={3}
             />
           </div>
