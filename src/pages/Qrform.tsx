@@ -43,7 +43,7 @@ export default function Qrform() {
     return (
       <div className="qrform-container">
         <div className="qrform-card">
-          <h2>Talkin Candy Message</h2>
+          <h2>TALK IN CANDY</h2>
           <p><b>NAME:</b> {savedData.name}</p>
           <p><b>CONTACT:</b> {savedData.contact}</p>
           <p><b>NOTE:</b> {savedData.note}</p>
