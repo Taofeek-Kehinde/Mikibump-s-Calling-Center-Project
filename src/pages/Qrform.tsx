@@ -47,7 +47,7 @@ export default function Qrform() {
                 <div className="success-content">
                     <h2>✓ Thank You!</h2>
                     <p className="mess">Your response has been submitted successfully.</p>
-                    <p className="mess">Scan the QR code again to view your submitted details.</p>
+                    {/* <p className="mess">Scan the QR code again to view your submitted details.</p> */}
                 </div>
             </div>
         );
