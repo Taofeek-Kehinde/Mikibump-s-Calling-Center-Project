@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { v4 as uuidv4 } from "uuid";
-import "./qrcode.css";
+import "./Qrcode.css";
 
 export default function Qrcode() {
   const [batchId, setBatchId] = useState("");
