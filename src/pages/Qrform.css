@@ -1,0 +1,223 @@
+.qrform-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.qrform-card {
+  width: 100%;
+  max-width: 450px;
+  background: darkblue;
+  color: white;
+  backdrop-filter: blur(20px);
+  border-radius: 30px;
+  padding: 40px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.qrform-card h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 30px;
+  font-family: 'Dancing Script', cursive;
+  background: linear-gradient(45deg, #f1ecec, #ccc, #999);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.qrform-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 14px 18px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #fff;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.submit-btn {
+  padding: 16px 40px;
+  font-family: 'Dancing Script', cursive;
+  background: linear-gradient(135deg, #e94560 0%, #c2335d 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(233, 69, 96, 0.4);
+  margin-top: 10px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  box-shadow: 0 15px 35px rgba(233, 69, 96, 0.5);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Success State */
+.qrform-success {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.success-content {
+  text-align: center;
+  background: darkblue;
+  backdrop-filter: blur(20px);
+  border-radius: 30px;
+  padding: 60px 40px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 400px;
+}
+
+.success-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4ade80;
+  margin-bottom: 20px;
+  font-family: 'Dancing Script', cursive;
+}
+
+.success-content p {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.close-message {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6) !important;
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .qrform-card {
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+
+  .qrform-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+  }
+
+  .success-content {
+    padding: 40px 25px;
+    border-radius: 20px;
+  }
+
+  .success-content h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .qrform-card {
+    padding: 25px 15px;
+    border-radius: 15px;
+  }
+
+  .qrform-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+
+  .submit-btn {
+    padding: 14px 30px;
+    font-size: 1.1rem;
+  }
+
+  .success-content {
+    padding: 30px 20px;
+    border-radius: 15px;
+  }
+
+  .success-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .success-content p {
+    font-size: 1rem;
+  }
+}
