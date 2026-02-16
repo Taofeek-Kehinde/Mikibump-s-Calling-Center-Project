@@ -68,11 +68,11 @@ export default function Qrform() {
         submittedAt: Date.now(),
       });
 
-      setIsSuccess(true);
+    //   setIsSuccess(true);
 
-      setTimeout(() => {
-        window.close();
-      }, 2000);
+    //   setTimeout(() => {
+    //     window.close();
+    //   }, 2000);
 
     } catch (err) {
       console.error(err);
@@ -86,7 +86,7 @@ export default function Qrform() {
       <div className="qrform-success">
         <div className="success-content">
           <h2>✓ Thank You!</h2>
-          <p>Your response has been submitted successfully.</p>
+          <p className="mess">Your response has been submitted successfully.</p>
           {/* <p className="close-message">This window will close automatically...</p> */}
         </div>
       </div>
