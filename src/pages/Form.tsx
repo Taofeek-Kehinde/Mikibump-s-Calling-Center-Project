@@ -180,7 +180,7 @@ function Form() {
               {/* Back Button */}
         <motion.button
           className="back-btn"
-          onClick={() => navigate(-3)}
+          onClick={() => navigate(-2)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           title="Go back"

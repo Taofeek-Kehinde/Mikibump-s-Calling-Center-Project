@@ -61,15 +61,15 @@
   transform: translateY(-2px);
 }
 
-.form-titles {
+.form-titless {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #fff;
+  color: #000;
   text-align: center;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
   margin-bottom: 40px;
   margin-top: 30px;
-  background: linear-gradient(45deg, #070505, #050505, #0c0c0c);
+  background: linear-gradient(45deg, #000000, #000000, #000000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
