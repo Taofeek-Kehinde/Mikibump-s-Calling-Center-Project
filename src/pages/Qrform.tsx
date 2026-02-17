@@ -130,30 +130,32 @@ export default function Qrform() {
   e.preventDefault();
   if (!id || isSubmitting) return;
 
+  if (!name.trim() || !contact.trim()) {
+    alert("Name and Contact are required.");
+    return;
+  }
+
   setIsSubmitting(true);
 
   try {
-    
     const docRef = doc(db, "submissions", id);
-
     const snap = await getDoc(docRef);
-
 
     if (snap.exists()) {
       setSavedData(snap.data());
-      setIsSubmitting(false);
       return;
     }
 
- 
+   
     const payload: any = {
       submittedAt: Date.now(),
     };
 
-    if (name && name.trim()) payload.name = name.trim();
-    if (contact && contact.trim()) payload.contact = contact.trim();
-    if (note && note.trim()) payload.note = note.trim();
-    if (url && url.trim()) payload.url = url.trim();
+    payload.name = name.trim();
+    payload.contact = contact.trim();
+
+    if (note.trim()) payload.note = note.trim();
+    if (url.trim()) payload.url = url.trim();
 
     await setDoc(docRef, payload);
 
