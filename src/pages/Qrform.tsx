@@ -17,7 +17,7 @@ export default function Qrform() {
     const [savedData, setSavedData] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const [, setJustSubmitted] = useState(false);
+    const [] = useState(false);
     const [isChecking, setIsChecking] = useState(true);
 
 
@@ -124,40 +124,46 @@ export default function Qrform() {
             </div>
         );
     }
-    const handleSubmit = async (e: React.FormEvent) => {
-        // Prevent default first to stop page refresh
-        e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!id || isSubmitting) return;
 
-        setIsSubmitting(true);
+  setIsSubmitting(true);
+
+  try {
+    
+    const docRef = doc(db, "submissions", id);
+
+    const snap = await getDoc(docRef);
 
 
-        // Save to Firestore
-        const docRef = doc(db, "submissions", id!);
+    if (snap.exists()) {
+      setSavedData(snap.data());
+      setIsSubmitting(false);
+      return;
+    }
 
-        await setDoc(docRef, {
-            name: name || "",
-            contact: contact || "",
-            note: note || "",
-            url: url || "",
-            submittedAt: Date.now(),
-        });
-        // Show success message and update saved data
-        setIsSuccess(true);
-        setJustSubmitted(true);
-        setSavedData({
-            name,
-            contact,
-            note,
-            url,
-        });
-
-        // } catch (err) {
-        //     console.error(err);
-        //     alert("Error submitting form. Please try again.");
-        // } finally {
-        //     setIsSubmitting(false);
-        // }
+ 
+    const payload: any = {
+      submittedAt: Date.now(),
     };
+
+    if (name && name.trim()) payload.name = name.trim();
+    if (contact && contact.trim()) payload.contact = contact.trim();
+    if (note && note.trim()) payload.note = note.trim();
+    if (url && url.trim()) payload.url = url.trim();
+
+    await setDoc(docRef, payload);
+
+    setIsSuccess(true);
+    setSavedData(payload);
+  } catch (err) {
+    console.error(err);
+    alert("Submission failed");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
 
     return (
