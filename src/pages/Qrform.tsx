@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase2";
-// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./Qrform.css";
 
 export default function Qrform() {
@@ -11,14 +11,13 @@ export default function Qrform() {
     const [name, setName] = useState("");
     const [contact, setContact] = useState("");
     const [note, setNote] = useState("");
-    // const [images, setImages] = useState<File[]>([]);
+    const [images, setImages] = useState<File[]>([]);
     const [savedData, setSavedData] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [, setJustSubmitted] = useState(false);
+    const [, setIsSuccess] = useState(false);
     const [isChecking, setIsChecking] = useState(true);
 
-
+    // Check if submission exists
     useEffect(() => {
         const checkQR = async () => {
             if (!id) return;
@@ -36,29 +35,14 @@ export default function Qrform() {
         checkQR();
     }, [id]);
 
-    if (isChecking) {
-        return null;
-    }
+    if (isChecking) return null;
 
-    // Show success message right after submission
-    if (isSuccess) {
-        return (
-            <div className="qrform-success">
-                <div className="success-content">
-                    <h2>✓ Thank You!</h2>
-                    <p className="mess">Your response has been submitted successfully.</p>
-                    {/* <p className="mess">Scan the QR code again to view your submitted details.</p> */}
-                </div>
-            </div>
-        );
-    }
-
-    
+    // Show saved submission immediately if exists
     if (savedData) {
         return (
             <div className="qrform-container">
                 <div className="qrform-card">
-                    <h2>TALK IN CANDY</h2>
+                    <h2>Previous Submission</h2>
                     <p><b>NAME:</b> {savedData.name}</p>
                     <p><b>CONTACT:</b> {savedData.contact}</p>
                     <p><b>NOTE:</b> {savedData.note}</p>
@@ -66,12 +50,7 @@ export default function Qrform() {
                     {savedData.images && savedData.images.length > 0 && (
                         <div className="images-preview">
                             {savedData.images.map((url: string, idx: number) => (
-                                <img
-                                    key={idx}
-                                    src={url}
-                                    alt={`Uploaded ${idx}`}
-                                    style={{ maxWidth: 200, margin: 5 }}
-                                />
+                                <img key={idx} src={url} alt={`Uploaded ${idx}`} style={{ maxWidth: 200, margin: 5 }} />
                             ))}
                         </div>
                     )}
@@ -79,11 +58,11 @@ export default function Qrform() {
             </div>
         );
     }
+
+    // Handle new submission
     const handleSubmit = async (e: React.FormEvent) => {
-        // Prevent default first to stop page refresh
         e.preventDefault();
-        
-        // Validate required fields
+
         if (!name || !contact) {
             alert("Please fill in all required fields");
             return;
@@ -91,47 +70,43 @@ export default function Qrform() {
 
         setIsSubmitting(true);
 
-        // try {
-        //     const storage = getStorage(); 
-        //     const uploadedUrls: string[] = [];
+        try {
+            const storage = getStorage();
+            const uploadedUrls: string[] = [];
 
-        //     // Upload images if any
-        //     for (let img of images) {
-        //         const imgRef = ref(storage, `submissions/${id}/${Date.now()}_${img.name}`);
-        //         await uploadBytes(imgRef, img);
-        //         const url = await getDownloadURL(imgRef);
-        //         uploadedUrls.push(url);
-        //     }
+            for (let img of images) {
+                const imgRef = ref(storage, `submissions/${id}/${Date.now()}_${img.name}`);
+                await uploadBytes(imgRef, img);
+                const url = await getDownloadURL(imgRef);
+                uploadedUrls.push(url);
+            }
 
-            // Save to Firestore
             const docRef = doc(db, "submissions", id!);
 
+            // Save or merge data
             await setDoc(docRef, {
                 name,
                 contact,
                 note,
-                // images: uploadedUrls,
+                images: uploadedUrls,
                 submittedAt: Date.now(),
             });
 
-            // Show success message and update saved data
-            setIsSuccess(true);
-            setJustSubmitted(true);
             setSavedData({
                 name,
                 contact,
                 note,
-                // images: uploadedUrls
+                images: uploadedUrls,
             });
+            setIsSuccess(true);
 
-        // } catch (err) {
-        //     console.error(err);
-        //     alert("Error submitting form. Please try again.");
-        // } finally {
-        //     setIsSubmitting(false);
-        // }
+        } catch (err) {
+            console.error(err);
+            alert("Error submitting form. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
-
 
     return (
         <div className="qrform-container">
@@ -167,7 +142,7 @@ export default function Qrform() {
                         />
                     </div>
 
-                    {/* <div className="form-group">
+                    <div className="form-group">
                         <label>Upload Images</label>
                         <input
                             type="file"
@@ -175,7 +150,7 @@ export default function Qrform() {
                             accept="image/*"
                             onChange={(e) => setImages([...e.target.files!])}
                         />
-                    </div> */}
+                    </div>
 
                     <button type="submit" className="submit-btn" disabled={isSubmitting}>
                         {isSubmitting ? "Submitting..." : "Submit"}
