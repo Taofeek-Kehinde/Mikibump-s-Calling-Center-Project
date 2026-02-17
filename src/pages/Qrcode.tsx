@@ -7,7 +7,6 @@ export default function Qrcode() {
   const [numQRs, setNumQRs] = useState(1); // number of QR codes to generate
   const [qrList, setQrList] = useState<{ id: string; url: string }[]>([]);
 
-  // Generate QR codes
   const generateQRBatch = () => {
     const tempList: { id: string; url: string }[] = [];
 
@@ -20,52 +19,11 @@ export default function Qrcode() {
     setQrList(tempList);
   };
 
-  // Print a single QR card
-  const printQR = (qrId: string) => {
-    const qrElement = document.getElementById(qrId);
-    if (!qrElement) return;
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print QR Code</title>
-          <style>
-            body {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              min-height: 100vh;
-              background: #fff;
-            }
-            .qr-box {
-              text-align: center;
-            }
-            .qr-box p {
-              color: #000;
-              font-weight: 500;
-            }
-          </style>
-        </head>
-        <body>
-          ${qrElement.innerHTML}
-        </body>
-      </html>
-    `);
-
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  };
-
   return (
     <div className="qr-wrap">
       <h1>Generate Smart QR</h1>
 
-      <div className="form-group">
+      <div className="form-groups">
         <label>Number of QR Codes</label>
         <input
           type="number"
@@ -79,26 +37,10 @@ export default function Qrcode() {
 
       <div className="qr-container">
         {qrList.map((qr, index) => (
-          <div key={index} className="qr-box" id={`qr-${index}`}>
+          <div key={index} className="qr-box">
             <QRCodeCanvas value={qr.url} size={220} />
             <p><b>ID:</b> {qr.id}</p>
             <p>Scan to set message</p>
-
-            <button
-              onClick={() => printQR(`qr-${index}`)}
-              style={{
-                marginTop: "10px",
-                padding: "8px 16px",
-                fontSize: "0.9rem",
-                background: "#ff4f87",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              Print QR
-            </button>
           </div>
         ))}
       </div>
