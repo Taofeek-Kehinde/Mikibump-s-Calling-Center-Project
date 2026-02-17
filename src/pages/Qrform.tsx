@@ -94,9 +94,11 @@ export default function Qrform() {
             <div className="qrform-container">
                 <div className="qrform-card">
                     <h2>TALK IN CANDY</h2>
-                    <p><b>NAME:</b> {savedData.name}</p>
-                    <p><b>CONTACT:</b> {savedData.contact}</p>
-                    <p><b>NOTE:</b> {savedData.note}</p>
+                    {savedData.name && <p><b>NAME:</b> {savedData.name}</p>}
+                    {savedData.contact && <p><b>CONTACT:</b> {savedData.contact}</p>}
+                    {savedData.note && (
+  <p><b>NOTE:</b> {savedData.note}</p>
+)}
 
                     {savedData.images && savedData.images.length > 0 && (
                         <div className="images-preview">
