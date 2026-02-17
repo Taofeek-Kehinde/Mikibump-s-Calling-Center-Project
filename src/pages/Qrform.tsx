@@ -53,27 +53,38 @@ export default function Qrform() {
 
             {/* HOME button at top-right */}
             <motion.button
-                className="cany-btns"
-                onClick={() => navigate('/form')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                title="Open Cany Form"
-                style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 20,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                }}
-            >
-                <FontAwesomeIcon
-                    icon={faHandPointRight}
-                    className="lefthand"
-                    style={{ marginRight: "0px" }}
-                />
-                HOME
-            </motion.button>
+        className="cany-home-btn"
+onClick={() => navigate('/dashboard')}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        title="Open Cany Form"
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          width: 60,
+          height: 60,
+          borderRadius: "50%", 
+          backgroundColor: "red", 
+          border: "none",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+        }}
+      >
+        <FontAwesomeIcon
+          icon={faHandPointRight}
+          className="lefthands"
+          style={{
+            fontSize: "1.5rem",
+            color: "white",
+            animation: "hand-point 1.2s ease-in-out infinite",
+            transformOrigin: "center",
+          }}
+        />
+      </motion.button>
         </div>
     );
 }
