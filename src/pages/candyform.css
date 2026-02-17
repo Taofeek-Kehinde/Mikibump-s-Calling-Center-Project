@@ -318,9 +318,9 @@ div.form-section{
     0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
-:root.dark-mode .form-titles {
+:root.dark-mode .form-titless {
   color: #e0e0e0;
-  background: linear-gradient(45deg, #e0e0e0, #b0b0b0, #888);
+  background: linear-gradient(45deg, #fff, #fff, #fff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -434,7 +434,7 @@ div.form-section{
     border-radius: 20px;
   }
 
-  .form-titles {
+  .form-titless {
     font-size: 1.8rem;
     margin-top: 40px;
   }
@@ -461,7 +461,7 @@ div.form-section{
     border-radius: 15px;
   }
 
-  .form-titles {
+  .form-titless {
     font-size: 1.5rem;
     margin-bottom: 30px;
     margin-top: 50px;
