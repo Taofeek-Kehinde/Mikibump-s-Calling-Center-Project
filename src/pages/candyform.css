@@ -107,9 +107,6 @@ form {
   gap: 10px;
 } */
 
-#recipientContact::placeholder {
-  color: #333;
-}
 div.form-section{
   background: transparent;
 }
