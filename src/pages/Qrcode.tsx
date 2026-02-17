@@ -38,9 +38,26 @@ export default function Qrcode() {
       <div className="qr-container">
         {qrList.map((qr, index) => (
           <div key={index} className="qr-box">
-            <QRCodeCanvas value={qr.url} size={220} />
+            {/* Assign unique ID for canvas so we can export it */}
+            <QRCodeCanvas id={`qr-${index}`} value={qr.url} size={220} />
             <p><b>ID:</b> {qr.id}</p>
             <p>Scan to set message</p>
+
+            {/* Save / Print button */}
+            <button
+              onClick={() => {
+                const canvas = document.getElementById(`qr-${index}`) as HTMLCanvasElement;
+                if (canvas) {
+                  const image = canvas.toDataURL("image/png");
+                  const link = document.createElement("a");
+                  link.href = image;
+                  link.download = `QR-${qr.id}.png`;
+                  link.click();
+                }
+              }}
+            >
+              Save / Print QR
+            </button>
           </div>
         ))}
       </div>
