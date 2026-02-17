@@ -23,7 +23,7 @@ export default function Qrcode() {
     <div className="qr-wrap">
       <h1>Generate Smart QR</h1>
 
-      <div className="form-group">
+      <div className="form-groups">
         <label>Number of QR Codes</label>
         <input
           type="number"

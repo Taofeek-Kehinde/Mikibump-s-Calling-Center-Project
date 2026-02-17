@@ -68,7 +68,7 @@ button:hover {
   color: #ff4f87;
 }
 
-.form-group {
+.form-groups {
   margin-bottom: 25px;
   text-align: center; /* center everything in the group */
   display: flex;
@@ -86,9 +86,9 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type="number"] {
+/* input[type="number"] {
   -moz-appearance: textfield;
-}
+} */
 
 
 label {
