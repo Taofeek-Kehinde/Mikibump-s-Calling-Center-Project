@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import "./Qrcode.css";
 
 export default function Qrcode() {
-  const [numQRs, setNumQRs] = useState(1); // number of QR codes to generate
+  const [numQRs, setNumQRs] = useState(1); 
   const [qrList, setQrList] = useState<{ id: string; url: string }[]>([]);
 
   const generateQRBatch = () => {
