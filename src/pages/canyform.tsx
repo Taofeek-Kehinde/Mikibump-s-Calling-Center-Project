@@ -144,7 +144,7 @@ function Form() {
     <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
 
 
-    Form Page
+    FREE CALLS
   </motion.button>
 
         <h1 className="form-titles">SAY IT WITH CANDY. NO WORDS NEEDED</h1>
