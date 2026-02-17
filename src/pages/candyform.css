@@ -305,7 +305,7 @@ div.form-section{
   transform: translateY(0);
 }
 
-/* Dark Mode Support */
+/* Dark Mode Support
 :root.dark-mode .form-containers {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
 }
@@ -363,7 +363,7 @@ div.form-section{
 :root.dark-mode .time-btn:hover {
   border-color: #667eea;
   background: rgba(102, 126, 234, 0.1);
-}
+} */
 
 .lefthand {
   font-size: 1.6rem;
