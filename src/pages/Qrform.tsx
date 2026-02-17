@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase2";
+import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 import "./Qrform.css";
 
 export default function Qrform() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [url, setUrl] = useState("");
     const [name, setName] = useState("");
     const [contact, setContact] = useState("");
@@ -39,17 +43,40 @@ export default function Qrform() {
     }
 
     // Show success message right after submission
-    if (isSuccess) {
-        return (
-            <div className="qrform-success">
-                <div className="success-content">
-                    <h2>✓ Thank You!</h2>
-                    <p className="mess">Your response has been submitted successfully.</p>
-                    {/* <p className="mess">Scan the QR code again to view your submitted details.</p> */}
-                </div>
+  if (isSuccess) {
+    return (
+        <div className="qrform-success" style={{ position: "relative" }}>
+            <div className="success-content">
+                <h2>✓ Thank You!</h2>
+                <p className="mess">Your response has been submitted successfully.</p>
             </div>
-        );
-    }
+
+            {/* HOME button at top-right */}
+            <motion.button
+                className="cany-btns"
+                onClick={() => navigate('/form')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                title="Open Cany Form"
+                style={{
+                    position: "absolute",
+                    top: 20,
+                    right: 20,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                }}
+            >
+                <FontAwesomeIcon
+                    icon={faHandPointRight}
+                    className="lefthand"
+                    style={{ marginRight: "0px" }}
+                />
+                HOME
+            </motion.button>
+        </div>
+    );
+}
 
 if (savedData) {
     return (
