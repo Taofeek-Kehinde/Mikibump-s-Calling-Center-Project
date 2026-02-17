@@ -64,13 +64,12 @@
 .form-titles {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #222;
+  color: #fff;
   text-align: center;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
   margin-bottom: 40px;
-  font-family: '';
   margin-top: 30px;
-  background: linear-gradient(45deg, #222, #444, #666);
+  background: linear-gradient(45deg, #070505, #050505, #0c0c0c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -95,7 +94,7 @@ form {
 }
 
 
-.section-title {
+/* .section-title {
   font-size: 1.2rem;
   font-weight: 600;
   color: #fff;
@@ -106,7 +105,7 @@ form {
   align-items: left;
   text-align: left;
   gap: 10px;
-}
+} */
 
 #recipientContact::placeholder {
   color: #333;
@@ -368,7 +367,7 @@ div.form-section{
 
 .lefthand {
   font-size: 1.6rem;
-  color: black;
+  color: red;
   transform-origin: center;
   margin-right: 120px;
   position: absolute;
@@ -388,7 +387,7 @@ div.form-section{
   top: 1rem;          /* instead of 12px */
   right: 1.2rem;     /* instead of 20px */
 
-  background: #000;
+  background: red;
   border: none;
   color: #fff;
 
