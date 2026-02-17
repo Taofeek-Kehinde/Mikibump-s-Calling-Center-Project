@@ -147,7 +147,7 @@ function Form() {
     FREE CALLS
   </motion.button>
 
-        <h1 className="form-titless">SAY IT WITH CANDY. NO WORDS NEEDED</h1>
+        <h1 className="form-titless">SAY IT WITH CANDY. <p className='nowords'>(NO WORDS NEEDED)</p></h1>
 
         <form onSubmit={handleSubmit}>
           {/* Your Details Section */}

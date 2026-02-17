@@ -38,6 +38,16 @@
   position: relative;
   overflow-x: hidden;
 }
+.nowords {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: red !important;
+  color: red !important;
+  display: block;
+  font-size: clamp(0.9rem, 2.5vw, 1.5rem);
+  font-weight: 500;
+}
 
 .back-btn {
   position: absolute;
