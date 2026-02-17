@@ -212,7 +212,7 @@ function Form() {
               {errors.recipientName && <span className="error-text">{errors.recipientName}</span>}
             </div>
 
-            <div className="form-group">
+            <div className="form-groups">
               <label htmlFor="recipientContact">Contact</label>
               <input
                 type="text"
