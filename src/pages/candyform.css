@@ -118,9 +118,10 @@ form {
   gap: 10px;
 } */
 
-div.form-section{
+/* div.form-section{
   background: transparent;
-}
+} */
+ 
 .section-title::before {
   content: '';
   width: 6px;
@@ -151,9 +152,15 @@ div.form-section{
   color: #555;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  text-align: left ;
+  /* text-align: left ; */
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
+
+.lab {
+  text-align: left;
+}
+
+
 
 .form-groups input,
 .form-groups textarea {
@@ -164,7 +171,6 @@ div.form-section{
   font-size: 1rem;
   color: #333;
   transition: all 0.3s ease;
-  /* background: rgba(255, 255, 255, 0.9); */
   text-align: left;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
   resize: none;
@@ -284,6 +290,25 @@ div.form-section{
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
 }
 
+#yourContact, #recipientContact::placeholder  {
+  width: 100%;
+  background: transparent;
+}
+
+input #yourContact {
+  padding-left: 10px;
+}
+#recipientContact::placeholder {
+  color: #000;
+}
+#yourName, #recipientName {
+  width: 100%;
+}
+
+#recipientContact {
+  width: 100%;
+  background: transparent;
+}
 /* Submit Button */
 .submit-btn {
   padding: 16px 40px;

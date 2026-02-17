@@ -170,7 +170,7 @@ if (savedData) {
     return (
         <div className="qrform-container">
             <div className="qrform-card">
-                <h2>Talkin Candy Form</h2>
+                <h2>TALK IN CANDY</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Name *</label>
@@ -213,7 +213,7 @@ if (savedData) {
 
 
                     <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : "Submit"}
+                        {isSubmitting ? "Submitting..." : "CANDY IT"}
                     </button>
                 </form>
             </div>

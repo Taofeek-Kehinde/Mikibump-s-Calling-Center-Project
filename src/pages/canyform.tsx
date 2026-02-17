@@ -160,7 +160,7 @@ function Form() {
             <h2 className="section-title">YOUR DETAILS</h2>
             
             <div className="form-groups">
-              <label htmlFor="yourName">Name</label>
+              <label className='lab' htmlFor="yourName">Name</label>
               <input
                 type="text"
                 id="yourName"
