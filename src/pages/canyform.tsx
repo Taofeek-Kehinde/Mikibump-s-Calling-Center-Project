@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { useState,useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCircle } from '@fortawesome/free-solid-svg-icons';
+import {  faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 // import { useAppContext } from '../context/useAppContext';
 import './candyform.css';
@@ -129,31 +130,36 @@ function Form() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        {/* Back Button */}
-        <motion.button
-          className="back-btn"
-          onClick={() => navigate(-2)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          title="Go back"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} />
-          Back
-        </motion.button>
 
-        <h1 className="form-title">SAY IT WITH CANDY. NO WORDS NEEDED</h1>
+    <motion.button
+    className="cany-btns"
+    onClick={() => navigate('/form')}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    title="Open Cany Form"
+
+    
+  >
+
+    <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
+
+
+    Form Page
+  </motion.button>
+
+        <h1 className="form-titles">SAY IT WITH CANDY. NO WORDS NEEDED</h1>
 
         <form onSubmit={handleSubmit}>
           {/* Your Details Section */}
           <motion.div
-            className="form-section"
+            className="form-sections"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
             <h2 className="section-title">YOUR DETAILS</h2>
             
-            <div className="form-group">
+            <div className="form-groups">
               <label htmlFor="yourName">Name</label>
               <input
                 type="text"
@@ -167,7 +173,7 @@ function Form() {
               {errors.yourName && <span className="error-text">{errors.yourName}</span>}
             </div>
 
-            <div className="form-group">
+            <div className="form-groups">
               <label htmlFor="yourContact">Contact</label>
               <input
                 type="text"
@@ -185,14 +191,14 @@ function Form() {
 
           {/* Recipient Details Section */}
           <motion.div
-            className="form-section"
+            className="form-sections"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
             <h2 className="section-title">RECIPIENT DETAILS</h2>
             
-            <div className="form-group">
+            <div className="form-groups">
               <label htmlFor="recipientName">Name</label>
               <input
                 type="text"
@@ -225,7 +231,7 @@ function Form() {
 
           {/* Relationship Section */}
           <motion.div
-            className="form-section"
+            className="form-sections"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -259,7 +265,7 @@ function Form() {
 
           {/* Call Time Section */}
           <motion.div
-            className="form-section"
+            className="form-sections"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}

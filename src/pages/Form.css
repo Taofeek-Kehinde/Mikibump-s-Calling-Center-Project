@@ -66,11 +66,11 @@
 .form-titless {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #fff;
+  /* color: red; */
   text-align: center;
   margin-bottom: 40px;
-  margin-top: clamp(70px, 12vw, 110px);
-  background: linear-gradient(45deg, #f1ecec, #444, #666);
+  margin-top: clamp(20px, 12vw, 50px);
+  background: linear-gradient(45deg, #0f0f0f, #444, #666);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -88,7 +88,7 @@ form {
   flex-direction: column;
   gap: 15px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(7, 7, 7, 0.8);
   border-radius: 15px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
@@ -127,6 +127,7 @@ form {
   color: #ccc;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  
   text-align: left ;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
@@ -138,11 +139,11 @@ form {
   border-radius: 10px;
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
-  color: #333;
+  color: #fff;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(240, 234, 234, 0.9);
   text-align: left;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+  /* text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20); */
   resize: none;
   width: 100%;
 }
@@ -151,7 +152,14 @@ form {
 .form-group textarea:focus {
   outline: none;
   border-color: #9c9696;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.9);
+}
+
+input {
+  color: white;
+}
+::placeholder {
+  color: white;
 }
 
 .form-group input.error,
@@ -334,7 +342,11 @@ form {
 :root.dark-mode .form-group input:focus,
 :root.dark-mode .form-group textarea:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.8);
+}
+
+div.form-section{
+  box-shadow: 0px 0px 2px 2px #461fd4;
 }
 
 :root.dark-mode .relationship-btn,
@@ -446,69 +458,9 @@ form {
 }
 
 
-.cany-btn {
-  position: absolute;
-  top: 1rem;          /* instead of 12px */
-  right: 1.2rem;     /* instead of 20px */
-
-  background: rgb(236, 156, 8);
-  border: none;
-  color: #fff;
-
-  width: clamp(48px, 8vw, 70px);
-  height: clamp(48px, 8vw, 70px);
-  font-size: clamp(0.7rem, 2vw, 0.9rem);
-
-  border-radius: 50%;
-  cursor: pointer;
-  font-weight: 600;
-
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
-  animation: candy 1.5s ease-in-out infinite;
-
-  font-family: 'Dancing Script', cursive;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@keyframes candy {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 10px rgba(243, 159, 3, 0.6);
-  }
-  50% {
-    transform: scale(1.15);
-    box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
-  }
-}
-
-
-.cany-btn:hover {
-  transform: translateY(-1px) scale(1.05);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
-}
 
 .statement {
   font-size: 0.85rem;
   color: #555;
   text-align: center;
-}
-
-.hand {
-  font-size: 1.6rem;
-  color: orange;
-  transform-origin: center;
-  margin-right: 120px;
-  position: absolute;
-  animation: hand-point 1.2s ease-in-out infinite;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
-}
-
-@keyframes hand-point {
-  0% { transform: rotate(12deg); }
-  50% { transform: rotate(-12deg); }
-  100% { transform: rotate(12deg); }
 }

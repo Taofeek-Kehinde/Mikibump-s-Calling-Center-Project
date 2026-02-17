@@ -53,7 +53,7 @@ export default function Qrform() {
         );
     }
 
-    // Show saved data if exists (from previous submission)
+    
     if (savedData) {
         return (
             <div className="qrform-container">

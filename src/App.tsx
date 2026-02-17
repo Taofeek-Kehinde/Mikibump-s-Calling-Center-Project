@@ -4,10 +4,10 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Dashboard from './assets/dashboard.tsx';
 import AdminLogin from './pages/AdminLogin.tsx';
+import Canyform from './pages/canyform.tsx';
 import Form from './pages/Form.tsx';
 import EnhancedChat from './components/EnhancedChat.tsx';
 import type { JSX } from 'react';
-import Canyform from './pages/canyform.tsx';
 import Qrcode from './pages/Qrcode.tsx';
 import Qrform from './pages/Qrform.tsx';
 import View from './pages/View.tsx';
@@ -60,8 +60,8 @@ function App(): JSX.Element {
     <Routes>
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin" element={<AdminLogin />} />
-      <Route path="/form" element={<Form />} />
       <Route path="/canyform" element={<Canyform />} />
+      <Route path="/form" element={<Form />} />
       <Route path="/Qrcode" element={<Qrcode />} />
       <Route path="/qrform/:id" element={<Qrform />} />
         <Route path="/view/:id" element={<View />} />

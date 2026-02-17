@@ -293,11 +293,11 @@ useEffect(() => {
               <>
                 <div
                   className="live-pointer"
-                  onClick={() => navigate('/form')}
+                  onClick={() => navigate('/canyform')}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => { 
-                    if (e.key === 'Enter' || e.key === ' ') navigate('/form'); 
+                    if (e.key === 'Enter' || e.key === ' ') navigate('/canyform'); 
                   }}
                 >
                   <FontAwesomeIcon icon={faHandPointLeft} className="hand-icon" />
@@ -307,12 +307,12 @@ useEffect(() => {
                   className="live-indicator-container"
                   animate={{ scale: pulse ? 1 : 1.05 }}
                   transition={{ duration: 1.5, repeat: Infinity }}
-                  onClick={() => navigate('/form')}
+                  onClick={() => navigate('/canyform')}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
-                      navigate('/form');
+                      navigate('/canyform');
                     }
                   }}
                 >
