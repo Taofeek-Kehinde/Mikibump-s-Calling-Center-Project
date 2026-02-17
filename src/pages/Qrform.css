@@ -27,10 +27,10 @@
   font-size: 1.8rem;
   font-weight: 700;
   color: #000;
-  text-align: left;
+  text-align: center;
   margin-bottom: 30px;
   font-family: 'Dancing Script', cursive;
-  background: linear-gradient(45deg, #f1ecec, #ccc, #999);
+  background: linear-gradient(45deg, #000, #000, #000000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -42,12 +42,7 @@
   gap: 25px;
 }
 
-.qrform-card  p {
-  text-align: left;
-}
-.qrform-card  b {
-  text-align: left;
-}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -61,6 +56,8 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: left;
+  align-items: left;
+  justify-content: left;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
