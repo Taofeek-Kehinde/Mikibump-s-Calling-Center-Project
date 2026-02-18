@@ -72,25 +72,23 @@ export default function Qrform() {
     alignItems: "center",
     cursor: "pointer",
     boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-    overflow: "hidden",
   }}
 >
-
+  {/* ADD THIS ONLY */}
   <span
     style={{
       position: "absolute",
       fontSize: "0.75rem",
       fontWeight: "700",
-      color: "#fff", 
-      letterSpacing: "1px",
+      color: "#fff",
       textTransform: "uppercase",
-      zIndex: 2,
+      pointerEvents: "none",
     }}
   >
     HOME
   </span>
 
-
+  {/* YOUR HAND ICON (UNCHANGED) */}
   <FontAwesomeIcon
     icon={faHandPointRight}
     className="lefthands"
@@ -102,7 +100,6 @@ export default function Qrform() {
       marginRight: "120px",
       position: "absolute",
       filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
-      zIndex: 1,
     }}
   />
 </motion.button>
