@@ -65,6 +65,7 @@ function App(): JSX.Element {
       <Route path="/Qrcode" element={<Qrcode />} />
       <Route path="/qrform/:id" element={<Qrform />} />
         <Route path="/view/:id" element={<View />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/chat" element={<EnhancedChat />} />
       <Route path="/" element={
         <div>
