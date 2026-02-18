@@ -78,10 +78,13 @@ export default function Qrform() {
                         icon={faHandPointRight}
                         className="lefthands"
                         style={{
-                            fontSize: "1.5rem",
-                            color: "white",
+                            fontSize: "1.6rem",
+                            color: "red",
                             animation: "hand-point 1.2s ease-in-out infinite",
                             transformOrigin: "center",
+                            marginRight: "120px",
+                            position: "absolute",
+                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
                         }}
                     />
                 </motion.button>
