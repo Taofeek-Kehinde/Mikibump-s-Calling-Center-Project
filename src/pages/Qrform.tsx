@@ -53,41 +53,60 @@ export default function Qrform() {
 
                 {/* HOME button at top-right */}
                 <motion.button
-                    className="cany-home-btn"
-                    onClick={() => navigate('/dashboard')}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    title="Open Cany Form"
-                    style={{
-                        position: "absolute",
-                        top: 20,
-                        right: 20,
-                        width: 60,
-                        height: 60,
-                        borderRadius: "50%",
-                        backgroundColor: "red",
-                        border: "none",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                    }}
-                >
-                    <FontAwesomeIcon
-                        icon={faHandPointRight}
-                        className="lefthands"
-                        style={{
-                            fontSize: "1.6rem",
-                            color: "red",
-                            animation: "hand-point 1.2s ease-in-out infinite",
-                            transformOrigin: "center",
-                            marginRight: "120px",
-                            position: "absolute",
-                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
-                        }}
-                    />
-                </motion.button>
+  className="cany-home-btn"
+  onClick={() => navigate('/dashboard')}
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.95 }}
+  title="Open Cany Form"
+  style={{
+    position: "absolute",
+    top: 20,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: "50%",
+    backgroundColor: "red",
+    border: "none",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+    overflow: "hidden",
+  }}
+>
+
+  <span
+    style={{
+      position: "absolute",
+      fontSize: "0.75rem",
+      fontWeight: "700",
+      color: "#fff", 
+      letterSpacing: "1px",
+      textTransform: "uppercase",
+      zIndex: 2,
+    }}
+  >
+    HOME
+  </span>
+
+
+  <FontAwesomeIcon
+    icon={faHandPointRight}
+    className="lefthands"
+    style={{
+      fontSize: "1.6rem",
+      color: "red",
+      animation: "hand-point 1.2s ease-in-out infinite",
+      transformOrigin: "center",
+      marginRight: "120px",
+      position: "absolute",
+      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
+      zIndex: 1,
+    }}
+  />
+</motion.button>
+
             </div>
         );
     }
