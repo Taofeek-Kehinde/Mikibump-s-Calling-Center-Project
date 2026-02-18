@@ -1,17 +1,35 @@
 
+body.candyform-page {
+  overflow: hidden;
+  height: 100vh;
+}
+
 .form-containers {
   min-height: 100vh;
-  background: url(../assets/candy.jpg);
-  background-position: center;
-  background-size: cover;
+
+  /* Background image settings */
+  background-image: url(../assets/candy.jpg);
+  background-position: center center;  /* perfectly center both vertically and horizontally */
+  background-size: cover;             /* make it cover the entire container */
   background-repeat: no-repeat;
+  background-attachment: fixed;       /* optional: makes background stay fixed while scrolling */
+
+  /* Flex centering */
   display: flex;
   justify-content: center;
   align-items: center;
+
   padding: 20px;
   font-family: 'Inter', sans-serif;
+
+  /* layering & overflow */
   position: relative;
   overflow: hidden;
+}
+
+
+label.lab {
+  text-align: left;
 }
 
 .form-background-carousel {
@@ -37,7 +55,34 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
   overflow-x: hidden;
+  max-height: 95vh;
+  overflow-y: auto;
 }
+
+.form-panels {
+  scrollbar-gutter: stable both-edges;
+  clip-path: inset(0 round 30px);
+}
+
+.form-panels::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-panels::-webkit-scrollbar-thumb {
+  background: orange;
+  border-radius: 10px;
+}
+
+.form-panels::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.form-panels {
+  scroll-behavior: smooth;
+}
+
+
 .nowords {
   background: none !important;
   -webkit-background-clip: initial !important;
@@ -152,15 +197,9 @@ form {
   color: #555;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  /* text-align: left ; */
+  text-align: left ;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
-
-.lab {
-  text-align: left;
-}
-
-
 
 .form-groups input,
 .form-groups textarea {
@@ -298,9 +337,7 @@ form {
 input #yourContact {
   padding-left: 10px;
 }
-#recipientContact::placeholder {
-  color: #000;
-}
+
 #yourName, #recipientName {
   width: 100%;
 }
@@ -338,65 +375,6 @@ input #yourContact {
   transform: translateY(0);
 }
 
-/* Dark Mode Support
-:root.dark-mode .form-containers {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-}
-
-:root.dark-mode .form-panel {
-  background: rgba(32, 32, 32, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-}
-
-:root.dark-mode .form-titless {
-  color: #e0e0e0;
-  background: linear-gradient(45deg, #fff, #fff, #fff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-:root.dark-mode .form-sections {
-  background: rgba(64, 64, 64, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-:root.dark-mode .section-titles {
-  color: #e0e0e0;
-}
-
-:root.dark-mode .form-groups label {
-  color: #b0b0b0;
-}
-
-:root.dark-mode .form-groups input,
-:root.dark-mode .form-groups textarea {
-  background: rgba(32, 32, 32, 0.8);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #e0e0e0;
-}
-
-:root.dark-mode .form-groups input:focus,
-:root.dark-mode .form-groups textarea:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-}
-
-:root.dark-mode .relationship-btn,
-:root.dark-mode .time-btn {
-  background: rgba(64, 64, 64, 0.8);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #b0b0b0;
-}
-
-:root.dark-mode .relationship-btn:hover,
-:root.dark-mode .time-btn:hover {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.1);
-} */
 
 .lefthand {
   font-size: 1.6rem;

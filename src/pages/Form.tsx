@@ -220,7 +220,7 @@ function Form() {
             <div className="form-group">
               <label htmlFor="yourContact">Contact</label>
               <input
-                type="text"
+                type="number"
                 id="yourContact"
                 name="yourContact"
                 value={formData.yourContact}
@@ -259,7 +259,7 @@ function Form() {
             <div className="form-group">
               <label htmlFor="recipientContact">Contact</label>
               <input
-                type="text"
+                type="number"
                 id="recipientContact"
                 name="recipientContact"
                 value={formData.recipientContact}

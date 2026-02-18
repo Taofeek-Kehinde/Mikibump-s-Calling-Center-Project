@@ -159,7 +159,7 @@ function Form() {
           >
             <h2 className="section-title">YOUR DETAILS</h2>
             
-            <div className="form-groups">
+            <div className="form-group">
               <label className='lab' htmlFor="yourName">Name</label>
               <input
                 type="text"
@@ -173,7 +173,7 @@ function Form() {
               {errors.yourName && <span className="error-text">{errors.yourName}</span>}
             </div>
 
-            <div className="form-groups">
+            <div className="form-group">
               <label htmlFor="yourContact">Contact</label>
               <input
                 type="number"
@@ -198,7 +198,7 @@ function Form() {
           >
             <h2 className="section-title">RECIPIENT DETAILS</h2>
             
-            <div className="form-groups">
+            <div className="form-group">
               <label htmlFor="recipientName">Name</label>
               <input
                 type="text"
@@ -212,7 +212,7 @@ function Form() {
               {errors.recipientName && <span className="error-text">{errors.recipientName}</span>}
             </div>
 
-            <div className="form-groups">
+            <div className="form-group">
               <label htmlFor="recipientContact">Contact</label>
               <input
                 type="number"

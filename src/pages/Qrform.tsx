@@ -112,6 +112,58 @@ export default function Qrform() {
         return (
             <div className="qrform-container">
                 <div className="qrform-card">
+                    <motion.button
+  className="cany-home-btn"
+  onClick={() => navigate('/dashboard')}
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.95 }}
+  title="Open Cany Form"
+  style={{
+    position: "absolute",
+    top: 20,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: "50%",
+    backgroundColor: "red",
+    border: "none",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+  }}
+>
+  {/* TEXT */}
+  <span
+    style={{
+      position: "absolute",
+      fontSize: "0.75rem",
+      fontWeight: "700",
+      color: "#fff",
+      textTransform: "uppercase",
+      pointerEvents: "none",
+    }}
+  >
+    HOME
+  </span>
+
+  {/* HAND ICON — unchanged */}
+  <FontAwesomeIcon
+    icon={faHandPointRight}
+    className="lefthands"
+    style={{
+      fontSize: "1.6rem",
+      color: "red",
+      animation: "hand-point 1.2s ease-in-out infinite",
+      transformOrigin: "center",
+      marginRight: "120px",
+      position: "absolute",
+      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
+    }}
+  />
+</motion.button>
+
                     <h2>TALK IN CANDY</h2>
                     {savedData.name && <p><b>NAME:</b> {savedData.name}</p>}
                     {savedData.contact && <p><b>CONTACT:</b> {savedData.contact}</p>}

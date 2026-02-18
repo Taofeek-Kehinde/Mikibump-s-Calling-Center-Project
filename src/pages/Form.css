@@ -50,7 +50,6 @@
   width: 100%;
   max-width: 600px;
   background: black;
-  color: white;
   backdrop-filter: blur(20px);
   border-radius: 30px;
   padding: 40px;
@@ -60,6 +59,30 @@
     0 1px 0 rgba(255, 255, 255, 0.2) inset;
   border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
+
+  /* New scroll settings */
+  max-height: 95vh;        
+  overflow-y: auto;        
+  overflow-x: hidden;      
+  scrollbar-width: thin;   
+  scrollbar-color: white transparent; 
+
+  scroll-behavior: smooth;
+  clip-path: inset(0 round 30px);
+}
+
+/* Chrome, Edge, Safari */
+.form-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-panel::-webkit-scrollbar-thumb {
+  background-color: orange;
+  border-radius: 10px;
+}
+
+.form-panel::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 
@@ -154,13 +177,17 @@ form {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.9);
 }
 
-input {
-  color: white;
-}
-::placeholder {
+input#yourName, #yourContact, #recipientName, #recipientContact{
   color: white;
 }
 
+textarea#note {
+  color: white;
+}
+
+div.form-group.value {
+  color: white;
+}
 .form-group input.error,
 .form-group textarea.error {
   border-color: #f44336;
