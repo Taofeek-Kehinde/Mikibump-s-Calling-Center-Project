@@ -53,56 +53,56 @@ export default function Qrform() {
 
                 {/* HOME button at top-right */}
                 <motion.button
-  className="cany-home-btn"
-  onClick={() => navigate('/dashboard')}
-  whileHover={{ scale: 1.1 }}
-  whileTap={{ scale: 0.95 }}
-  title="Open Cany Form"
-  style={{
-    position: "absolute",
-    top: 20,
-    right: 20,
-    width: 60,
-    height: 60,
-    borderRadius: "50%",
-    backgroundColor: "red",
-    border: "none",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "pointer",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-  }}
->
-  {/* ADD THIS ONLY */}
-  <span
-    style={{
-      position: "absolute",
-      fontSize: "0.75rem",
-      fontWeight: "700",
-      color: "#fff",
-      textTransform: "uppercase",
-      pointerEvents: "none",
-    }}
-  >
-    HOME
-  </span>
+                    className="cany-home-btn"
+                    onClick={() => navigate('/dashboard')}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    title="Open Cany Form"
+                    style={{
+                        position: "absolute",
+                        top: 20,
+                        right: 20,
+                        width: 60,
+                        height: 60,
+                        borderRadius: "50%",
+                        backgroundColor: "red",
+                        border: "none",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                    }}
+                >
+                    {/* ADD THIS ONLY */}
+                    <span
+                        style={{
+                            position: "absolute",
+                            fontSize: "0.75rem",
+                            fontWeight: "700",
+                            color: "#fff",
+                            textTransform: "uppercase",
+                            pointerEvents: "none",
+                        }}
+                    >
+                        HOME
+                    </span>
 
-  {/* YOUR HAND ICON (UNCHANGED) */}
-  <FontAwesomeIcon
-    icon={faHandPointRight}
-    className="lefthands"
-    style={{
-      fontSize: "1.6rem",
-      color: "red",
-      animation: "hand-point 1.2s ease-in-out infinite",
-      transformOrigin: "center",
-      marginRight: "120px",
-      position: "absolute",
-      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
-    }}
-  />
-</motion.button>
+                    {/* YOUR HAND ICON (UNCHANGED) */}
+                    <FontAwesomeIcon
+                        icon={faHandPointRight}
+                        className="lefthands"
+                        style={{
+                            fontSize: "1.6rem",
+                            color: "red",
+                            animation: "hand-point 1.2s ease-in-out infinite",
+                            transformOrigin: "center",
+                            marginRight: "120px",
+                            position: "absolute",
+                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
+                        }}
+                    />
+                </motion.button>
 
             </div>
         );
@@ -112,63 +112,63 @@ export default function Qrform() {
         return (
             <div className="qrform-container">
                 <motion.button
-  className="cany-home-btn"
-  onClick={() => navigate('/dashboard')}
-  whileHover={{ scale: 1.1 }}
-  whileTap={{ scale: 0.95 }}
-  title="Open Cany Form"
-  style={{
-    position: "fixed",   // ← ONLY change (was absolute)
-    top: 20,
-    right: 20,
-    width: 60,
-    height: 60,
-    borderRadius: "50%",
-    backgroundColor: "red",
-    border: "none",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "pointer",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-    zIndex: 9999,
-  }}
->
-  <span
-    style={{
-      position: "absolute",
-      fontSize: "0.75rem",
-      fontWeight: "700",
-      color: "#fff",
-      textTransform: "uppercase",
-      pointerEvents: "none",
-    }}
-  >
-    HOME
-  </span>
+                    className="cany-home-btn"
+                    onClick={() => navigate('/dashboard')}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    title="Open Cany Form"
+                    style={{
+                        position: "fixed",   // ← ONLY change (was absolute)
+                        top: 20,
+                        right: 20,
+                        width: 60,
+                        height: 60,
+                        borderRadius: "50%",
+                        backgroundColor: "red",
+                        border: "none",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                        zIndex: 9999,
+                    }}
+                >
+                    <span
+                        style={{
+                            position: "absolute",
+                            fontSize: "0.75rem",
+                            fontWeight: "700",
+                            color: "#fff",
+                            textTransform: "uppercase",
+                            pointerEvents: "none",
+                        }}
+                    >
+                        HOME
+                    </span>
 
-  <FontAwesomeIcon
-    icon={faHandPointRight}
-    className="lefthands"
-    style={{
-      fontSize: "1.6rem",
-      color: "red",
-      animation: "hand-point 1.2s ease-in-out infinite",
-      transformOrigin: "center",
-      marginRight: "120px",
-      position: "absolute",
-      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
-    }}
-  />
-</motion.button>
+                    <FontAwesomeIcon
+                        icon={faHandPointRight}
+                        className="lefthands"
+                        style={{
+                            fontSize: "1.6rem",
+                            color: "red",
+                            animation: "hand-point 1.2s ease-in-out infinite",
+                            transformOrigin: "center",
+                            marginRight: "120px",
+                            position: "absolute",
+                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
+                        }}
+                    />
+                </motion.button>
 
                 <div className="qrform-card">
                     <h2>TALK IN CANDY</h2>
                     {savedData.name && <p><b>NAME:</b> {savedData.name}</p>}
                     {savedData.contact && <p><b>CONTACT:</b> {savedData.contact}</p>}
                     {savedData.note && (
-  <p><b>NOTE:</b> {savedData.note}</p>
-)}
+                        <p><b>NOTE:</b> {savedData.note}</p>
+                    )}
 
                     {savedData.images && savedData.images.length > 0 && (
                         <div className="images-preview">
@@ -185,59 +185,59 @@ export default function Qrform() {
 
 
                     {savedData.url && (
-                        <p>
-                            <b>URL:</b>{" "}
-                            <a href={savedData.url} target="_blank" rel="noopener noreferrer">
-                                {savedData.url}
-                            </a>
-                        </p>
+                        <button
+                            className="url-btn"
+                            onClick={() => window.open(savedData.url, "_blank")}
+                        >
+                            VISIT LINK
+                        </button>
                     )}
                 </div>
             </div>
         );
     }
-  const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!id || isSubmitting) return;
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!id || isSubmitting) return;
 
-  if (!name.trim() || !contact.trim()) {
-    alert("Name and Contact are required.");
-    return;
-  }
+        if (!name.trim() || !contact.trim()) {
+            alert("Name and Contact are required.");
+            return;
+        }
 
-  setIsSubmitting(true);
+        setIsSubmitting(true);
 
-  try {
-    const docRef = doc(db, "submissions", id);
-    const snap = await getDoc(docRef);
+        try {
+            const docRef = doc(db, "submissions", id);
+            const snap = await getDoc(docRef);
 
-    if (snap.exists()) {
-      setSavedData(snap.data());
-      return;
-    }
+            if (snap.exists()) {
+                setSavedData(snap.data());
+                return;
+            }
 
-   
-    const payload: any = {
-      submittedAt: Date.now(),
+
+            const payload: any = {
+                submittedAt: Date.now(),
+            };
+
+            payload.name = name.trim();
+            payload.contact = contact.trim();
+
+            if (note.trim()) payload.note = note.trim();
+            if (url.trim()) payload.url = url.trim();
+
+            await setDoc(docRef, payload);
+
+            setIsSuccess(true);
+            setSavedData(payload);
+        } catch (err) {
+            console.error(err);
+            alert("Submission failed");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
-
-    payload.name = name.trim();
-    payload.contact = contact.trim();
-
-    if (note.trim()) payload.note = note.trim();
-    if (url.trim()) payload.url = url.trim();
-
-    await setDoc(docRef, payload);
-
-    setIsSuccess(true);
-    setSavedData(payload);
-  } catch (err) {
-    console.error(err);
-    alert("Submission failed");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
 
 
     return (
