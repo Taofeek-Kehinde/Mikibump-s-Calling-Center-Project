@@ -48,7 +48,7 @@ export default function Qrform() {
             <div className="qrform-success" style={{ position: "relative" }}>
                 <div className="success-content">
                     <h2>✓ Thank You!</h2>
-                    <p className="mess">Your response has been submitted successfully.</p>
+                    <p className="mess">LET CANDY DO THE TALKIN.</p>
                 </div>
 
                 {/* HOME button at top-right */}
@@ -265,7 +265,7 @@ export default function Qrform() {
                     </div>
 
                     <div className="form-group">
-                        <label>Social Media / URL</label>
+                        <label>paste link</label>
                         <input
                             type="url"
                             placeholder="https://example.com"
