@@ -111,15 +111,14 @@ export default function Qrform() {
     if (savedData) {
         return (
             <div className="qrform-container">
-                <div className="qrform-card">
-                    <motion.button
+                <motion.button
   className="cany-home-btn"
   onClick={() => navigate('/dashboard')}
   whileHover={{ scale: 1.1 }}
   whileTap={{ scale: 0.95 }}
   title="Open Cany Form"
   style={{
-    position: "absolute",
+    position: "fixed",   // ← ONLY change (was absolute)
     top: 20,
     right: 20,
     width: 60,
@@ -132,9 +131,9 @@ export default function Qrform() {
     alignItems: "center",
     cursor: "pointer",
     boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+    zIndex: 9999,
   }}
 >
-  {/* TEXT */}
   <span
     style={{
       position: "absolute",
@@ -148,7 +147,6 @@ export default function Qrform() {
     HOME
   </span>
 
-  {/* HAND ICON — unchanged */}
   <FontAwesomeIcon
     icon={faHandPointRight}
     className="lefthands"
@@ -164,6 +162,7 @@ export default function Qrform() {
   />
 </motion.button>
 
+                <div className="qrform-card">
                     <h2>TALK IN CANDY</h2>
                     {savedData.name && <p><b>NAME:</b> {savedData.name}</p>}
                     {savedData.contact && <p><b>CONTACT:</b> {savedData.contact}</p>}
