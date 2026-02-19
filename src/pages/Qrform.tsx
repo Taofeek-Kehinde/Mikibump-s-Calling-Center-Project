@@ -13,8 +13,8 @@ export default function Qrform() {
     const navigate = useNavigate();
     const [url, setUrl] = useState("");
     const [name, setName] = useState("");
+     const [note, setNote] = useState("");
     const [contact, setContact] = useState("");
-    const [note, setNote] = useState("");
     const [savedData, setSavedData] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -166,19 +166,7 @@ export default function Qrform() {
                 <div className="qrform-card">
                     <h2>TALK IN CANDY</h2>
                     {savedData.name && <p><b>NAME:</b> {savedData.name}</p>}
-                    {savedData.contact && (
-                        <button
-                            className="whatsapp-btn"
-                            onClick={() =>
-                                window.open(
-                                    `https://wa.me/${savedData.contact}?text=Hello ${savedData.name}`,
-                                    "_blank"
-                                )
-                            }
-                        >
-                            CHAT ON WHATSAPP
-                        </button>
-                    )}
+
                     {savedData.note && (
                         <p><b>NOTE:</b> {savedData.note}</p>
                     )}
@@ -195,6 +183,21 @@ export default function Qrform() {
                             ))}
                         </div>
                     )}
+
+                    {savedData.contact && (
+                        <button
+                            className="whatsapp-btn"
+                            onClick={() =>
+                                window.open(
+                                    `https://wa.me/${savedData.contact}?text=Hello ${savedData.name}`,
+                                    "_blank"
+                                )
+                            }
+                        >
+                            CHAT ON WHATSAPP
+                        </button>
+                    )}
+                    
 
 
                     {savedData.url && (
