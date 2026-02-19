@@ -1,73 +1,48 @@
 import { motion } from 'framer-motion';
-import { useState,useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 // import { useAppContext } from '../context/useAppContext';
 import './candyform.css';
 
 interface FormData {
-  yourName: string;
-  yourContact: string;
-  recipientName: string;
+
   recipientContact: string;
   relationship: 'CHOCOLATE' | 'LOLLIPOP';
-  callTime: string;
+
 }
 
 function Form() {
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
-    yourName: '',
-    yourContact: '',
-    recipientName: '',
+
     recipientContact: '',
     relationship: 'CHOCOLATE',
-    callTime: '',
+
   });
 
   useEffect(() => {
-  document.body.classList.add('candyform-page');
-  return () => document.body.classList.remove('candyform-page');
-}, []);
+    document.body.classList.add('candyform-page');
+    return () => document.body.classList.remove('candyform-page');
+  }, []);
 
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+ 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-  
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // Clear error for this field
-    if (errors[name as keyof FormData]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: undefined,
-      }));
-    }
-  };
 
   const validateForm = (): boolean => {
     const newErrors: Partial<FormData> = {};
 
-    if (!formData.yourName.trim()) newErrors.yourName = 'Name is required';
-    if (!formData.yourContact.trim()) newErrors.yourContact = 'Contact is required';
-    if (!formData.recipientName.trim()) newErrors.recipientName = 'Recipient name is required';
-    if (!formData.recipientContact.trim()) newErrors.recipientContact = 'Recipient contact is required';
-    if (!formData.callTime) newErrors.callTime = 'Call time is required';
 
-    setErrors(newErrors);
+    if (!formData.recipientContact.trim()) newErrors.recipientContact = 'Recipient contact is required';
+
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -83,12 +58,8 @@ function Form() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          yourName: formData.yourName,
-          yourContact: formData.yourContact,
-          recipientName: formData.recipientName,
           recipientContact: formData.recipientContact,
           relationship: formData.relationship,
-          callTime: formData.callTime,
         }),
       });
 
@@ -105,12 +76,8 @@ function Form() {
     // Reset form
     setTimeout(() => {
       setFormData({
-        yourName: '',
-        yourContact: '',
-        recipientName: '',
         recipientContact: '',
         relationship: 'CHOCOLATE',
-        callTime: ''
       });
     }, 500);
   };
@@ -131,165 +98,106 @@ function Form() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
 
-    <motion.button
-    className="cany-btns"
-    onClick={() => navigate('/form')}
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    title="Open Cany Form"
-
-    
-  >
-
-    <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
+        <motion.button
+          className="cany-btns"
+          onClick={() => navigate('/form')}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          title="Open Cany Form"
 
 
-    FREE CALLS
-  </motion.button>
+        >
 
-        <h1 className="form-titless">SAY IT WITH CANDY. <p className='nowords'>(NO WORDS NEEDED)</p></h1>
+          <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
+          FREE CALLS
+        </motion.button>
 
+        <h1 className="form-titless" style={{
+          fontFamily: "sans-serif",
+          userSelect: "none"
+        }}>
+          SAY IT WITH CANDY <p className='nowords'>(NO WORDS NEEDED)</p></h1>
+
+
+
+    <p className='question' style={{
+      fontFamily: "sans-serif",
+      fontWeight: "500",
+      fontSize: "20px",
+      textAlign: "center",
+      userSelect: "none",
+      textShadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
+    }}> WHO ARE YOU SENDING IT TO?</p>
         <form onSubmit={handleSubmit}>
+
+
+          {/* Input session */}
+
+<input 
+  type="text"
+  placeholder="ENTER NAME"
+  className="recipient-input"
+  value={formData.recipientContact}
+  onChange={(e) =>
+    setFormData({ ...formData, recipientContact: e.target.value })
+  }
+/>
+
+
+{/* Centered button below */}
+            <motion.button
+              type="button"
+              className="singbtn"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className='Singsecbtn'>TAP TO MAKE IT SING</span>
+            </motion.button>
+
+
+    <span className='mycanndy'>CANDY IT WITH</span>
+
           {/* Your Details Section */}
-          <motion.div
-            className="form-sections"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <h2 className="section-title">YOUR DETAILS</h2>
-            
-            <div className="form-group">
-              <label className='lab' htmlFor="yourName">Name</label>
-              <input
-                type="text"
-                id="yourName"
-                name="yourName"
-                value={formData.yourName}
-                onChange={handleChange}
-                placeholder="Enter your full name"
-                className={errors.yourName ? 'error' : ''}
-              />
-              {errors.yourName && <span className="error-text">{errors.yourName}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="yourContact">Contact</label>
-              <input
-                type="number"
-                id="yourContact"
-                name="yourContact"
-                value={formData.yourContact}
-                onChange={handleChange}
-                placeholder="Whatsapp number"
-                className={errors.yourContact ? 'error' : ''}
-              />
-              {errors.yourContact && <span className="error-text">{errors.yourContact}</span>}
-              <span className="help-text">We will send you feedback via this contact</span>
-            </div>
-          </motion.div>
-
-          {/* Recipient Details Section */}
-          <motion.div
-            className="form-sections"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h2 className="section-title">RECIPIENT DETAILS</h2>
-            
-            <div className="form-group">
-              <label htmlFor="recipientName">Name</label>
-              <input
-                type="text"
-                id="recipientName"
-                name="recipientName"
-                value={formData.recipientName}
-                onChange={handleChange}
-                placeholder="Recipient's full name"
-                className={errors.recipientName ? 'error' : ''}
-              />
-              {errors.recipientName && <span className="error-text">{errors.recipientName}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="recipientContact">Contact</label>
-              <input
-                type="number"
-                id="recipientContact"
-                name="recipientContact"
-                value={formData.recipientContact}
-                onChange={handleChange}
-                placeholder="Whatsapp number "
-                className={errors.recipientContact ? 'error' : ''}
-              />
-              {errors.recipientContact && <span className="error-text">{errors.recipientContact}</span>}
-            </div>
 
 
-          </motion.div>
-
-          {/* Relationship Section */}
-          <motion.div
-            className="form-sections"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h2 className="section-title">SELECT CANDY TYPE</h2>
-            
+          <div className="relationship-container">
             <div className="relationship-options">
               <motion.button
                 type="button"
-                className={`relationship-btn ${formData.relationship === 'CHOCOLATE' ? 'active' : ''}`}
+                className={`relationship-btns ${formData.relationship === 'CHOCOLATE' ? 'active' : ''}`}
                 onClick={() => setFormData(prev => ({ ...prev, relationship: 'CHOCOLATE' }))}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                style={{
+                  backgroundColor: "chocolate",
+                }}
               >
-                <span className="relationship-emoji">🟤</span>
+
                 <span>CHOCOLATE</span>
               </motion.button>
-              
+
               <motion.button
                 type="button"
-                className={`relationship-btn ${formData.relationship === 'LOLLIPOP' ? 'active' : ''}`}
+                className={`relationship-btns ${formData.relationship === 'LOLLIPOP' ? 'active' : ''}`}
                 onClick={() => setFormData(prev => ({ ...prev, relationship: 'LOLLIPOP' }))}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+    style={{
+                  backgroundColor: "yellow",
+                }}
               >
-                <span className="relationship-emoji">🟡</span>
+ 
                 <span>LOLLIPOP</span>
               </motion.button>
             </div>
-          </motion.div>
 
-          {/* Call Time Section */}
-          <motion.div
-            className="form-sections"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h2 className="section-title">SELECT TIME WE REVEAL YOUR IDENTITY</h2>
-            
-            <div className="form-group">
-              <div className="time-options">
-                {['6AM', '12PM', '3PM', '9PM'].map((time) => (
-                  <motion.button
-                    key={time}
-                    type="button"
-                    className={`time-btn ${formData.callTime === time ? 'active' : ''}`}
-                    onClick={() => setFormData(prev => ({ ...prev, callTime: time }))}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {time}
-                  </motion.button>
-                ))}
-              </div>
-              {errors.callTime && <span className="error-text">{errors.callTime}</span>}
-            </div>
-          </motion.div>
+        
+          </div>
+
+
+          <span className='introduction'>YOUR CANDY WIL SING AFTER 15 MINUTES TO BUILD SUSPENSE</span>
+
+          
 
           {/* Submit Button */}
           <motion.button

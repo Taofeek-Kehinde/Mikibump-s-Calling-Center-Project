@@ -71,6 +71,9 @@
   clip-path: inset(0 round 30px);
 }
 
+/* form {
+  font-family: fantasy;
+} */
 /* Chrome, Edge, Safari */
 .form-panel::-webkit-scrollbar {
   width: 6px;
