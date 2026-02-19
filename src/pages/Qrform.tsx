@@ -269,23 +269,23 @@ export default function Qrform() {
                     </div>
 
                     <div className="form-group">
-                        <label>WhatsApp Number *</label>
-                        <input
-                            type="tel"
-                            placeholder="234 only!"
-                            value={contact}
-                            onChange={(e) => setContact(e.target.value.replace(/\D/g, ""))}
-                        />
-
-                    </div>
-
-                    <div className="form-group">
                         <label>Note</label>
                         <textarea
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
                             rows={3}
                         />
+                    </div>
+
+                    <div className="form-group">
+                        <label>WhatsApp Number *</label>
+                        <input
+                            type="tel"
+                            placeholder="Enter number with country code, e.g. 2348119825334"
+                            value={contact}
+                            onChange={(e) => setContact(e.target.value.replace(/\D/g, ""))}
+                        />
+
                     </div>
 
                     <div className="form-group">
