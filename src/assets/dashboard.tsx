@@ -1,9 +1,4 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
-import { useAppContext } from '../context/useAppContext';
 import { showAlert } from '../utils/showAlert';
 import { ref, onValue } from "firebase/database";
 import { db } from "../firebase";
@@ -18,6 +13,11 @@ import af7 from '../assets/af7.jpg';
 import af8 from '../assets/af8.jpg';
 import af9 from '../assets/af9.jpg';
 import af10 from '../assets/af10.jpg';
+import { useNavigate } from 'react-router-dom';
+import { faHandPointLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState, useRef, useEffect } from 'react';
+import { useAppContext } from '../context/useAppContext';
 
 function Dashboard() {
   const navigate = useNavigate();

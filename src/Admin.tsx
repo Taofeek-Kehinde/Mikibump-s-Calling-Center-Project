@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun, faArrowRightFromBracket, faUpload} from '@fortawesome/free-solid-svg-icons';
+import { FaMoon, FaSun, FaSignOutAlt, FaUpload } from 'react-icons/fa';
 import { useAppContext } from './context/useAppContext';
 import { showAlert } from './utils/showAlert';
 import { ref, set } from "firebase/database";
@@ -133,7 +132,7 @@ const handleGoOffline = () => {
               whileTap={{ scale: 0.95 }}
               title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} />
+              {isDarkMode ? <FaSun /> : <FaMoon />}
             </motion.button>
 
             <motion.button
@@ -142,7 +141,7 @@ const handleGoOffline = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+              <FaSignOutAlt />
               Logout
             </motion.button>
           </div>
@@ -232,7 +231,7 @@ const handleGoOffline = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <FontAwesomeIcon icon={faUpload} />
+                <FaUpload />
                 Upload Background Images
               </motion.button>
             </div>
