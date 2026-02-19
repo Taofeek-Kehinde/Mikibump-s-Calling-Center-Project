@@ -3,8 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandPointRight } from "@fortawesome/free-solid-svg-icons";
+import { FaWhatsapp } from "react-icons/fa";
+import { FaLink } from "react-icons/fa";
+import { FaHandPointRight } from "react-icons/fa";
+
+
 import "./Qrform.css";
 import { showAlert } from "../utils/showAlert";
 
@@ -13,7 +16,7 @@ export default function Qrform() {
     const navigate = useNavigate();
     const [url, setUrl] = useState("");
     const [name, setName] = useState("");
-     const [note, setNote] = useState("");
+    const [note, setNote] = useState("");
     const [contact, setContact] = useState("");
     const [savedData, setSavedData] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,8 +93,7 @@ export default function Qrform() {
                     </span>
 
                     {/* YOUR HAND ICON (UNCHANGED) */}
-                    <FontAwesomeIcon
-                        icon={faHandPointRight}
+                    <FaHandPointRight
                         className="lefthands"
                         style={{
                             fontSize: "1.6rem",
@@ -148,8 +150,7 @@ export default function Qrform() {
                         HOME
                     </span>
 
-                    <FontAwesomeIcon
-                        icon={faHandPointRight}
+                    <FaHandPointRight
                         className="lefthands"
                         style={{
                             fontSize: "1.6rem",
@@ -186,28 +187,32 @@ export default function Qrform() {
 
                     {savedData.contact && (
                         <button
-                            className="whatsapp-btn"
+                            className="action-btn whatsapp-btn"
                             onClick={() =>
                                 window.open(
-                                    `https://wa.me/${savedData.contact}?text=Hello ${savedData.name}`,
+                                    `https://wa.me/${savedData.contact}?text=Hi, I scanned your Candy QR`,
                                     "_blank"
                                 )
                             }
                         >
-                            CHAT ON WHATSAPP
+                            <FaWhatsapp className="btn-icon" />
+                            <span>Chat on WhatsApp</span>
                         </button>
                     )}
-                    
+
+
 
 
                     {savedData.url && (
                         <button
-                            className="url-btn"
+                            className="action-btn url-btn"
                             onClick={() => window.open(savedData.url, "_blank")}
                         >
-                            VISIT LINK
+                            <FaLink className="btn-icon" />
+                            <span>Visit Link</span>
                         </button>
                     )}
+
                 </div>
             </div>
         );
