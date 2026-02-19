@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 import "./Qrform.css";
+import { showAlert } from "../utils/showAlert";
 
 export default function Qrform() {
     const { id } = useParams();
@@ -165,7 +166,19 @@ export default function Qrform() {
                 <div className="qrform-card">
                     <h2>TALK IN CANDY</h2>
                     {savedData.name && <p><b>NAME:</b> {savedData.name}</p>}
-                    {savedData.contact && <p><b>CONTACT:</b> {savedData.contact}</p>}
+                    {savedData.contact && (
+                        <button
+                            className="whatsapp-btn"
+                            onClick={() =>
+                                window.open(
+                                    `https://wa.me/${savedData.contact}?text=Hello ${savedData.name}`,
+                                    "_blank"
+                                )
+                            }
+                        >
+                            CHAT ON WHATSAPP
+                        </button>
+                    )}
                     {savedData.note && (
                         <p><b>NOTE:</b> {savedData.note}</p>
                     )}
@@ -201,7 +214,12 @@ export default function Qrform() {
         if (!id || isSubmitting) return;
 
         if (!name.trim() || !contact.trim()) {
-            alert("Name and Contact are required.");
+            showAlert("Name and WhatsApp number are required.");
+            return;
+        }
+
+        if (contact.length < 10) {
+            showAlert("Enter a valid WhatsApp number with country code.");
             return;
         }
 
@@ -251,8 +269,14 @@ export default function Qrform() {
                     </div>
 
                     <div className="form-group">
-                        <label>Contact *</label>
-                        <input type="tel" value={contact} onChange={(e) => setContact(e.target.value)} />
+                        <label>WhatsApp Number *</label>
+                        <input
+                            type="tel"
+                            placeholder="Whatsapp number"
+                            value={contact}
+                            onChange={(e) => setContact(e.target.value.replace(/\D/g, ""))}
+                        />
+
                     </div>
 
                     <div className="form-group">

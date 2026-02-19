@@ -278,3 +278,22 @@ h2 {
     padding: 10px 14px;
   }
 }
+
+
+.whatsapp-btn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #25D366;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+  width: 100%;
+}
+
+.whatsapp-btn:hover {
+  background: #1ebe5d;
+  transform: scale(1.05);
+}
