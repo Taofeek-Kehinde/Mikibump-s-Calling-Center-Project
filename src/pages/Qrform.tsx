@@ -272,7 +272,7 @@ export default function Qrform() {
                         <label>WhatsApp Number *</label>
                         <input
                             type="tel"
-                            placeholder="Whatsapp number"
+                            placeholder="234 only!"
                             value={contact}
                             onChange={(e) => setContact(e.target.value.replace(/\D/g, ""))}
                         />
