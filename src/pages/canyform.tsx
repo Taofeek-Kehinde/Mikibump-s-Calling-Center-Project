@@ -36,7 +36,7 @@ function Form() {
 
 const [spotifyLink, setSpotifyLink] = useState("");
 const [qrImage, setQrImage] = useState("");
-const [generatedUrl, setGeneratedUrl] = useState("");
+const [generatedUrl] = useState("");
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
