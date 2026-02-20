@@ -272,7 +272,7 @@ form {
   text-align: center;       
   max-width: 600px;         
   margin: 15px auto;        
-  font-size: 1.1rem;        
+  font-size: 0.8rem;        
   font-weight: 500;         
   color: #333;            
   line-height: 1.5;        
@@ -375,6 +375,8 @@ form {
 
 .mycanndy {
   text-align: center;
+  position: relative;
+  top: 30px;
   font-size: 1.5rem;
   font-family:Georgia, 'Times New Roman', Times, serif;
 }
@@ -386,6 +388,7 @@ form {
 }
 
 /* Time Options */
+
 .time-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -532,6 +535,10 @@ input #yourContact {
     border-radius: 20px;
   }
 
+  .introduction {        
+  font-size: 0.7rem;        
+  
+}
   .form-titless {
     font-size: 1.8rem;
     margin-top: 40px;
@@ -558,6 +565,12 @@ input #yourContact {
     padding: 20px 15px;
     border-radius: 15px;
   }
+
+   .introduction {        
+  font-size: 0.7rem;        
+  
+}
+
 
   .form-titless {
     font-size: 1.5rem;

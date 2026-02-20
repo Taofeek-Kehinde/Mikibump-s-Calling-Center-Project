@@ -2,8 +2,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
-import { faHandPointRight } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 // import { useAppContext } from '../context/useAppContext';
 import './candyform.css';
@@ -155,7 +154,7 @@ function Form() {
             </motion.button>
 
 
-    <span className='mycanndy'>CANDY IT WITH</span>
+    <span className='mycanndy'>CANDY IT </span>
 
           {/* Your Details Section */}
 
@@ -172,6 +171,10 @@ function Form() {
                   backgroundColor: "chocolate",
                 }}
               >
+  <FontAwesomeIcon icon={faHandPointRight} className="lefthand"  style={{
+    marginRight: "150px",
+    color:"chocolate",
+  }}/>
 
                 <span>CHOCOLATE</span>
               </motion.button>
@@ -186,7 +189,10 @@ function Form() {
                   backgroundColor: "yellow",
                 }}
               >
- 
+   <FontAwesomeIcon icon={faHandPointLeft} className="lefthand" style={{
+    marginLeft: "270px",
+    color: "yellow"
+   }} />
                 <span>LOLLIPOP</span>
               </motion.button>
             </div>
@@ -195,23 +201,9 @@ function Form() {
           </div>
 
 
-          <span className='introduction'>YOUR CANDY WIL SING AFTER 15 MINUTES TO BUILD SUSPENSE</span>
+          <span className='introduction'>(YOUR CANDY WILL SING AFTER 15 MINUTES TO BUILD SUSPENSE)</span>
 
           
-
-          {/* Submit Button */}
-          <motion.button
-            type="submit"
-            className="submit-btn"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <FontAwesomeIcon icon={faCircle} />
-            CANDY IT
-          </motion.button>
           <p className='statement'>(NB: CANDY will be delivered 6am to Recipient WhatsApp,  while your IDENTITY will be revealed at the time you selected)</p>
         </form>
       </motion.div>
