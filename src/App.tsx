@@ -11,6 +11,7 @@ import type { JSX } from 'react';
 import Qrcode from './pages/Qrcode.tsx';
 import Qrform from './pages/Qrform.tsx';
 import View from './pages/View.tsx';
+import CandyDetails from './pages/CandyDetails.tsx';
 
 function App(): JSX.Element {
   const [typedText, setTypedText] = useState('');
@@ -66,6 +67,7 @@ function App(): JSX.Element {
       <Route path="/qrform/:id" element={<Qrform />} />
         <Route path="/view/:id" element={<View />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/candy/:id" element={<CandyDetails />} />
       <Route path="/chat" element={<EnhancedChat />} />
       <Route path="/" element={
         <div>

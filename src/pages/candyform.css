@@ -671,13 +671,6 @@ input #yourContact {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
 }
 
-.statement {
-  font-size: 0.85rem;
-  color: #555;
-  text-align: center;
-}
-
-
 .recipient-input {
   display: block;
   margin: 1rem auto 0 auto; /* center horizontally with spacing */
@@ -691,14 +684,14 @@ input #yourContact {
   text-align: center;
   border: 2px solid black;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  color: #333;
-  background: transparent;
+  color: #fff;
+  background: black;
   box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);
   transition: all 0.3s ease;
 }
 
 .recipient-input::placeholder {
-  color: #000; 
+  color: #fff; 
   opacity: 1;
 }
 

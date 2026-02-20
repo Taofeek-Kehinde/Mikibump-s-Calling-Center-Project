@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { db } from "../firebase2";
+import { collection, addDoc } from "firebase/firestore";
+import QRCode from "qrcode";
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
@@ -31,55 +34,84 @@ function Form() {
 
  
 
+const [spotifyLink, setSpotifyLink] = useState("");
+const [qrImage, setQrImage] = useState("");
+const [generatedUrl, setGeneratedUrl] = useState("");
 
-  const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {};
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  if (!formData.recipientContact || !spotifyLink) {
+    showAlert("Fill all fields", "error");
+    return;
+  }
+
+  try {
+    const unlockTime = Date.now() + 15 * 60 * 1000;
+
+    const docRef = await addDoc(collection(db, "candies"), {
+      name: formData.recipientContact,
+      relationship: formData.relationship,
+      spotifyLink: spotifyLink,
+      createdAt: Date.now(),
+      unlockTime: unlockTime
+    });
+
+    const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
+
+    const qr = await QRCode.toDataURL(candyUrl);
+    setQrImage(qr);
+
+    showAlert("Candy Generated Successfully 🍫", "success");
+
+  } catch (error) {
+    console.error(error);
+    showAlert("Error saving candy", "error");
+  }
+};
 
 
-    if (!formData.recipientContact.trim()) newErrors.recipientContact = 'Recipient contact is required';
 
-    return Object.keys(newErrors).length === 0;
-  };
 
- const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+// hmm
 
-    if (!validateForm()) {
-      showAlert('Please fill all required fields', 'error');
-      return;
-    }
 
-    try {
-      await fetch('https://formspree.io/f/mreaeapj', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          recipientContact: formData.recipientContact,
-          relationship: formData.relationship,
-        }),
-      });
+const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
+  if (!formData.recipientContact || !spotifyLink) {
+    showAlert("Enter name and paste Spotify link", "error");
+    return;
+  }
 
-      showAlert('CANDY sent Successfully, we will get back to you soon', 'success');
-      // Navigate to dashboard after successful submission
-      setTimeout(() => {
-        navigate('/');
-      }, 2000); // Wait 2 seconds to show the success message
-    } catch (error) {
-      console.error('Error sending message:', error);
-      showAlert('Error sending message. Please try again.', 'error');
-    }
+  try {
+    const unlockTime = Date.now() + 15 * 60 * 1000;
 
-    // Reset form
-    setTimeout(() => {
-      setFormData({
-        recipientContact: '',
-        relationship: 'CHOCOLATE',
-      });
-    }, 500);
-  };
+    const docRef = await addDoc(collection(db, "candies"), {
+      name: formData.recipientContact,
+      relationship: type,
+      spotifyLink: spotifyLink,
+      createdAt: Date.now(),
+      unlockTime: unlockTime
+    });
+
+    const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
+
+    // Generate QR
+    const qr = await QRCode.toDataURL(candyUrl);
+    setQrImage(qr);
+
+    // Open WhatsApp
+    const message = `🍫 Someone sent you a Candy Surprise!\nTap to open:\n${candyUrl}`;
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+
+  } catch (error) {
+    console.error(error);
+    showAlert("Error creating candy", "error");
+  }
+};
+
 
   // const noteWords = formData.note.trim().split(/\s+/).filter(word => word.length > 0).length;
 
@@ -122,7 +154,7 @@ function Form() {
     <p className='question' style={{
       fontFamily: "sans-serif",
       fontWeight: "500",
-      fontSize: "20px",
+      fontSize: "15px",
       textAlign: "center",
       userSelect: "none",
       textShadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
@@ -142,16 +174,73 @@ function Form() {
   }
 />
 
+<input
+  type="text"
+  placeholder="PASTE SPOTIFY LINK"
+  value={spotifyLink}
+  className='recipient-input'
+  onChange={(e) => setSpotifyLink(e.target.value)}
+/>
+{qrImage && (
+  <div style={{ textAlign: "center", marginTop: "20px" }}>
+    <div style={{
+      display: "inline-block",
+      padding: "20px",
+      borderRadius: "50%",
+      background: formData.relationship === "CHOCOLATE" ? "chocolate" : "yellow",
+      boxShadow: "0 5px 15px rgba(0,0,0,0.3)"
+    }}>
+      <img src={qrImage} alt="Candy QR" width="150" height="150" style={{ borderRadius: "50%" }}/>
+    </div>
+
+    <div style={{ marginTop: "10px" }}>
+      <a href={qrImage} download={`candy-${formData.recipientContact}.png`}>
+        <button>Download QR</button>
+      </a>
+    </div>
+
+    <div style={{ marginTop: "10px" }}>
+      <button
+        onClick={() => {
+          const message = `🍫 Someone sent you a Candy Surprise!\nTap to open:\n${generatedUrl}`;
+          window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
+        }}
+      >
+        Share on WhatsApp
+      </button>
+    </div>
+  </div>
+)}
+
 
 {/* Centered button below */}
-            <motion.button
-              type="button"
-              className="singbtn"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className='Singsecbtn'>TAP TO MAKE IT SING</span>
-            </motion.button>
+<motion.button
+  type="button"
+  className="singbtn"
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => {
+    const playlistId = "37i9dQZF1DXcBWIGoYBM5M"; // <-- replace with yours
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      window.location.href = `spotify:playlist:${playlistId}`;
+
+      setTimeout(() => {
+        window.location.href = `https://open.spotify.com/playlist/${playlistId}`;
+      }, 1500);
+    } else {
+      window.open(
+        `https://open.spotify.com/playlist/${playlistId}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }
+  }}
+>
+  <span className="Singsecbtn">TAP TO MAKE IT SING</span>
+</motion.button>
 
 
     <span className='mycanndy'>CANDY IT </span>
@@ -164,12 +253,10 @@ function Form() {
               <motion.button
                 type="button"
                 className={`relationship-btns ${formData.relationship === 'CHOCOLATE' ? 'active' : ''}`}
-                onClick={() => setFormData(prev => ({ ...prev, relationship: 'CHOCOLATE' }))}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                style={{
-                  backgroundColor: "chocolate",
-                }}
+                style={{ backgroundColor: "chocolate" }}
+                onClick={() => handleCandyClick("CHOCOLATE")}
               >
   <FontAwesomeIcon icon={faHandPointRight} className="lefthand"  style={{
     marginRight: "150px",
@@ -182,12 +269,10 @@ function Form() {
               <motion.button
                 type="button"
                 className={`relationship-btns ${formData.relationship === 'LOLLIPOP' ? 'active' : ''}`}
-                onClick={() => setFormData(prev => ({ ...prev, relationship: 'LOLLIPOP' }))}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-    style={{
-                  backgroundColor: "yellow",
-                }}
+                style={{ backgroundColor: "yellow" }} 
+                onClick={() => handleCandyClick("LOLLIPOP")}
               >
    <FontAwesomeIcon icon={faHandPointLeft} className="lefthand" style={{
     marginLeft: "270px",
@@ -203,8 +288,6 @@ function Form() {
 
           <span className='introduction'>(YOUR CANDY WILL SING AFTER 15 MINUTES TO BUILD SUSPENSE)</span>
 
-          
-          <p className='statement'>(NB: CANDY will be delivered 6am to Recipient WhatsApp,  while your IDENTITY will be revealed at the time you selected)</p>
         </form>
       </motion.div>
     </motion.div>
