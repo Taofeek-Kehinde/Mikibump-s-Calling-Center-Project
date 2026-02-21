@@ -1,19 +1,21 @@
 
 body.candyform-page {
-  overflow: hidden;
-  height: 100vh;
+  overflow-x: hidden;
+  min-height: 100vh; 
 }
 
-.form-containers {
-  min-height: 100vh;
-
-  /* Background image settings */
+body {
   background-image: url(../assets/candy.jpg);
   background-position: center center;  /* perfectly center both vertically and horizontally */
   background-size: cover;             /* make it cover the entire container */
   background-repeat: no-repeat;
-  background-attachment: fixed;       /* optional: makes background stay fixed while scrolling */
-
+  background-attachment: fixed;   
+}
+.form-containers {
+  min-height: 100vh;
+  height: auto;
+  /* Background image settings */
+      /* optional: makes background stay fixed while scrolling */
   /* Flex centering */
   display: flex;
   justify-content: center;
@@ -24,7 +26,7 @@ body.candyform-page {
 
   /* layering & overflow */
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 
@@ -42,12 +44,12 @@ label.lab {
 }
 
 .form-panels {
-  width: 100%;
+  width: auto;
   max-width: 600px;
   background: orange;
   backdrop-filter: blur(20px);
   border-radius: 30px;
-  padding: 40px;
+  padding: 30px 40px 20px 40px;
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(255, 255, 255, 0.8) inset,
@@ -55,9 +57,9 @@ label.lab {
   border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
   overflow-x: hidden;
-  max-height: 95vh;
-  overflow-y: auto;
-}
+  height: auto;
+max-height: none;
+  /* overflow-y: hidden; */
 
 .form-panels {
   scrollbar-gutter: stable both-edges;
@@ -258,23 +260,26 @@ form {
 }
 
 /* Container */
-.relationship-container {
+/* .relationship-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 25px; 
+  gap: 20px; 
   width: 100%;
+  position: relative;
+  bottom: 20px;
   padding: 20px;
-}
+} */
 
 .introduction {
   display: block;           
   text-align: center;       
   max-width: 600px;         
-  margin: 15px auto;        
+  margin: -10px auto 5px auto;        
   font-size: 0.8rem;        
-  font-weight: 500;         
-  color: #333;            
+  font-weight: 500;  
+  margin-top: -40px;  
+  color: #333;          
   line-height: 1.5;        
   padding: 0 10px;          
   animation: fadeIn 1s ease-in-out; 
@@ -302,7 +307,19 @@ form {
   align-items: center;
   gap: 25px;
   width: 100%;
+  position: relative;
+  bottom: 65px;
   padding: 20px;
+}
+
+.middle {
+  background-color: black;
+  border: 2px solid black;
+  color: white;
+  width: 30px;
+  border-radius: 50px;
+  height: 30px;
+  text-align: center;
 }
 
 /* Top Buttons */
@@ -376,7 +393,7 @@ form {
 .mycanndy {
   text-align: center;
   position: relative;
-  top: 30px;
+  bottom: 10px;
   font-size: 1.5rem;
   font-family:Georgia, 'Times New Roman', Times, serif;
 }
@@ -435,34 +452,6 @@ input #yourContact {
 #recipientContact {
   width: 100%;
   background: transparent;
-}
-/* Submit Button */
-.submit-btn {
-  padding: 16px 40px;
-  font-family: 'Dancing script', cursive;
-  background: linear-gradient(135deg, #2f2f2f 0%, #4a4a4a 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-  margin-top: 20px;
-}
-
-.submit-btn:hover {
-  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-  transform: translateY(-2px);
-}
-
-.submit-btn:active {
-  transform: translateY(0);
 }
 
 
@@ -671,15 +660,17 @@ input #yourContact {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
 }
 
-.recipient-input {
+.recipient-input{
   display: block;
   margin: 1rem auto 0 auto; /* center horizontally with spacing */
   width: 90%; /* relative width for mobile */
   max-width: 450px; /* max width for larger screens */
   padding: 0.75rem 1.25rem; /* comfortable padding */
-  border-radius: 13px; /* pill shape */
+  border-radius: 50px; /* pill shape */
   font-size: 1rem;
-  margin-top: 30px;
+  /* margin-top: -10px; */
+  position: relative;
+  bottom: 25px;
   font-weight: 600;
   text-align: center;
   border: 2px solid black;
@@ -690,8 +681,34 @@ input #yourContact {
   transition: all 0.3s ease;
 }
 
+.recipient-inputs {
+   display: block;
+  margin: 1rem auto 0 auto; /* center horizontally with spacing */
+  width: 90%; /* relative width for mobile */
+  max-width: 450px; /* max width for larger screens */
+  padding: 0.75rem 1.25rem; /* comfortable padding */
+  border-radius: 50px; /* pill shape */
+  font-size: 1rem;
+  /* margin-top: -10px; */
+  position: relative;
+ bottom: 55px;
+  font-weight: 600;
+  text-align: center;
+  border: 2px solid black;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: #fff;
+  background: black;
+  box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);
+  transition: all 0.3s ease;
+}
 .recipient-input::placeholder {
   color: #fff; 
+  opacity: 1;
+  /* font-family: 'Dancing script', cursive; */
+}
+
+.recipient-inputs::placeholder {
+   color: #fff; 
   opacity: 1;
 }
 
@@ -700,9 +717,22 @@ input #yourContact {
   transform: scale(1.02); /* subtle pop effect */
 }
 
+.recipient-inputs:focus {
+  outline: none;
+  transform: scale(1.02); /* subtle pop effect */
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 640px) { /* small devices */
   .recipient-input {
+    font-size: 0.9rem;
+    padding: 0.65rem 1rem;
+  }
+}
+
+@media (max-width: 640px) { /* small devices */
+  .recipient-inputs {
     font-size: 0.9rem;
     padding: 0.65rem 1rem;
   }
@@ -715,9 +745,26 @@ input #yourContact {
   }
 }
 
+@media (min-width: 641px) and (max-width: 1024px) { /* tablets */
+  .recipient-inputs {
+    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
+  }
+}
+
+
 @media (min-width: 1025px) { /* desktops */
   .recipient-input {
     font-size: 1.1rem;
     padding: 0.85rem 1.5rem;
   }
+}
+
+
+@media (min-width: 1025px) { /* desktops */
+  .recipient-inputs {
+    font-size: 1.1rem;
+    padding: 0.85rem 1.5rem;
+  }
+}
 }

@@ -149,38 +149,45 @@ const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
         }}>
           SAY IT WITH CANDY <p className='nowords'>(NO WORDS NEEDED)</p></h1>
 
+    <span className='mycanndy'>CANDY TREAT </span>
 
-
-    <p className='question' style={{
-      fontFamily: "sans-serif",
-      fontWeight: "500",
-      fontSize: "15px",
-      textAlign: "center",
-      userSelect: "none",
-      textShadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
-    }}> WHO ARE YOU SENDING IT TO?</p>
         <form onSubmit={handleSubmit}>
 
 
           {/* Input session */}
 
+
+          <input
+  type="text"
+  placeholder="PASTE Link to SONG OR VIDEO"
+  value={spotifyLink}
+  className='recipient-input'
+  onChange={(e) => setSpotifyLink(e.target.value)}
+/>
+
+
+    <p className='question' style={{
+      fontFamily: "sans-serif",
+      fontWeight: "500",
+      position:"relative",
+      bottom: "14px",
+      fontSize: "15px",
+      textAlign: "center",
+      userSelect: "none",
+      textShadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
+    }}> WHO ARE YOU SENDING IT TO?</p>
+
+
 <input 
   type="text"
   placeholder="ENTER NAME"
-  className="recipient-input"
+  className="recipient-inputs"
   value={formData.recipientContact}
   onChange={(e) =>
     setFormData({ ...formData, recipientContact: e.target.value })
   }
 />
 
-<input
-  type="text"
-  placeholder="PASTE SPOTIFY LINK"
-  value={spotifyLink}
-  className='recipient-input'
-  onChange={(e) => setSpotifyLink(e.target.value)}
-/>
 {qrImage && (
   <div style={{ textAlign: "center", marginTop: "20px" }}>
     <div style={{
@@ -212,39 +219,6 @@ const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
   </div>
 )}
 
-
-{/* Centered button below */}
-<motion.button
-  type="button"
-  className="singbtn"
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.95 }}
-  onClick={() => {
-    const playlistId = "37i9dQZF1DXcBWIGoYBM5M"; // <-- replace with yours
-
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      window.location.href = `spotify:playlist:${playlistId}`;
-
-      setTimeout(() => {
-        window.location.href = `https://open.spotify.com/playlist/${playlistId}`;
-      }, 1500);
-    } else {
-      window.open(
-        `https://open.spotify.com/playlist/${playlistId}`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }
-  }}
->
-  <span className="Singsecbtn">TAP TO MAKE IT SING</span>
-</motion.button>
-
-
-    <span className='mycanndy'>CANDY IT </span>
-
           {/* Your Details Section */}
 
 
@@ -255,7 +229,7 @@ const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
                 className={`relationship-btns ${formData.relationship === 'CHOCOLATE' ? 'active' : ''}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                style={{ backgroundColor: "chocolate" }}
+                style={{ backgroundColor: "chocolate", position: "relative", left: "10px" }}
                 onClick={() => handleCandyClick("CHOCOLATE")}
               >
   <FontAwesomeIcon icon={faHandPointRight} className="lefthand"  style={{
@@ -264,14 +238,18 @@ const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
   }}/>
 
                 <span>CHOCOLATE</span>
-              </motion.button>
 
+                 
+              </motion.button>
+              <div className='middle'>
+              <p>OR</p>
+              </div>
               <motion.button
                 type="button"
                 className={`relationship-btns ${formData.relationship === 'LOLLIPOP' ? 'active' : ''}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                style={{ backgroundColor: "yellow" }} 
+                style={{ backgroundColor: "yellow", position: "relative", right: "10px"}} 
                 onClick={() => handleCandyClick("LOLLIPOP")}
               >
    <FontAwesomeIcon icon={faHandPointLeft} className="lefthand" style={{
@@ -286,7 +264,7 @@ const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
           </div>
 
 
-          <span className='introduction'>(YOUR CANDY WILL SING AFTER 15 MINUTES TO BUILD SUSPENSE)</span>
+          <span className='introduction'>[CANDY Treat will be made available after 15 minutes to build suspense]</span>
 
         </form>
       </motion.div>
