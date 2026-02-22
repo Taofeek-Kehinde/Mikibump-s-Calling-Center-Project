@@ -170,7 +170,7 @@ const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
       fontFamily: "sans-serif",
       fontWeight: "500",
       position:"relative",
-      bottom: "14px",
+      bottom: "20px",
       fontSize: "15px",
       textAlign: "center",
       userSelect: "none",

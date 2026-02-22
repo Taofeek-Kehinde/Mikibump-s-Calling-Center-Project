@@ -394,9 +394,12 @@ form {
   text-align: center;
   position: relative;
   bottom: 10px;
-  font-size: 1.5rem;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size: "15px";
+  font-family: sans-serif;
+user-select: none;
+text-shadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
 }
+
 .singbtn:hover {
   background: linear-gradient(135deg, #2f2f2f 0%, #4a4a4a 100%);
   transform: scale(1.08);
@@ -673,10 +676,10 @@ input #yourContact {
   bottom: 25px;
   font-weight: 600;
   text-align: center;
-  border: 2px solid black;
+  border: 2px solid brown;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   color: #fff;
-  background: black;
+  background: brown;
   box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);
   transition: all 0.3s ease;
 }
@@ -694,22 +697,24 @@ input #yourContact {
  bottom: 55px;
   font-weight: 600;
   text-align: center;
-  border: 2px solid black;
+  border: 2px solid brown;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   color: #fff;
-  background: black;
+  background: brown;
   box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);
   transition: all 0.3s ease;
 }
 .recipient-input::placeholder {
   color: #fff; 
   opacity: 1;
+  font-size: 14px;
   /* font-family: 'Dancing script', cursive; */
 }
 
 .recipient-inputs::placeholder {
    color: #fff; 
   opacity: 1;
+  font-size: 14px;
 }
 
 .recipient-input:focus {
