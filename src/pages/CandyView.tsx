@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
-import "./candyview.css";
+import './Candyview.css';
 
 interface CandyData {
   name: string;
