@@ -790,3 +790,18 @@ input #yourContact {
   }
 }
 }
+
+
+
+label.name,
+label.time,
+label.date {
+  color: black;
+}
+
+
+.name,
+.time,
+.date {
+  color: black !important;
+}
