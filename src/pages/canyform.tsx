@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
-import QRCode from "qrcode";
+// import QRCode from "qrcode";
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
@@ -35,82 +35,41 @@ function Form() {
 
 
   const [spotifyLink, setSpotifyLink] = useState("");
-  const [qrImage, setQrImage] = useState("");
+  // const [qrImage, setQrImage] = useState("");
   // const [generatedUrl] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!formData.recipientContact || !spotifyLink) {
-      showAlert("Fill all fields", "error");
-      return;
-    }
-
-    try {
-      const unlockTime = Date.now() + 15 * 60 * 1000;
-
-      const docRef = await addDoc(collection(db, "candies"), {
-        name: formData.recipientContact,
-        relationship: formData.relationship,
-        spotifyLink: spotifyLink,
-        createdAt: Date.now(),
-        unlockTime: unlockTime
-      });
-
-      const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
-
-      const qr = await QRCode.toDataURL(candyUrl);
-      setQrImage(qr);
-
-      showAlert("Candy Generated Successfully 🍫", "success");
-
-    } catch (error) {
-      console.error(error);
-      showAlert("Error saving candy", "error");
-    }
-  };
-
-
 
 
   // hmm
 
 
   const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
-    if (!formData.recipientContact || !spotifyLink) {
-      showAlert("Enter name and paste Spotify link", "error");
-      return;
-    }
+  if (!formData.recipientContact || !spotifyLink) {
+    showAlert("Enter name and paste Spotify link", "error");
+    return;
+  }
 
-    try {
-      const unlockTime = Date.now() + 15 * 60 * 1000;
+  try {
+    const unlockTime = Date.now() + 15 * 60 * 1000;
 
-      const docRef = await addDoc(collection(db, "candies"), {
-        name: formData.recipientContact,
-        relationship: type,
-        spotifyLink: spotifyLink,
-        createdAt: Date.now(),
-        unlockTime: unlockTime
-      });
+    const docRef = await addDoc(collection(db, "candies"), {
+      name: formData.recipientContact,
+      relationship: type,
+      spotifyLink: spotifyLink,
+      createdAt: Date.now(),
+      unlockTime: unlockTime
+    });
 
-      const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
+    const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
 
-      // Generate QR
-      const qr = await QRCode.toDataURL(candyUrl);
-      setQrImage(qr);
+    const message = `🍫 Someone sent you a Candy Treat!\nTap to open:\n${candyUrl}`;
 
-      // Open WhatsApp
-      const message = `🍫 Someone sent you a Candy Surprise!\nTap to open:\n${candyUrl}`;
-      window.open(
-        `https://wa.me/?text=${encodeURIComponent(message)}`,
-        "_blank"
-      );
+    window.location.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
 
-    } catch (error) {
-      console.error(error);
-      showAlert("Error creating candy", "error");
-    }
-  };
+  } catch (error) {
+    console.error(error);
+    showAlert("Error creating candy", "error");
+  }
+};
 
 
   // const noteWords = formData.note.trim().split(/\s+/).filter(word => word.length > 0).length;
@@ -151,7 +110,7 @@ function Form() {
 
         <span className='mycanndy'>CANDY TREAT </span>
 
-        <form onSubmit={handleSubmit}>
+        <form>
 
 
           {/* Input session */}
@@ -188,38 +147,7 @@ function Form() {
             }
           />
 
-          {qrImage && (
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
-              <div style={{
-                display: "inline-block",
-                padding: "20px",
-                borderRadius: "50%",
-                background: formData.relationship === "CHOCOLATE" ? "chocolate" : "yellow",
-                boxShadow: "0 5px 15px rgba(0,0,0,0.3)"
-              }}>
-                <img src={qrImage} alt="Candy QR" width="150" height="150" style={{ borderRadius: "50%" }} />
-              </div>
-
-              <div style={{ marginTop: "10px" }}>
-                <a href={qrImage} download={`candy-${formData.recipientContact}.png`}>
-                  <button>Download QR</button>
-                </a>
-              </div>
-
-              <div style={{ marginTop: "10px" }}>
-                {/* <button
-                  onClick={() => {
-                    const message = `🍫 Someone sent you a Candy Surprise!\nTap to open:\n${generatedUrl}`;
-                    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
-                  }}
-                >
-                  Share on WhatsApp
-                </button> */}
-              </div>
-            </div>
-          )}
-
-          {/* Your Details Section */}
+        
 
 
           <div className="relationship-container">
