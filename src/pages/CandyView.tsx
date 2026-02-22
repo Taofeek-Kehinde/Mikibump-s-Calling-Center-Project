@@ -58,13 +58,13 @@ function CandyView() {
           {candy.relationship.toLowerCase()}
         </div>
 
-        <p><strong>NAME:</strong> {candy.name}</p>
+        <p><strong>FOR:</strong> {candy.name}</p>
         <p><strong>TIME:</strong> {formattedTime}</p>
         <p><strong>DATE:</strong> {formattedDate}</p>
 
         {locked ? (
           <button className="wait-btn">
-            WAIT FOR YOUR SONG
+            OPEN YOUR CANDY TREAT
           </button>
         ) : (
           <a
@@ -73,7 +73,7 @@ function CandyView() {
             rel="noopener noreferrer"
             className="wait-btn"
           >
-            OPEN YOUR SONG 🎵
+            OPEN YOUR CANDY TREAT 🎵
           </a>
         )}
 
