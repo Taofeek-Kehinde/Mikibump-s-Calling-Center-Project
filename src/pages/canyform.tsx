@@ -63,7 +63,14 @@ function Form() {
 
     const message = `🍫 Someone sent you a Candy Treat!\nTap to open:\n${candyUrl}`;
 
-    window.location.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    const whatsappMessage = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+  window.location.href = `whatsapp://send?text=${encodeURIComponent(message)}`;
+} else {
+  window.open(whatsappMessage, "_blank");
+}
+
 
   } catch (error) {
     console.error(error);
