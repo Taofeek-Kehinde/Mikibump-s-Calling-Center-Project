@@ -36,7 +36,7 @@ function Form() {
 
   const [spotifyLink, setSpotifyLink] = useState("");
   const [qrImage, setQrImage] = useState("");
-  const [generatedUrl] = useState("");
+  // const [generatedUrl] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -207,14 +207,14 @@ function Form() {
               </div>
 
               <div style={{ marginTop: "10px" }}>
-                <button
+                {/* <button
                   onClick={() => {
                     const message = `🍫 Someone sent you a Candy Surprise!\nTap to open:\n${generatedUrl}`;
                     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
                   }}
                 >
                   Share on WhatsApp
-                </button>
+                </button> */}
               </div>
             </div>
           )}

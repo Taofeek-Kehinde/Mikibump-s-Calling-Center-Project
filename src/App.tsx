@@ -11,7 +11,7 @@ import type { JSX } from 'react';
 import Qrcode from './pages/Qrcode.tsx';
 import Qrform from './pages/Qrform.tsx';
 import View from './pages/View.tsx';
-import CandyDetails from './pages/CandyDetails.tsx';
+import CandyDetails from './pages/CandyView.tsx';
 
 function App(): JSX.Element {
   const [typedText, setTypedText] = useState('');
