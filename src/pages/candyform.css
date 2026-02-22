@@ -676,12 +676,29 @@ input #yourContact {
   bottom: 25px;
   font-weight: 600;
   text-align: center;
-  border: 2px solid brown;
+  border: 2px solid chocolate;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   color: #fff;
-  background: brown;
+  background: chocolate;
   box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);
   transition: all 0.3s ease;
+}
+
+
+.middle-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(6px, 2vw, 16px); /* responsive spacing */
+}
+
+.divider-line {
+  font-size: clamp(18px, 4vw, 32px); /* responsive font size */
+  font-weight: 700;
+  letter-spacing: clamp(2px, 1vw, 8px); /* responsive spacing */
+  background: linear-gradient(180deg, chocolate, yellow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .recipient-inputs {
@@ -697,10 +714,10 @@ input #yourContact {
  bottom: 55px;
   font-weight: 600;
   text-align: center;
-  border: 2px solid brown;
+  border: 2px solid chocolate;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   color: #fff;
-  background: brown;
+  background: chocolate;
   box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);
   transition: all 0.3s ease;
 }
