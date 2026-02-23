@@ -17,7 +17,7 @@ export default function QRScanner() {
         alert("Scanned: " + decodedText);
         scanner.clear();
       },
-      (errorMessage) => {
+      (_errorMessage) => {
         // ignore errors (optional)
       }
     );
