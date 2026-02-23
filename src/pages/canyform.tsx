@@ -2,11 +2,12 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
-import QRCode from "qrcode"; // ✅ ADDED
+import QRCode from "qrcode"; 
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
+import { FaWhatsapp } from "react-icons/fa";
 import './candyform.css';
 
 
@@ -35,12 +36,11 @@ function Form() {
 
   const [spotifyLink, setSpotifyLink] = useState("");
 
-  // ✅ ADDED STATES (nothing else touched)
   const [selectedCandy, setSelectedCandy] = useState<"CHOCOLATE" | "LOLLIPOP" | null>(null);
   const [showSharePrompt, setShowSharePrompt] = useState(false);
 
 
-  // ✅ Modified to open prompt first (same validation kept)
+
   const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
     if (!formData.recipientContact || !spotifyLink) {
       showAlert("Enter name and paste Spotify link", "error");
@@ -52,7 +52,6 @@ function Form() {
   };
 
 
-  // ✅ NEW FUNCTION - Improved share functionality for phone and laptop
   const handleShareChoice = async (option: "LINK" | "QR") => {
 
     if (!selectedCandy) return;
@@ -194,7 +193,7 @@ function Form() {
           SAY IT WITH CANDY <p className='nowords'>(NO WORDS NEEDED)</p>
         </h1>
 
-        <span className='mycanndy'>CANDY TREAT </span>
+        <span className='mycanndy' style={{fontSize: "13px"}}>CANDY TREAT </span>
 
         <form>
 
@@ -211,10 +210,10 @@ function Form() {
             fontWeight: "500",
             position: "relative",
             bottom: "20px",
-            fontSize: "15px",
+            fontSize: "12px",
             textAlign: "center",
             userSelect: "none",
-            textShadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
+            color: "brown"
           }}> WHO ARE YOU SENDING IT TO?</p>
 
           <input
@@ -280,17 +279,39 @@ function Form() {
           <div className="share-box">
             <p>How do you want to share?</p>
 
-            <button onClick={() => handleShareChoice("QR")}>
-              Share as QR CODE
-            </button>
+            <button
+  onClick={() => handleShareChoice("QR")}
+  style={{
+    background: "darkblue",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    justifyContent: "center"
+  }}
+>
+  <FaWhatsapp size={18} />
+  Share as QR CODE
+</button>
 
-            <button onClick={() => handleShareChoice("LINK")}>
-              Share as LINK
-            </button>
+<button
+  onClick={() => handleShareChoice("LINK")}
+  style={{
+    background: "green",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    justifyContent: "center"
+  }}
+>
+  <FaWhatsapp size={18} />
+  Share as LINK
+</button>
 
-            <button onClick={() => setShowSharePrompt(false)}>
+            {/* <button onClick={() => setShowSharePrompt(false)}>
               Cancel
-            </button>
+            </button> */}
           </div>
         </div>
       )}
