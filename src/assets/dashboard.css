@@ -864,3 +864,12 @@ pointer-events: auto;
 .scan-icon {
   font-size: 18px;
 }
+
+/* Responsive adjustment for mobile */
+@media (max-width: 600px) {
+  .scan-button {
+    bottom: 4px; /* move a little lower */
+    padding: 12px 18px;
+    border-radius: 16px;
+  }
+}
