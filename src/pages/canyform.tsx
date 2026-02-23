@@ -61,7 +61,7 @@ function Form() {
 
     const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
 
-    const message = `🍫 Someone sent you a Candy Treat!\nTap to open:\n${candyUrl}`;
+   const message = candyUrl;
 
     const whatsappMessage = `https://wa.me/?text=${encodeURIComponent(message)}`;
 
