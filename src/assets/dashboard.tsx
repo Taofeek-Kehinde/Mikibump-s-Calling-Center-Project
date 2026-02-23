@@ -272,6 +272,13 @@ useEffect(() => {
         animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
         transition={{ duration: 1.2, ease: "easeOut", type: "spring", stiffness: 100 }}
       >
+
+        <div className="scan-button" onClick={() => navigate('/qrscanner')}>
+  <div className="scan-icon">📷</div>
+  <span>SCAN</span>
+</div>
+
+
      <div className="live-hint-wrapper">
   <div
     className={`live-hint-text ${isLive ? "live" : "offline"}`}

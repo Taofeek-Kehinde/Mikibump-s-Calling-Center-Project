@@ -12,6 +12,7 @@ import Qrcode from './pages/Qrcode.tsx';
 import Qrform from './pages/Qrform.tsx';
 import View from './pages/View.tsx';
 import CandyDetails from './pages/CandyView.tsx';
+import QRScanner from './pages/qrscanner';
 
 function App(): JSX.Element {
   const [typedText, setTypedText] = useState('');
@@ -67,6 +68,7 @@ function App(): JSX.Element {
       <Route path="/qrform/:id" element={<Qrform />} />
         <Route path="/view/:id" element={<View />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/qrscanner" element={<QRScanner />} />
       <Route path="/candy/:id" element={<CandyDetails />} />
       <Route path="/chat" element={<EnhancedChat />} />
       <Route path="/" element={
