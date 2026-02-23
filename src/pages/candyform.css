@@ -805,3 +805,32 @@ label.date {
 .date {
   color: black !important;
 }
+
+.share-prompt {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.share-box {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+  width: 90%;
+  max-width: 320px;
+}
+
+.share-box button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}

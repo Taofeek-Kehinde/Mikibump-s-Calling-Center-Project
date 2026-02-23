@@ -1,13 +1,21 @@
-# TODO: Modify Music Playback Logic
+# TODO: Fix WhatsApp Sharing in candyform.tsx
 
-## Tasks:
-- [x] Modify dashboard.tsx: in music useEffect, only play music if data.playing and isLive, set currentMusic to data.url (which will be '/music/music.mp3')
-- [x] Modify Admin.tsx: in handleGoLive, set Firebase music to { url: '/music/music.mp3', playing: true }
-- [x] Modify Admin.tsx: in handleGoOffline, set Firebase music playing: false
-- [x] Ensure music persists across refresh via Firebase
-- [x] Test on localhost and Vercel
+## Plan
 
-## Notes:
-- Keep Firebase music saving for persistence
-- Music only plays when LIVE, automatically
-- Hardcode URL to '/music/music.mp3' in Admin
+### Information Gathered:
+- `src/pages/canyform.tsx` - Contains the share functionality with `handleShareChoice` function
+- The current implementation has issues:
+  1. QR sharing uses native share API which may not work reliably for WhatsApp
+  2. Link sharing uses clipboard fallback which may fail in some browsers
+  3. Need to ensure direct WhatsApp sharing works on both phone and laptop
+
+### Tasks:
+- [ ] Modify QR code sharing to download QR and open WhatsApp with pre-filled message
+- [ ] Modify link sharing to open WhatsApp directly with pre-filled message
+- [ ] Add better error handling
+
+### Implementation Steps:
+1. Update `handleShareChoice` function in `src/pages/canyform.tsx`
+   - For QR option: Download QR code, then open WhatsApp
+   - For LINK option: Open WhatsApp directly with the link
+2. Test the implementation

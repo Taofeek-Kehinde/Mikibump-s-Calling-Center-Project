@@ -2,13 +2,14 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
-// import QRCode from "qrcode";
+import QRCode from "qrcode"; // ✅ ADDED
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
-// import { useAppContext } from '../context/useAppContext';
 import './candyform.css';
+
+
 
 interface FormData {
 
@@ -32,54 +33,134 @@ function Form() {
     return () => document.body.classList.remove('candyform-page');
   }, []);
 
-
-
   const [spotifyLink, setSpotifyLink] = useState("");
-  // const [qrImage, setQrImage] = useState("");
-  // const [generatedUrl] = useState("");
+
+  // ✅ ADDED STATES (nothing else touched)
+  const [selectedCandy, setSelectedCandy] = useState<"CHOCOLATE" | "LOLLIPOP" | null>(null);
+  const [showSharePrompt, setShowSharePrompt] = useState(false);
 
 
-  // hmm
-
-
+  // ✅ Modified to open prompt first (same validation kept)
   const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
-  if (!formData.recipientContact || !spotifyLink) {
-    showAlert("Enter name and paste Spotify link", "error");
-    return;
-  }
+    if (!formData.recipientContact || !spotifyLink) {
+      showAlert("Enter name and paste Spotify link", "error");
+      return;
+    }
 
-  try {
-    const unlockTime = Date.now() + 15 * 60 * 1000;
-
-    const docRef = await addDoc(collection(db, "candies"), {
-      name: formData.recipientContact,
-      relationship: type,
-      spotifyLink: spotifyLink,
-      createdAt: Date.now(),
-      unlockTime: unlockTime
-    });
-
-    const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
-
-   const message = candyUrl;
-
-    const whatsappMessage = `https://wa.me/?text=${encodeURIComponent(message)}`;
-
-if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-  window.location.href = `whatsapp://send?text=${encodeURIComponent(message)}`;
-} else {
-  window.open(whatsappMessage, "_blank");
-}
+    setSelectedCandy(type);
+    setShowSharePrompt(true);
+  };
 
 
-  } catch (error) {
-    console.error(error);
-    showAlert("Error creating candy", "error");
-  }
-};
+  // ✅ NEW FUNCTION - Improved share functionality for phone and laptop
+  const handleShareChoice = async (option: "LINK" | "QR") => {
 
+    if (!selectedCandy) return;
 
-  // const noteWords = formData.note.trim().split(/\s+/).filter(word => word.length > 0).length;
+    try {
+      const unlockTime = Date.now() + 15 * 60 * 1000;
+
+      const docRef = await addDoc(collection(db, "candies"), {
+        name: formData.recipientContact,
+        relationship: selectedCandy,
+        spotifyLink: spotifyLink,
+        createdAt: Date.now(),
+        unlockTime: unlockTime
+      });
+
+      const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
+      const message = `🎁 You got a Candy Treat! Open it here: ${candyUrl}`;
+
+      // Check if Web Share API is available (mobile devices)
+      const canUseWebShare = typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
+
+      if (option === "LINK") {
+        if (canUseWebShare) {
+          // Use native share on mobile
+          try {
+            await navigator.share({
+              title: 'Candy Treat',
+              text: message,
+              url: candyUrl
+            });
+          } catch (err) {
+            // User cancelled or error - do nothing
+            console.log('Share cancelled or failed:', err);
+          }
+        } else {
+          // Desktop fallback: copy to clipboard and open WhatsApp Web
+          try {
+            await navigator.clipboard.writeText(message);
+            showAlert('Link copied to clipboard!', 'success');
+            // Open WhatsApp Web
+            window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(message), '_blank');
+          } catch (clipErr) {
+            // Fallback if clipboard fails
+            window.open('https://wa.me/?text=' + encodeURIComponent(message), '_blank');
+          }
+        }
+      }
+
+      if (option === "QR") {
+        const qrDataUrl = await QRCode.toDataURL(candyUrl, {
+          width: 300,
+          margin: 2,
+          errorCorrectionLevel: 'M'
+        });
+
+        if (canUseWebShare) {
+          // Convert data URL to blob for sharing
+          const response = await fetch(qrDataUrl);
+          const blob = await response.blob();
+          const file = new File([blob], 'candy-qr.png', { type: 'image/png' });
+
+          if (navigator.canShare?.({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: 'Candy QR Code',
+                text: 'Scan this QR code to open your Candy Treat!',
+                files: [file]
+              });
+            } catch (err) {
+              console.log('Share cancelled or failed:', err);
+            }
+          } else {
+            // Fallback: share as link with QR description
+            try {
+              await navigator.share({
+                title: 'Candy Treat',
+                text: message + '\n\nOr scan the downloaded QR code!',
+                url: candyUrl
+              });
+            } catch (err) {
+              console.log('Share cancelled or failed:', err);
+            }
+          }
+        } else {
+          // Desktop fallback: download QR and show WhatsApp link
+          const link = document.createElement('a');
+          link.href = qrDataUrl;
+          link.download = `candy-qr-${docRef.id}.png`;
+          link.click();
+          
+          showAlert('QR code downloaded! Now you can send it via WhatsApp.', 'success');
+          
+          // Open WhatsApp Web with pre-filled message
+          setTimeout(() => {
+            window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(message), '_blank');
+          }, 500);
+        }
+      }
+
+      setShowSharePrompt(false);
+      setSelectedCandy(null);
+
+    } catch (error) {
+      console.error(error);
+      showAlert("Error creating candy", "error");
+    }
+  };
+
 
   return (
     <motion.div
@@ -101,10 +182,7 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           title="Open Cany Form"
-
-
         >
-
           <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
           FREE CALLS
         </motion.button>
@@ -113,15 +191,12 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
           fontFamily: "sans-serif",
           userSelect: "none"
         }}>
-          SAY IT WITH CANDY <p className='nowords'>(NO WORDS NEEDED)</p></h1>
+          SAY IT WITH CANDY <p className='nowords'>(NO WORDS NEEDED)</p>
+        </h1>
 
         <span className='mycanndy'>CANDY TREAT </span>
 
         <form>
-
-
-          {/* Input session */}
-
 
           <input
             type="url"
@@ -130,7 +205,6 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             className='recipient-input'
             onChange={(e) => setSpotifyLink(e.target.value)}
           />
-
 
           <p className='question' style={{
             fontFamily: "sans-serif",
@@ -143,7 +217,6 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             textShadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
           }}> WHO ARE YOU SENDING IT TO?</p>
 
-
           <input
             type="text"
             placeholder="ENTER NAME"
@@ -154,11 +227,9 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             }
           />
 
-        
-
-
           <div className="relationship-container">
             <div className="relationship-options">
+
               <motion.button
                 type="button"
                 className={`relationship-btns ${formData.relationship === 'CHOCOLATE' ? 'active' : ''}`}
@@ -171,14 +242,13 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
                   marginRight: "150px",
                   color: "chocolate",
                 }} />
-
                 <span>CHOCOLATE</span>
-
-
               </motion.button>
+
               <div className="middle-divider">
                 <span className="divider-line">||</span>
               </div>
+
               <motion.button
                 type="button"
                 className={`relationship-btns ${formData.relationship === 'LOLLIPOP' ? 'active' : ''}`}
@@ -193,16 +263,38 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
                 }} />
                 <span>LOLLIPOP</span>
               </motion.button>
+
             </div>
-
-
           </div>
 
-
-          <span className='introduction'> (Your CANDY TREAT will be revealed after 15 minutes to build suspense)</span>
+          <span className='introduction'>
+            (Your CANDY TREAT will be revealed after 15 minutes to build suspense)
+          </span>
 
         </form>
       </motion.div>
+
+      {/* ✅ ADDED SHARE PROMPT (no layout touched) */}
+      {showSharePrompt && (
+        <div className="share-prompt">
+          <div className="share-box">
+            <p>How do you want to share?</p>
+
+            <button onClick={() => handleShareChoice("QR")}>
+              Share as QR CODE
+            </button>
+
+            <button onClick={() => handleShareChoice("LINK")}>
+              Share as LINK
+            </button>
+
+            <button onClick={() => setShowSharePrompt(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
     </motion.div>
   );
 }
