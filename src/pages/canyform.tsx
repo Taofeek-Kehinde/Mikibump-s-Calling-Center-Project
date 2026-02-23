@@ -124,7 +124,7 @@ if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
 
 
           <input
-            type="text"
+            type="url"
             placeholder="PASTE Link to SONG OR VIDEO"
             value={spotifyLink}
             className='recipient-input'

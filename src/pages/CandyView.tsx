@@ -64,7 +64,7 @@ function CandyView() {
 
         {locked ? (
           <button className="wait-btn">
-            OPEN YOUR CANDY TREAT
+            WAIT FOR YOUR CANDY SONG
           </button>
         ) : (
           <a
@@ -72,6 +72,7 @@ function CandyView() {
             target="_blank"
             rel="noopener noreferrer"
             className="wait-btn"
+            style={{background: "green"}}
           >
             OPEN YOUR CANDY TREAT 🎵
           </a>
