@@ -13,15 +13,15 @@ export default function QRScanner() {
       false
     );
 
-    scanner.render(
-      (decodedText) => {
-        alert("Scanned: " + decodedText);
-        scanner.clear();
-      },
-      (errorMessage) => {
-        // optional: console.log(errorMessage);
-      }
-    );
+   scanner.render(
+  (decodedText) => {
+    alert("Scanned: " + decodedText);
+    scanner.clear();
+  },
+  () => {
+    
+  }
+);
 
     return () => {
       scanner.clear();
