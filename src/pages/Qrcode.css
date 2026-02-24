@@ -1,5 +1,5 @@
 body {
-  background: url(../assets/favicon.png);
+  background: url(../assets/candy.jpg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -8,6 +8,7 @@ body {
 
 .qr-wrap {
   min-height: 100vh;
+  background: #3b2f2f;;
   display: flex;
   flex-direction: column;
   align-items: center;
