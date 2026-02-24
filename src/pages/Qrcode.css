@@ -137,7 +137,7 @@ input[type="number"]:focus {
   background: #2a1f1f;
   color: white;
   border: none;
-  border-radius: 30px;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
   letter-spacing: 1px;
