@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useRef, useEffect } from 'react';
 import { useAppContext } from '../context/useAppContext';
 
+
 function Dashboard() {
   const navigate = useNavigate();
   const [code, setCode] = useState('');
@@ -27,7 +28,7 @@ function Dashboard() {
   const [userHasInteracted, setUserHasInteracted] = useState(false);
   const [offlineElapsedTime, setOfflineElapsedTime] = useState<number>(0);
  const [showQrOptions, setShowQrOptions] = useState(false);
-
+const [loadingQR, setLoadingQR] = useState(false);
  const toggleQrOptions = () => {
   setShowQrOptions(!showQrOptions);
 };
@@ -190,6 +191,19 @@ useEffect(() => {
     }
   };
 
+
+  const handleGenerateQR = () => {
+  if (loadingQR) return;
+
+  setLoadingQR(true);
+
+  setTimeout(() => {
+    navigate('/Qrcode');
+  }, 3000); 
+};
+
+
+
   const images = [af1, af2, af3, af4, af5, af6, af7, af8, af9, af10];
   const [bgIndex, setBgIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -285,11 +299,18 @@ useEffect(() => {
   {showQrOptions && (
     <div className="scan-options">
       <div 
-        className="option-btn"
-        onClick={() => navigate('/Qrcode')}
-      >
-       🍬 GENERATE QR CODE
-      </div>
+  className={`option-btn ${loadingQR ? "loading" : ""}`}
+  onClick={handleGenerateQR}
+>
+  {loadingQR ? (
+    <>
+      <span className="loader"></span>
+      Loading...
+    </>
+  ) : (
+    <>🍬 GENERATE QR CODE</>
+  )}
+</div>
 
       <div 
         className="option-btn"
