@@ -132,9 +132,9 @@ input[type="number"]:focus {
 
 /* HOW THIS WORKS BUTTON */
 .how-it-works-btn {
-  margin-top: 20px;
+  margin: 20px auto 0 auto; 
   padding: 12px 20px;
-  background: #2a1f1f; /* chocolate black */
+  background: #2a1f1f;
   color: white;
   border: none;
   border-radius: 30px;
@@ -142,10 +142,9 @@ input[type="number"]:focus {
   font-weight: 600;
   letter-spacing: 1px;
   transition: all 0.3s ease;
-  width: 100%;
-  max-width: 300px;
+  width: fit-content;   
+  min-width: 180px;     
 }
-
 .how-it-works-btn:hover {
   background: #3b2f2f;
   transform: scale(1.05);
@@ -160,7 +159,7 @@ input[type="number"]:focus {
   margin-top: 10px;
   border-radius: 15px;
   width: 100%;
-  max-width: 500px;
+  max-width: 350px;
   padding: 0 20px;
 }
 
