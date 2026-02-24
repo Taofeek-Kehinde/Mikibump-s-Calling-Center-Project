@@ -6,6 +6,13 @@ import "./Qrcode.css";
 export default function Qrcode() {
   const [numQRs, setNumQRs] = useState(1); 
   const [qrList, setQrList] = useState<{ id: string; url: string }[]>([]);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+
+
+  const toggleHowItWorks = () => {
+  setShowHowItWorks(!showHowItWorks);
+};
+
 
   const generateQRBatch = () => {
     const tempList: { id: string; url: string }[] = [];
@@ -34,6 +41,23 @@ export default function Qrcode() {
       </div>
 
       <button onClick={generateQRBatch}>Generate QR</button>
+
+      <button 
+  className="how-it-works-btn"
+  onClick={toggleHowItWorks}
+>
+  HOW THIS WORKS
+</button>
+
+<div className={`how-it-works-content ${showHowItWorks ? "active" : ""}`}>
+  <p>
+    1. Enter recipient name.<br/>
+    2. Select your candy type.<br/>
+    3. Click Generate QR.<br/>
+    4. Share the QR code with someone special 🍫
+  </p>
+</div>
+
 
       <div className="qr-container">
         {qrList.map((qr, index) => (

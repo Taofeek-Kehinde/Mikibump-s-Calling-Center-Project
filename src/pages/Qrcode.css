@@ -128,3 +128,74 @@ input[type="number"]:focus {
   border-color: #ff4f87;
   background: #2b2b3a;
 }
+
+
+/* HOW THIS WORKS BUTTON */
+.how-it-works-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #2a1f1f; /* chocolate black */
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.how-it-works-btn:hover {
+  background: #3b2f2f;
+  transform: scale(1.05);
+}
+
+/* Expandable Content */
+.how-it-works-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  background: #fdf3f3;
+  margin-top: 10px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 500px;
+  padding: 0 20px;
+}
+
+.how-it-works-content p {
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+  line-height: 1.6;
+  padding: 10px 0;
+}
+
+/* When active */
+.how-it-works-content.active {
+  max-height: 300px;
+  padding: 15px 20px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .how-it-works-btn {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  .how-it-works-content {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .how-it-works-btn {
+    font-size: 13px;
+  }
+
+  .how-it-works-content p {
+    font-size: 13px;
+  }
+}
