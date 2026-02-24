@@ -21,7 +21,7 @@ export default function Qrcode() {
 
   return (
     <div className="qr-wrap">
-      <h1>Generate Smart QR</h1>
+      <h1>Generate Talkin QR</h1>
 
       <div className="form-groups">
         <label>Number of QR Codes</label>

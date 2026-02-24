@@ -267,7 +267,7 @@ function Form() {
           </div>
 
           <span className='introduction'>
-            (Your CANDY TREAT will be revealed after 15 minutes to build suspense)
+            (Your CANDY TREAT will be revealed after 15 minutes to build suspense and will dissapear after 24 hours)
           </span>
 
         </form>

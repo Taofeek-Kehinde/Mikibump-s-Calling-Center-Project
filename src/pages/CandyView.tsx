@@ -43,45 +43,51 @@ function CandyView() {
   const formattedTime = date.toLocaleTimeString();
   const formattedDate = date.toDateString();
 
-  return (
-    <div className="candy-page">
-      <div className="candy-card">
+return (
+  <div className="candy-page">
+    <div className="candy-card">
 
-        <h2 className="candy-title">TALK IN CANDY</h2>
+      <h2 className="candy-title">TALK IN CANDY</h2>
 
-        <div
-          className="candy-circle"
-          style={{
-            background:
-              candy.relationship === "CHOCOLATE" ? "brown" : "orange"
-          }}
-        >
-          {candy.relationship.toLowerCase()}
-        </div>
-
-        <p><strong>FOR:</strong> {candy.name}</p>
-        <p><strong>TIME:</strong> {formattedTime}</p>
-        <p><strong>DATE:</strong> {formattedDate}</p>
-
-        {locked ? (
-          <button className="wait-btn">
-            WAIT FOR YOUR CANDY TREAT <FaLink />
-          </button>
-        ) : (
-          <a
-            href={candy.spotifyLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="wait-btn"
-            style={{background: "green"}}
-          >
-            OPEN YOUR CANDY TREAT 🎵 <FaLink />
-          </a>
-        )}
-
+      <div
+        className="candy-circle"
+        style={{
+          background:
+            candy.relationship === "CHOCOLATE" ? "brown" : "orange"
+        }}
+      >
+        {candy.relationship.toLowerCase()}
       </div>
+
+      <p><strong>FOR:</strong> {candy.name}</p>
+      <p><strong>TIME:</strong> {formattedTime}</p>
+      <p><strong>DATE:</strong> {formattedDate}</p>
+
+      {locked ? (
+        <button className="wait-btn">
+          WAIT FOR YOUR CANDY TREAT <FaLink />
+        </button>
+      ) : (
+        <a
+          href={candy.spotifyLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="wait-btn"
+          style={{ background: "green" }}
+        >
+          OPEN YOUR CANDY TREAT <FaLink />
+        </a>
+      )}
+
+      {/* 👇 Add this */}
+      <p className="expire-text">
+        DISAPPEARS AFTER 24 HOURS
+      </p>
+
     </div>
-  );
+  </div>
+);
+
 }
 
 export default CandyView;

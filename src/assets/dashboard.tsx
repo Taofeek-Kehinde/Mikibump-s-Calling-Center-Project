@@ -275,7 +275,7 @@ useEffect(() => {
 
         <div className="scan-button" onClick={() => navigate('/qrscanner')}>
   <div className="scan-icon">📷</div>
-  <span>SCAN</span>
+  <span>QR TALKS</span>
 </div>
 
 

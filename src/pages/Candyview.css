@@ -54,3 +54,11 @@
 .wait-btn:hover {
   background: darkred;
 }
+
+.expire-text {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
