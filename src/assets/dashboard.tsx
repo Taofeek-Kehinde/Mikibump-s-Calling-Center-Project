@@ -26,6 +26,12 @@ function Dashboard() {
   const [typedText] = useState('');
   const [userHasInteracted, setUserHasInteracted] = useState(false);
   const [offlineElapsedTime, setOfflineElapsedTime] = useState<number>(0);
+ const [showQrOptions, setShowQrOptions] = useState(false);
+
+ const toggleQrOptions = () => {
+  setShowQrOptions(!showQrOptions);
+};
+
 
   const {
     isLive,
@@ -273,9 +279,32 @@ useEffect(() => {
         transition={{ duration: 1.2, ease: "easeOut", type: "spring", stiffness: 100 }}
       >
 
-        <div className="scan-button" onClick={() => navigate('/qrscanner')}>
-  <div className="scan-icon">📷</div>
-  <span>QR TALKS</span>
+      {/* QR TALKS MAIN BUTTON */}
+<div className="scan-wrapper">
+
+  {showQrOptions && (
+    <div className="scan-options">
+      <div 
+        className="option-btn"
+        onClick={() => navigate('/Qrcode')}
+      >
+       🍬 GENERATE QR CODE
+      </div>
+
+      <div 
+        className="option-btn"
+        onClick={() => navigate('/qrhistory')}
+      >
+       🍬 SCAN QR CODE
+      </div>
+    </div>
+  )}
+
+  <div className="scan-button" onClick={toggleQrOptions}>
+    <div className="scan-icon">📷</div>
+    <span>QR TALKS</span>
+  </div>
+
 </div>
 
 
