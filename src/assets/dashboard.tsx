@@ -198,7 +198,7 @@ useEffect(() => {
   setLoadingQR(true);
 
   setTimeout(() => {
-    navigate('/Qrcode');
+    navigate('/users');
   }, 3000); 
 };
 
