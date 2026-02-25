@@ -305,44 +305,42 @@ useEffect(() => {
       {/* QR TALKS MAIN BUTTON */}
 <div className="scan-wrapper">
 
-  {showQrOptions && (
-    <div className="scan-options">
-      <div 
-  className={`option-btn ${loadingQR ? "loading" : ""}`}
-  onClick={handleGenerateQR}
->
-  {loadingQR ? (
-    <>
-      <span className="loader"></span>
-      Loading...
-    </>
-  ) : (
-    <>🍬 GENERATE QR CODE</>
-  )}
-</div>
-
-
-      <div 
-  className={`option-btn ${loadingQR ? "loading" : ""}`}
-  onClick={handleScanQR}
->
-  {loadingQR ? (
-    <>
-      <span className="loader"></span>
-      Loading...
-    </>
-  ) : (
-    <>  🍬 SCAN QR CODE</>
-  )}
-</div>
-
-    </div>
-  )}
-
   <div className="scan-button" onClick={toggleQrOptions}>
     <div className="scan-icon">📷</div>
     <span>QR TALKS</span>
   </div>
+
+  {showQrOptions && (
+    <div className="scan-options">
+      <div
+        className={`option-btn ${loadingQR ? "loading" : ""}`}
+        onClick={handleGenerateQR}
+      >
+        {loadingQR ? (
+          <>
+            <span className="loader"></span>
+            Loading...
+          </>
+        ) : (
+          <>🍬 GENERATE QR</>
+        )}
+      </div>
+
+      <div
+        className={`option-btn ${loadingQR ? "loading" : ""}`}
+        onClick={handleScanQR}
+      >
+        {loadingQR ? (
+          <>
+            <span className="loader"></span>
+            Loading...
+          </>
+        ) : (
+          <>🍬 SCAN QR</>
+        )}
+      </div>
+    </div>
+  )}
 
 </div>
 
