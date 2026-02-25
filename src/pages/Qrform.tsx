@@ -21,29 +21,53 @@ export default function Qrform() {
     const [savedData, setSavedData] = useState<any>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const [] = useState(false);
     const [isChecking, setIsChecking] = useState(true);
 
 
     useEffect(() => {
         const checkQR = async () => {
-            if (!id) return;
-
-            const docRef = doc(db, "submissions", id);
-            const snap = await getDoc(docRef);
-
-            if (snap.exists()) {
-                setSavedData(snap.data());
+            if (!id) {
+                setIsChecking(false);
+                return;
             }
 
-            setIsChecking(false);
+            try {
+                const docRef = doc(db, "submissions", id);
+                const snap = await getDoc(docRef);
+
+                if (snap.exists()) {
+                    setSavedData(snap.data());
+                }
+            } catch (err) {
+                console.error("Error checking QR:", err);
+            } finally {
+                setIsChecking(false);
+            }
         };
 
+        // Add a timeout to prevent infinite loading
+        const timeoutId = setTimeout(() => {
+            setIsChecking(false);
+        }, 5000);
+
         checkQR();
+
+        return () => clearTimeout(timeoutId);
     }, [id]);
 
     if (isChecking) {
-        return null;
+        return (
+            <div style={{
+                minHeight: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                color: 'white'
+            }}>
+                <p>Loading...</p>
+            </div>
+        );
     }
 
     // Show success message right after submission
