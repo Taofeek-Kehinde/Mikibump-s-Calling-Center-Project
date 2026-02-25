@@ -678,7 +678,7 @@ input #yourContact {
   font-weight: 600;
   text-align: center;
   border: 2px solid chocolate;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: sans-serif;
   color: #fff;
   background: chocolate;
   box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);

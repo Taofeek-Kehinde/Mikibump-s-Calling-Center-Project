@@ -203,6 +203,15 @@ useEffect(() => {
 };
 
 
+ const handleScanQR = () => {
+  if (loadingQR) return;
+
+  setLoadingQR(true);
+
+  setTimeout(() => {
+    navigate('/qrscanner');
+  }, 3000); 
+};
 
   const images = [af1, af2, af3, af4, af5, af6, af7, af8, af9, af10];
   const [bgIndex, setBgIndex] = useState(0);
@@ -312,12 +321,21 @@ useEffect(() => {
   )}
 </div>
 
+
       <div 
-        className="option-btn"
-        onClick={() => navigate('/qrhistory')}
-      >
-       🍬 SCAN QR CODE
-      </div>
+  className={`option-btn ${loadingQR ? "loading" : ""}`}
+  onClick={handleScanQR}
+>
+  {loadingQR ? (
+    <>
+      <span className="loader"></span>
+      Loading...
+    </>
+  ) : (
+    <>  🍬 SCAN QR CODE</>
+  )}
+</div>
+
     </div>
   )}
 

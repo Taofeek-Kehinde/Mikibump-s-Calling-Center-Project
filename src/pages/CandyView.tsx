@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import './Candyview.css';
-import { FaLink } from "react-icons/fa";
+// import { FaLink } from "react-icons/fa";
 
 interface CandyData {
   name: string;
@@ -65,7 +65,7 @@ return (
 
       {locked ? (
         <button className="wait-btn">
-          WAIT FOR YOUR CANDY TREAT <FaLink />
+          WAIT FOR CANDY
         </button>
       ) : (
         <a
@@ -75,13 +75,13 @@ return (
           className="wait-btn"
           style={{ background: "green" }}
         >
-          OPEN YOUR CANDY TREAT <FaLink />
+          TAP TO LISTEN
         </a>
       )}
 
       {/* 👇 Add this */}
       <p className="expire-text">
-        DISAPPEARS AFTER 24 HOURS
+        (DISAPPEARS AFTER 24 HOURS)
       </p>
 
     </div>

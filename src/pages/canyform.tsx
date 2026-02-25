@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
 import QRCode from "qrcode"; 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
@@ -21,7 +21,7 @@ interface FormData {
 
 function Form() {
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
 
     recipientContact: '',
@@ -174,8 +174,8 @@ function Form() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-
-        <motion.button
+{/* I'm coming back to this code */}
+        {/* <motion.button
           className="cany-btns"
           onClick={() => navigate('/form')}
           whileHover={{ scale: 1.05 }}
@@ -184,22 +184,22 @@ function Form() {
         >
           <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
           FREE CALLS
-        </motion.button>
+        </motion.button> */}
 
         <h1 className="form-titless" style={{
           fontFamily: "sans-serif",
           userSelect: "none"
         }}>
-          SAY IT WITH CANDY <p className='nowords'>(NO WORDS NEEDED)</p>
+          LET CANDY DO THE TALKIN 
         </h1>
 
-        <span className='mycanndy' style={{fontSize: "13px"}}>CANDY TREAT </span>
+        <span className='mycanndy' style={{fontSize: "13px"}}>TALK IN CANDY </span>
 
         <form>
 
           <input
-            type="url"
-            placeholder="PASTE Link to SONG OR VIDEO"
+            type="text"
+            placeholder="ENTER MESSAGE"
             value={spotifyLink}
             className='recipient-input'
             onChange={(e) => setSpotifyLink(e.target.value)}
@@ -267,13 +267,13 @@ function Form() {
           </div>
 
           <span className='introduction'>
-            (Your CANDY TREAT will be revealed after 15 minutes to build suspense and will dissapear after 24 hours)
+            (Your MESSAGE will be delivered in CANDY's voice after 15 minutes to build suspense and dissappears after 24 hours)
           </span>
 
         </form>
       </motion.div>
 
-      {/* ✅ ADDED SHARE PROMPT (no layout touched) */}
+     
       {showSharePrompt && (
         <div className="share-prompt">
           <div className="share-box">
