@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import QrScanner from "qr-scanner";
 
 export default function QRScanner() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const scannerRef = useRef<QrScanner | null>(null);
+  const navigate = useNavigate();
   const [hasCamera, setHasCamera] = useState(true);
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(true);
@@ -32,6 +34,9 @@ export default function QRScanner() {
           setScanResult(text);
           setIsScanning(false);
           scanner.stop();
+          
+          // Navigate to the scanned URL (e.g., /qrform/:id)
+          navigate(text);
         }
       },
       {
