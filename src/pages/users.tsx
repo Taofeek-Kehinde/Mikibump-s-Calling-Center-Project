@@ -174,8 +174,8 @@ function Users(): React.ReactElement {
     // Try to find a child-friendly voice
     const voices = window.speechSynthesis.getVoices();
     const childVoice = voices.find(voice => 
-      voice.name.includes('Microsoft Zira') ||
-      voice.name.includes('Samantha')
+      voice.name.includes('Microsoft Aria') ||
+      voice.name.includes('Microsoft Aria')
     );
     if (childVoice) {
       utterance.voice = childVoice;
