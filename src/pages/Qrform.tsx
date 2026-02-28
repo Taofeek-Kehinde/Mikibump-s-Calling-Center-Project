@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
-import { FaWhatsapp } from "react-icons/fa";
-import { FaLink } from "react-icons/fa";
-import { FaHandPointRight } from "react-icons/fa";
+import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
 
 import "./Qrform.css";
 
@@ -14,6 +12,14 @@ export default function Qrform() {
     const navigate = useNavigate();
     const [savedData, setSavedData] = useState<any>(null);
     const [isChecking, setIsChecking] = useState(true);
+    
+    // Text-to-speech state
+    const [isTtsPlaying, setIsTtsPlaying] = useState(false);
+    const [isTtsCompleted, setIsTtsCompleted] = useState(false);
+    
+    // Voice note state
+    const [isVoicePlaying, setIsVoicePlaying] = useState(false);
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
         const checkQR = async () => {
@@ -44,6 +50,28 @@ export default function Qrform() {
 
         return () => clearTimeout(timeoutId);
     }, [id]);
+
+    // Handle audio events for voice note
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (audio) {
+            const handleEnded = () => {
+                setIsVoicePlaying(false);
+            };
+            const handlePlay = () => setIsVoicePlaying(true);
+            const handlePause = () => setIsVoicePlaying(false);
+            
+            audio.addEventListener('ended', handleEnded);
+            audio.addEventListener('play', handlePlay);
+            audio.addEventListener('pause', handlePause);
+            
+            return () => {
+                audio.removeEventListener('ended', handleEnded);
+                audio.removeEventListener('play', handlePlay);
+                audio.removeEventListener('pause', handlePause);
+            };
+        }
+    }, [savedData?.audioUrl]);
 
     if (isChecking) {
         return (
@@ -82,23 +110,44 @@ export default function Qrform() {
     const playTextToSpeech = (text: string) => {
         if (window.speechSynthesis.speaking) {
             window.speechSynthesis.cancel();
+            setIsTtsPlaying(false);
         } else {
+            setIsTtsPlaying(true);
+            setIsTtsCompleted(false);
+            
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 0.9;
             utterance.pitch = 1.5;
             utterance.lang = 'en-US';
             
-            // Try to find a child-friendly voice
-            const voices = window.speechSynthesis.getVoices();
-            const childVoice = voices.find(voice => 
-                voice.name.includes('Microsoft Zira') ||
-                voice.name.includes('Samantha')
-            );
-            if (childVoice) {
-                utterance.voice = childVoice;
-            }
+            utterance.onend = () => {
+                setIsTtsPlaying(false);
+                setIsTtsCompleted(true);
+            };
+            utterance.onerror = () => {
+                setIsTtsPlaying(false);
+            };
             
             window.speechSynthesis.speak(utterance);
+        }
+    };
+
+    // Toggle voice playback
+    const toggleVoicePlayback = () => {
+        if (audioRef.current) {
+            if (isVoicePlaying) {
+                audioRef.current.pause();
+            } else {
+                audioRef.current.play();
+            }
+        }
+    };
+
+    // Replace/reload voice
+    const replaceVoice = () => {
+        if (audioRef.current) {
+            audioRef.current.load();
+            audioRef.current.play();
         }
     };
 
@@ -161,24 +210,59 @@ export default function Qrform() {
                 {savedData.contentMode === 'voice' && savedData.audioUrl && (
                     <div className="audio-section">
                         <h3>Voice Message</h3>
-                        <audio controls src={savedData.audioUrl} style={{ width: '100%' }}>
+                        <audio 
+                            ref={audioRef}
+                            src={savedData.audioUrl}
+                            style={{ width: '100%' }}
+                        >
                             Your browser does not support audio.
                         </audio>
-                        <p className="audio-label">Tap play to listen to the voice note</p>
+                        <div className="audio-controls">
+                            <button 
+                                className="play-audio-btn"
+                                onClick={toggleVoicePlayback}
+                            >
+                                {isVoicePlaying ? <FaPause /> : <FaPlay />} 
+                                {isVoicePlaying ? " Pause" : " Play"}
+                            </button>
+                            <button 
+                                className="play-audio-btn replace-btn"
+                                onClick={replaceVoice}
+                            >
+                                <FaSync /> Replace
+                            </button>
+                        </div>
                     </div>
                 )}
 
-                {/* Text to Speech Section */}
+                {/* Text to Speech Section - With play/pause/replay */}
                 {savedData.contentMode === 'text' && savedData.textMessage && (
                     <div className="text-section">
-                        <h3>Text Message</h3>
-                        <p className="message-text">{savedData.textMessage}</p>
-                        <button 
-                            className="play-audio-btn"
-                            onClick={() => playTextToSpeech(savedData.textMessage)}
-                        >
-                            🔊 Play as Audio
-                        </button>
+                        {isTtsCompleted ? (
+                            <button 
+                                className="play-audio-btn"
+                                onClick={() => playTextToSpeech(savedData.textMessage)}
+                            >
+                                <FaRedo /> Replay
+                            </button>
+                        ) : isTtsPlaying ? (
+                            <button 
+                                className="play-audio-btn"
+                                onClick={() => {
+                                    window.speechSynthesis.cancel();
+                                    setIsTtsPlaying(false);
+                                }}
+                            >
+                                <FaPause /> Pause
+                            </button>
+                        ) : (
+                            <button 
+                                className="play-audio-btn"
+                                onClick={() => playTextToSpeech(savedData.textMessage)}
+                            >
+                                <FaPlay /> Play Message
+                            </button>
+                        )}
                     </div>
                 )}
 
