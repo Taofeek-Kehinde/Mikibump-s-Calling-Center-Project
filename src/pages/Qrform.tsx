@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
-import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
+import { FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
 import { createChildVoice } from "../utils/textToSpeech";
 
 import "./Qrform.css";
@@ -111,28 +111,6 @@ export default function Qrform() {
             </div>
         );
     }
-
-    // Generate the shareable URL
-    const shareUrl = `${getBaseUrl()}/qrform/${id}`;
-
-    // Generate WhatsApp message with all info including image
-    const getWhatsAppMessage = () => {
-        let message = `Hi, I scanned your Candy QR\n\n`;
-        
-        if (savedData.contentMode === 'voice') {
-            message += `🎤 Voice message: ${shareUrl}\n\n`;
-        } else if (savedData.contentMode === 'text') {
-            message += `📝 Text message: ${shareUrl}\n\n`;
-        }
-        
-        if (savedData.link) {
-            message += `🔗 Social media: ${savedData.link}\n`;
-        }
-        
-        message += `\n👋 View all info here: ${shareUrl}`;
-        
-        return encodeURIComponent(message);
-    };
 
     // Play text-to-speech function with child-like voice (using shared utility)
     const playTextToSpeech = (text: string) => {
@@ -292,22 +270,6 @@ export default function Qrform() {
                             </button>
                         )}
                     </div>
-                )}
-
-                {/* WhatsApp Contact - Opens with message including link */}
-                {savedData.whatsappNumber && (
-                    <button
-                        className="action-btn whatsapp-btn"
-                        onClick={() =>
-                            window.open(
-                                `https://wa.me/${savedData.whatsappNumber}?text=${getWhatsAppMessage()}`,
-                                "_blank"
-                            )
-                        }
-                    >
-                        <FaWhatsapp className="btn-icon" />
-                        <span>Chat on WhatsApp</span>
-                    </button>
                 )}
 
                 {/* Social Media Link */}
