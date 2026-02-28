@@ -122,7 +122,7 @@ function Users() {
           <input
             type="tel"
             className="whatsapp-input"
-            placeholder="(start with 234... e.g 2348190004000)"
+            placeholder="start with 234... e.g 2348190004000"
             value={whatsappNumber}
             onChange={(e) => setWhatsappNumber(e.target.value)}
             required
