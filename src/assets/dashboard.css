@@ -884,8 +884,8 @@ pointer-events: auto;
   }
 
   .circle-btn {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
   }
 }
 
@@ -896,8 +896,8 @@ pointer-events: auto;
   }
 
   .circle-btn {
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 4px;
   }
 }
 
@@ -911,7 +911,15 @@ pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: center;
+    animation: float 3s ease-in-out infinite;
 }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+
 
 /* Chocolate left */
 .circle-btn.chocolate {
