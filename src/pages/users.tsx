@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './users.css';
 import { FaMicrophone, FaTimes, FaVolumeUp, FaStop } from "react-icons/fa";
@@ -19,6 +19,10 @@ function Users() {
   const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
+  
+  // Recording timer - countdown from 15
+  const [recordingSeconds, setRecordingSeconds] = useState(15);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Speech synthesis for text-to-speech preview
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -33,12 +37,14 @@ function Users() {
     setTextMessage('');
     setRecordedAudioUrl(null);
     setAudioBase64(null);
+    setRecordingSeconds(15);
   };
 
   const selectTextMode = () => {
     setContentMode('text');
     setRecordedAudioUrl(null);
     setAudioBase64(null);
+    setRecordingSeconds(15);
     // Stop any playing audio
     if (audioRef.current) {
       audioRef.current.pause();
@@ -75,10 +81,29 @@ function Users() {
         
         // Stop all tracks
         stream.getTracks().forEach(track => track.stop());
+        
+        // Clear timer
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
       };
 
       mediaRecorder.start();
       setIsRecording(true);
+      setRecordingSeconds(15);
+      
+      // Start countdown timer - from 15 to 0
+      timerRef.current = setInterval(() => {
+        setRecordingSeconds(prev => {
+          if (prev <= 1) {
+            // Auto-stop at 0 seconds
+            stopRecording();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
     } catch (error) {
       console.error('Error starting recording:', error);
       alert('Could not access microphone. Please check permissions.');
@@ -89,6 +114,9 @@ function Users() {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
     }
   };
 
@@ -209,6 +237,7 @@ function Users() {
     setTextMessage('');
     setRecordedAudioUrl(null);
     setAudioBase64(null);
+    setRecordingSeconds(15);
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -218,7 +247,19 @@ function Users() {
       window.speechSynthesis.cancel();
     }
     setIsSpeaking(false);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="users-page">
@@ -263,8 +304,14 @@ function Users() {
                     <button 
                       className={`record-btn ${isRecording ? 'recording' : ''}`}
                       onClick={isRecording ? stopRecording : startRecording}
+                      disabled={isRecording && recordingSeconds <= 0}
                     >
-                      {isRecording ? '⏹ Stop Recording' : '🎤 Start Recording'}
+                      {isRecording 
+                        ? recordingSeconds <= 0 
+                          ? '⏹ Time Up!' 
+                          : '⏹ Stop Recording'
+                        : '🎤 Start Recording'
+                      }
                     </button>
                   ) : (
                     <div className="recorded-audio">
@@ -274,6 +321,7 @@ function Users() {
                       <button className="re-record-btn" onClick={() => {
                         setRecordedAudioUrl(null);
                         setAudioBase64(null);
+                        setRecordingSeconds(15);
                         startRecording();
                       }}>
                         🔄 Re-record
@@ -281,7 +329,23 @@ function Users() {
                     </div>
                   )}
                 </div>
-                {isRecording && <p className="recording-status">🔴 Recording...</p>}
+                
+                {isRecording && (
+                  <div className="recording-timer">
+                    <p className="recording-status">🔴 Recording...</p>
+                    <div className="timer-display">
+                      <span className="timer-seconds">{recordingSeconds}</span>
+                      <span className="timer-label">seconds left</span>
+                    </div>
+                    <div className="timer-progress">
+                      <div 
+                        className="timer-progress-bar" 
+                        style={{ width: `${(recordingSeconds / 15) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+                
                 {audioBase64 && <p className="audio-saved">✓ Audio saved</p>}
               </div>
             )}
