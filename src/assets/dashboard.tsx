@@ -24,15 +24,10 @@ function Dashboard() {
   const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [pulse, setPulse] = useState(true);
-  const [typedText] = useState('');
   const [userHasInteracted, setUserHasInteracted] = useState(false);
   const [offlineElapsedTime, setOfflineElapsedTime] = useState<number>(0);
- const [showQrOptions, setShowQrOptions] = useState(false);
 const [loadingQR, setLoadingQR] = useState(false);
 const [loadQR, setLoadQr] = useState(false);
- const toggleQrOptions = () => {
-  setShowQrOptions(!showQrOptions);
-};
 
 
   const {
