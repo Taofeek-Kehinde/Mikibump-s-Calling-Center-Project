@@ -6,6 +6,78 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+}
+
+.talkin-heading {
+  font-size: 2.5rem;
+  color: #ff4f87;
+  margin-bottom: 30px;
+  font-family: 'Dancing Script', cursive;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.audio-player {
+  margin-bottom: 30px;
+}
+
+.play-audio-btn {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  background: linear-gradient(90deg, #ff4f87, #ff758c);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.play-audio-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 79, 135, 0.4);
+}
+
+.link-section {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.check-this-out {
+  color: #ccc;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.custom-link {
+  color: #00ffaa;
+  font-size: 1.1rem;
+  text-decoration: none;
+  word-break: break-all;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: inline-block;
+  transition: background 0.3s ease;
+}
+
+.custom-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.talk-to-me-btn {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  background: linear-gradient(90deg, #25D366, #128C7E);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.talk-to-me-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
 }
 
 textarea {
@@ -21,4 +93,17 @@ button {
   background: #00ffaa;
   border: none;
   border-radius: 6px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .talkin-heading {
+    font-size: 2rem;
+  }
+  
+  .play-audio-btn,
+  .talk-to-me-btn {
+    font-size: 1rem;
+    padding: 12px 24px;
+  }
 }

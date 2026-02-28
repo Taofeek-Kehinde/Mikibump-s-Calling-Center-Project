@@ -31,6 +31,8 @@ function Adminform(): React.ReactElement {
   const audioChunks = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
 
   // Get customUrl from query parameter on page load
   useEffect(() => {
@@ -96,11 +98,23 @@ function Adminform(): React.ReactElement {
     setIsRecording(false);
   };
 
-  // 🎤 START RECORDING
+  // 🎤 START RECORDING - with real-time audio playback
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
+
+      // Set up audio context for real-time playback
+      const audioContext = new AudioContext();
+      audioContextRef.current = audioContext;
+      
+      // Create source node from the stream
+      const source = audioContext.createMediaStreamSource(stream);
+      sourceNodeRef.current = source;
+      
+      // Connect to speakers for real-time monitoring
+      source.connect(audioContext.destination);
+
       const mediaRecorder = new MediaRecorder(stream);
 
       mediaRecorderRef.current = mediaRecorder;
@@ -111,6 +125,14 @@ function Adminform(): React.ReactElement {
       };
 
       mediaRecorder.onstop = () => {
+        // Disconnect the monitoring when recording stops
+        if (sourceNodeRef.current) {
+          sourceNodeRef.current.disconnect();
+        }
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+          audioContextRef.current = null;
+        }
         processRecording();
       };
 
@@ -273,6 +295,12 @@ function Adminform(): React.ReactElement {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
+      if (sourceNodeRef.current) {
+        sourceNodeRef.current.disconnect();
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
     };
   }, []);
 
@@ -333,7 +361,7 @@ function Adminform(): React.ReactElement {
             
             {isRecording && (
               <div className="recording-timer">
-                <p className="recording-status">🔴 Recording...</p>
+                <p className="recording-status">🔴 Recording... (You can hear audio through speakers)</p>
                 <div className="timer-display">
                   <span className="timer-seconds">{recordingSeconds}</span>
                   <span className="timer-label">seconds left</span>

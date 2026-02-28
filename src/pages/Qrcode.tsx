@@ -99,17 +99,32 @@ export default function Qrcode() {
   }
 
   // Generate batch QR codes
-  const generateQRBatch = () => {
+  const generateQRBatch = async () => {
     const tempList: { id: string; url: string }[] = [];
+    const { setDoc, doc } = await import("firebase/firestore");
 
     for (let i = 0; i < numQRs; i++) {
       const uniqueId = uuidv4().slice(0, 8);
-      // Always use current app's domain, but pass custom URL as a parameter
-      const baseUrl = `${window.location.origin}/adminform/${uniqueId}`;
-      // If custom URL is provided, add it as a query parameter
-      const link = customUrl 
-        ? `${baseUrl}?customUrl=${encodeURIComponent(customUrl)}`
-        : `${window.location.origin}/qrform/${uniqueId}`;
+      // QR code points to the Adminform page where users can record audio
+      const link = `${window.location.origin}/adminform/${uniqueId}${customUrl ? `?customUrl=${encodeURIComponent(customUrl)}` : ''}`;
+      
+      // Create a placeholder document in Firestore with the custom URL
+      if (customUrl) {
+        try {
+          await setDoc(doc(db, "submissions", uniqueId), {
+            id: uniqueId,
+            customUrl: customUrl,
+            link: customUrl,
+            whatsappNumber: '',
+            contentMode: 'voice',
+            audioUrl: null,
+            createdAt: Date.now(),
+          });
+        } catch (err) {
+          console.error("Error creating placeholder:", err);
+        }
+      }
+      
       tempList.push({ id: uniqueId, url: link });
     }
 
