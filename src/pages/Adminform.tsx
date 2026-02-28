@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import './users.css';
 import { FaMicrophone, FaTimes } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 function Adminform(): React.ReactElement {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [customUrl, setCustomUrl] = useState<string>('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
@@ -23,16 +24,12 @@ function Adminform(): React.ReactElement {
   const [recordingSeconds, setRecordingSeconds] = useState(15);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [showShareOptions, setShowShareOptions] = useState(false);
   const [submissionSaved, setSubmissionSaved] = useState(false);
-  const [savedSubmissionId, setSavedSubmissionId] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
 
   // Get customUrl from query parameter on page load
   useEffect(() => {
@@ -60,7 +57,6 @@ function Adminform(): React.ReactElement {
               setRecordedAudioUrl(data.audioUrl);
             }
             setSubmissionSaved(true);
-            setSavedSubmissionId(id);
           }
         } catch (err) {
           console.error("Error checking submission:", err);
@@ -98,22 +94,11 @@ function Adminform(): React.ReactElement {
     setIsRecording(false);
   };
 
-  // 🎤 START RECORDING - with real-time audio playback
+  // 🎤 START RECORDING - no real-time playback
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-
-      // Set up audio context for real-time playback
-      const audioContext = new AudioContext();
-      audioContextRef.current = audioContext;
-      
-      // Create source node from the stream
-      const source = audioContext.createMediaStreamSource(stream);
-      sourceNodeRef.current = source;
-      
-      // Connect to speakers for real-time monitoring
-      source.connect(audioContext.destination);
 
       const mediaRecorder = new MediaRecorder(stream);
 
@@ -125,14 +110,6 @@ function Adminform(): React.ReactElement {
       };
 
       mediaRecorder.onstop = () => {
-        // Disconnect the monitoring when recording stops
-        if (sourceNodeRef.current) {
-          sourceNodeRef.current.disconnect();
-        }
-        if (audioContextRef.current) {
-          audioContextRef.current.close();
-          audioContextRef.current = null;
-        }
         processRecording();
       };
 
@@ -190,44 +167,7 @@ function Adminform(): React.ReactElement {
     }
   };
 
-  // Share as image
-  const shareAsImage = async () => {
-    const shareData = {
-      title: 'TALK IN CANDY',
-      text: `Check out my voice message!`,
-      url: `${window.location.origin}/view/${savedSubmissionId}`
-    };
-
-    if (navigator.share && navigator.canShare(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.log('Share cancelled or failed');
-      }
-    } else {
-      const url = `${window.location.origin}/view/${savedSubmissionId}`;
-      navigator.clipboard.writeText(url);
-      alert('Link copied to clipboard!');
-    }
-    setShowShareOptions(false);
-  };
-
-  // Share as URL via WhatsApp
-  const shareViaWhatsApp = () => {
-    if (!whatsappNumber.trim()) {
-      alert('Please enter a WhatsApp number');
-      return;
-    }
-
-    const url = `${window.location.origin}/view/${savedSubmissionId}`;
-    const message = encodeURIComponent(`Check out my TALK IN CANDY message: ${url}`);
-    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${message}`;
-    
-    window.open(whatsappUrl, '_blank');
-    setShowShareOptions(false);
-  };
-
-  // 📝 SUBMIT - SAVE DATA AND GENERATE QR
+  // 📝 SUBMIT - SAVE DATA AND REDIRECT TO THANKS
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -259,9 +199,8 @@ function Adminform(): React.ReactElement {
       const docRef = doc(db, "submissions", submissionId);
       await setDoc(docRef, payload);
 
-      setSavedSubmissionId(submissionId);
-      setSubmissionSaved(true);
-      setShowShareOptions(true);
+      // Navigate to Thanks page after successful submission
+      navigate('/thanks');
 
     } catch (error) {
       console.error('Error saving data:', error);
@@ -294,12 +233,6 @@ function Adminform(): React.ReactElement {
       }
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
-      }
-      if (sourceNodeRef.current) {
-        sourceNodeRef.current.disconnect();
-      }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
       }
     };
   }, []);
@@ -361,7 +294,7 @@ function Adminform(): React.ReactElement {
             
             {isRecording && (
               <div className="recording-timer">
-                <p className="recording-status">🔴 Recording... (You can hear audio through speakers)</p>
+                <p className="recording-status">🔴 Recording...</p>
                 <div className="timer-display">
                   <span className="timer-seconds">{recordingSeconds}</span>
                   <span className="timer-label">seconds left</span>
@@ -380,80 +313,49 @@ function Adminform(): React.ReactElement {
         </div>
 
         <p className="shoot-text">VOICE NOTE MODE</p>
-        
-        {/* Share Options Modal */}
-        {showShareOptions && (
-          <div className="content-section">
-            <h3>Share Your Message</h3>
-            <p>How would you like to share?</p>
-            <div className="users-form">
-              <button 
-                className="candy-button" 
-                onClick={shareAsImage}
-              >
-                📤 Share Link
-              </button>
-              <button 
-                className="candy-button" 
-                onClick={shareViaWhatsApp}
-              >
-                📱 Send to WhatsApp
-              </button>
-              <button 
-                className="clear-btn" 
-                onClick={() => setShowShareOptions(false)}
-                style={{ background: '#666' }}
-              >
-                Close
-              </button>
+
+        <form onSubmit={handleSubmit} className="users-form">
+          <label className="whatsapp-label">WHATSAPP NUMBER*</label>
+          <input
+            type="tel"
+            className="whatsapp-input"
+            placeholder="start with 234... e.g 2348190004000"
+            value={whatsappNumber}
+            onChange={(e) => setWhatsappNumber(e.target.value)}
+            required
+          />
+
+          {/* Show custom URL if provided, otherwise show regular link input */}
+          {customUrl ? (
+            <div>
+              <label className="whatsapp-label">Your Custom URL</label>
+              <input
+                type="text"
+                className="whatsapp-input"
+                value={customUrl}
+                disabled
+                style={{ backgroundColor: '#333' }}
+              />
             </div>
-          </div>
-        )}
+          ) : (
+            <>
+              <label className="whatsapp-label">Social Media/Web (OPTIONAL)</label>
+              <input
+                type="url"
+                className="whatsapp-input"
+                placeholder="Paste Link to social media or web address"
+                value={linkNumber}
+                onChange={(e) => setLinkNumber(e.target.value)}
+              />
+            </>
+          )}
 
-        {!showShareOptions && (
-          <form onSubmit={handleSubmit} className="users-form">
-            <label className="whatsapp-label">WHATSAPP NUMBER*</label>
-            <input
-              type="tel"
-              className="whatsapp-input"
-              placeholder="start with 234... e.g 2348190004000"
-              value={whatsappNumber}
-              onChange={(e) => setWhatsappNumber(e.target.value)}
-              required
-            />
+          <button type="submit" className="candy-button" disabled={isProcessing}>
+            {isProcessing ? 'PROCESSING...' : submissionSaved ? 'UPDATE' : 'CANDY IT'}
+          </button>
 
-            {/* Show custom URL if provided, otherwise show regular link input */}
-            {customUrl ? (
-              <div>
-                <label className="whatsapp-label">Your Custom URL</label>
-                <input
-                  type="text"
-                  className="whatsapp-input"
-                  value={customUrl}
-                  disabled
-                  style={{ backgroundColor: '#333' }}
-                />
-              </div>
-            ) : (
-              <>
-                <label className="whatsapp-label">Social Media/Web (OPTIONAL)</label>
-                <input
-                  type="url"
-                  className="whatsapp-input"
-                  placeholder="Paste Link to social media or web address"
-                  value={linkNumber}
-                  onChange={(e) => setLinkNumber(e.target.value)}
-                />
-              </>
-            )}
-
-            <button type="submit" className="candy-button" disabled={isProcessing}>
-              {isProcessing ? 'PROCESSING...' : submissionSaved ? 'UPDATE' : 'CANDY IT'}
-            </button>
-
-            <p className='footer'>(Print your QR code after generating and stick it on your product, flyer, promotional item, gift, or anything!)</p>
-          </form>
-        )}
+          <p className='footer'>(Print your QR code after generating and stick it on your product, flyer, promotional item, gift, or anything!)</p>
+        </form>
       </div>
     </div>
   );
