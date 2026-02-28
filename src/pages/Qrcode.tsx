@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
+import { v4 as uuidv4 } from "uuid";
 import "./Qrcode.css";
 
 export default function Qrcode() {
@@ -10,6 +11,10 @@ export default function Qrcode() {
   const navigate = useNavigate();
   const [submissionData, setSubmissionData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  
+  // Batch QR generation states
+  const [numQRs, setNumQRs] = useState(1);
+  const [qrList, setQrList] = useState<{ id: string; url: string }[]>([]);
 
   useEffect(() => {
     const checkSubmission = async () => {
@@ -92,16 +97,63 @@ export default function Qrcode() {
     );
   }
 
-  // Original page (no ID) - show instructions
+  // Generate batch QR codes
+  const generateQRBatch = () => {
+    const tempList: { id: string; url: string }[] = [];
+
+    for (let i = 0; i < numQRs; i++) {
+      const uniqueId = uuidv4().slice(0, 8);
+      const link = `${window.location.origin}/qrform/${uniqueId}`;
+      tempList.push({ id: uniqueId, url: link });
+    }
+
+    setQrList(tempList);
+  };
+
+  // Download QR code for batch
+  const downloadBatchQR = (index: number, qrId: string) => {
+    const canvas = document.getElementById(`qr-${index}`) as HTMLCanvasElement;
+    if (canvas) {
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `QR-${qrId}.png`;
+      link.click();
+    }
+  };
+
+  // Original page (no ID) - show batch QR generation
   return (
     <div className="qr-wrap">
       <h1>Generate Talkin QR</h1>
-      <p className="qr-info">
-        Go to the <strong>MAKE IT TALK</strong> page to create your personalized QR code with voice notes or text-to-speech!
-      </p>
-      <button className="home-btn" onClick={() => navigate('/users')}>
-        Create Your QR
-      </button>
+
+      <div className="form-groups">
+        <label>Number of QR Codes</label>
+        <input
+          type="number"
+          min={1}
+          value={numQRs}
+          onChange={(e) => setNumQRs(parseInt(e.target.value))}
+        />
+      </div>
+
+      <button onClick={generateQRBatch}>Generate QR</button>
+
+      <div className="qr-container">
+        {qrList.map((qr, index) => (
+          <div key={index} className="qr-box">
+            <QRCodeCanvas id={`qr-${index}`} value={qr.url} size={220} />
+            <p><b>ID:</b> {qr.id}</p>
+            <p>Scan to set message</p>
+
+            <button
+              onClick={() => downloadBatchQR(index, qr.id)}
+            >
+              Save / Print QR
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
