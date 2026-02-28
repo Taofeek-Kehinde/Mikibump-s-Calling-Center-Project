@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
-import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
+import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync, FaEye } from "react-icons/fa";
 import { createChildVoice } from "../utils/textToSpeech";
+import candyImage from "../assets/candy.jpg";
 
 import "./Qrform.css";
 
@@ -13,6 +14,7 @@ export default function Qrform() {
     const navigate = useNavigate();
     const [savedData, setSavedData] = useState<any>(null);
     const [isChecking, setIsChecking] = useState(true);
+    const [showInfo, setShowInfo] = useState(false);
     
     // Text-to-speech state
     const [isTtsPlaying, setIsTtsPlaying] = useState(false);
@@ -21,6 +23,11 @@ export default function Qrform() {
     // Voice note state
     const [isVoicePlaying, setIsVoicePlaying] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
+
+    // Get the current base URL for sharing
+    const getBaseUrl = () => {
+        return window.location.origin;
+    };
 
     useEffect(() => {
         const checkQR = async () => {
@@ -107,6 +114,28 @@ export default function Qrform() {
         );
     }
 
+    // Generate the shareable URL
+    const shareUrl = `${getBaseUrl()}/qrform/${id}`;
+
+    // Generate WhatsApp message with all info
+    const getWhatsAppMessage = () => {
+        let message = `Hi! Check out my Candy QR!\n\n`;
+        
+        if (savedData.contentMode === 'voice') {
+            message += `🎤 I've left you a voice message!\n`;
+        } else if (savedData.contentMode === 'text') {
+            message += `📝 I've left you a text message!\n`;
+        }
+        
+        if (savedData.link) {
+            message += `\n🔗 My social media: ${savedData.link}\n`;
+        }
+        
+        message += `\n👋 Scan or click here to see and hear everything:\n${shareUrl}`;
+        
+        return encodeURIComponent(message);
+    };
+
     // Play text-to-speech function with child-like voice (using shared utility)
     const playTextToSpeech = (text: string) => {
         if (window.speechSynthesis.speaking) {
@@ -147,6 +176,12 @@ export default function Qrform() {
             audioRef.current.load();
             audioRef.current.play();
         }
+    };
+
+    // Copy link to clipboard
+    const copyLink = () => {
+        navigator.clipboard.writeText(shareUrl);
+        alert('Link copied to clipboard!');
     };
 
     return (
@@ -203,6 +238,15 @@ export default function Qrform() {
 
             <div className="qrform-card">
                 <h2>TALK IN CANDY</h2>
+
+                {/* Candy Image */}
+                <div className="candy-image-container">
+                    <img 
+                        src={candyImage} 
+                        alt="Candy" 
+                        className="candy-image"
+                    />
+                </div>
 
                 {/* Voice Note Section */}
                 {savedData.contentMode === 'voice' && savedData.audioUrl && (
@@ -267,19 +311,56 @@ export default function Qrform() {
                     </div>
                 )}
 
-                {/* WhatsApp Contact */}
+                {/* View Info Button - Toggle between minimal and full view */}
+                <button
+                    className="action-btn view-info-btn"
+                    onClick={() => setShowInfo(!showInfo)}
+                >
+                    <FaEye className="btn-icon" />
+                    <span>{showInfo ? 'Hide Info' : 'View All Info'}</span>
+                </button>
+
+                {/* Show Full Information */}
+                {showInfo && (
+                    <div className="info-section">
+                        {savedData.contentMode === 'text' && savedData.textMessage && (
+                            <div className="info-message">
+                                <strong>📝 Message:</strong>
+                                <p>{savedData.textMessage}</p>
+                            </div>
+                        )}
+                        
+                        {savedData.link && (
+                            <div className="info-link">
+                                <strong>🔗 Social Media:</strong>
+                                <a href={savedData.link} target="_blank" rel="noopener noreferrer">
+                                    {savedData.link}
+                                </a>
+                            </div>
+                        )}
+                        
+                        {savedData.whatsappNumber && (
+                            <div className="info-contact">
+                                <strong>📱 WhatsApp:</strong>
+                                <span>{savedData.whatsappNumber}</span>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* WhatsApp Contact - Opens with full message */}
                 {savedData.whatsappNumber && (
                     <button
                         className="action-btn whatsapp-btn"
                         onClick={() =>
                             window.open(
-                                `https://wa.me/${savedData.whatsappNumber}?text=Hi, I scanned your Candy QR`,
+                                `https://wa.me/${savedData.whatsappNumber}?text=${getWhatsAppMessage()}`,
                                 "_blank"
                             )
                         }
                     >
                         <FaWhatsapp className="btn-icon" />
-                        <span>Chat on WhatsApp</span>
+                        <span>Share on WhatsApp</span>
                     </button>
                 )}
 
@@ -293,6 +374,15 @@ export default function Qrform() {
                         <span>CHECK ME OUT</span>
                     </button>
                 )}
+
+                {/* Copy Link Button */}
+                <button
+                    className="action-btn copy-link-btn"
+                    onClick={copyLink}
+                >
+                    <FaLink className="btn-icon" />
+                    <span>Copy Link</span>
+                </button>
             </div>
         </div>
     );
