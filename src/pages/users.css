@@ -98,6 +98,13 @@
   height: 60px;
   border-radius: 50%;
   background: #ff4757;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 28px;
+  box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
+  transition: transform 0.3s ease;
 }
 
 .shoot-text {
@@ -170,19 +177,6 @@
   user-select: none;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
-.record-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #ff4757;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 28px;
-  box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
-  transition: transform 0.3s ease;
-}
 
 /* Responsive adjustment */
 @media (max-width: 600px) {
@@ -240,4 +234,186 @@
   align-items: center;
   justify-content: center;
   font-size: 18px;
+}
+
+/* Active state for record circles */
+.record-circle.active {
+  background-color: #e91e63;
+  border-color: #e91e63;
+}
+
+.record-circle.active .record-icon,
+.record-circle.active .record-text-circle {
+  background-color: #fff;
+  color: #e91e63;
+}
+
+/* Content Section */
+.content-section {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.clear-btn {
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.clear-btn:hover {
+  background: #444;
+}
+
+/* Voice Section */
+.voice-section {
+  text-align: center;
+}
+
+.record-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.record-btn {
+  background: linear-gradient(135deg, #ff4757 0%, #ff6b6b 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.record-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
+}
+
+.record-btn.recording {
+  background: #ff0000;
+  animation: pulse-recording 1s infinite;
+}
+
+@keyframes pulse-recording {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.recorded-audio {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.play-btn, .re-record-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+.play-btn:hover {
+  background: #45a049;
+}
+
+.re-record-btn {
+  background: #ff9800;
+  color: white;
+}
+
+.re-record-btn:hover {
+  background: #f57c00;
+}
+
+.recording-status {
+  color: #ff0000;
+  font-weight: 600;
+  margin-top: 10px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.audio-saved {
+  color: #4CAF50;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* Text Section */
+.text-section {
+  text-align: center;
+}
+
+.text-section textarea {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 15px;
+}
+
+.text-section textarea:focus {
+  border-color: #ff4757;
+  outline: none;
+}
+
+.speak-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.speak-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.speak-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.speaking-status {
+  color: #667eea;
+  font-weight: 600;
+  margin-top: 10px;
 }

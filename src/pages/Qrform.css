@@ -52,7 +52,6 @@
 .form-group label {
   font-size: 0.9rem;
   font-weight: 500;
-  /* color: #ccc; */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: left;
@@ -249,20 +248,17 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;              /* full width on small screens */
-  max-width: 320px;        /* not too wide on large screens */
-  margin: 12px auto 0;     /* center horizontally */
+  width: 100%;
+  max-width: 320px;
+  margin: 12px auto 0;
   padding: 12px 16px;
-
-  font-size: clamp(0.85rem, 2.5vw, 1rem); /* responsive text */
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   font-weight: 600;
   letter-spacing: 0.5px;
-
   border-radius: 30px;
   border: none;
   background: linear-gradient(135deg, #ff4d4d, #ff9966);
   color: #fff;
-
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -272,7 +268,6 @@ h2 {
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* Small phones */
 @media (max-width: 480px) {
   .url-btn {
     padding: 10px 14px;
@@ -353,3 +348,78 @@ h2 {
   }
 }
 
+/* Audio Section */
+.audio-section {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.audio-section h3 {
+  color: #000;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.audio-section audio {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.audio-label {
+  color: #333;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Text Section */
+.text-section {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.text-section h3 {
+  color: #000;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.message-text {
+  color: #000;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+/* Play Audio Button */
+.play-audio-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.play-audio-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.play-audio-btn:active {
+  transform: scale(0.98);
+}

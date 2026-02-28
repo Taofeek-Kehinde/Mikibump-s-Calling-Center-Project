@@ -47,7 +47,7 @@ button:hover {
 .qr-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 30px; /* more spacing */
+  gap: 30px;
   width: 100%;
   max-width: 1200px;
   margin-top: 40px;
@@ -79,12 +79,12 @@ button:hover {
 
 .form-groups {
   margin-bottom: 25px;
-  text-align: center; /* center everything in the group */
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap; /* wrap on small screens */
-  gap: 10px; /* spacing between label and input */
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 
@@ -94,25 +94,18 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Firefox */
-/* input[type="number"] {
-  -moz-appearance: textfield;
-} */
-
-
 label {
   font-weight: 600;
   color: #ff758c;
-  margin: 0; /* remove left margin */
+  margin: 0;
 }
 
 input[type="number"] {
-  -webkit-appearance: none; /* remove default number styling in Chrome/Safari */
-  -moz-appearance: textfield; /* remove default number styling in Firefox */
-  appearance: textfield; /* standard fallback */
-
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: textfield;
   background: #222;
-  color: #fff; /* text color is white */
+  color: #fff;
   font-size: 1rem;
   font-weight: 500;
   text-align: center;
@@ -197,4 +190,90 @@ input[type="number"]:focus {
   .how-it-works-content p {
     font-size: 13px;
   }
+}
+
+/* QR Success Box */
+.qr-success-box {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.qr-success-box h1 {
+  color: #ff4757;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-shadow: none;
+}
+
+.submission-details {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.submission-details h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.submission-details p {
+  color: #555;
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.submission-details b {
+  color: #333;
+}
+
+.download-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.download-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.home-btn {
+  background: #333;
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.home-btn:hover {
+  background: #555;
+  transform: scale(1.02);
+}
+
+.qr-instructions {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 20px;
+  line-height: 1.5;
+}
+
+.qr-info {
+  color: #ccc;
+  font-size: 1.1rem;
+  margin: 30px 0;
+  text-align: center;
+}
+
+.qr-info strong {
+  color: #ff4f87;
 }

@@ -1,28 +1,19 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaLink } from "react-icons/fa";
 import { FaHandPointRight } from "react-icons/fa";
 
-
 import "./Qrform.css";
-import { showAlert } from "../utils/showAlert";
 
 export default function Qrform() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [url, setUrl] = useState("");
-    const [name, setName] = useState("");
-    const [note, setNote] = useState("");
-    const [contact, setContact] = useState("");
     const [savedData, setSavedData] = useState<any>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
     const [isChecking, setIsChecking] = useState(true);
-
 
     useEffect(() => {
         const checkQR = async () => {
@@ -45,7 +36,6 @@ export default function Qrform() {
             }
         };
 
-        // Add a timeout to prevent infinite loading
         const timeoutId = setTimeout(() => {
             setIsChecking(false);
         }, 5000);
@@ -70,271 +60,141 @@ export default function Qrform() {
         );
     }
 
-    // Show success message right after submission
-    if (isSuccess) {
-        return (
-            <div className="qrform-success" style={{ position: "relative" }}>
-                <div className="success-content">
-                    <h2>✓ Thank You!</h2>
-                    <p className="mess">LET CANDY DO THE TALKIN.</p>
-                </div>
-
-                {/* HOME button at top-right */}
-                <motion.button
-                    className="cany-home-btn"
-                    onClick={() => navigate('/dashboard')}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    title="Open Cany Form"
-                    style={{
-                        position: "absolute",
-                        top: 20,
-                        right: 20,
-                        width: 60,
-                        height: 60,
-                        borderRadius: "50%",
-                        backgroundColor: "red",
-                        border: "none",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                    }}
-                >
-                    {/* ADD THIS ONLY */}
-                    <span
-                        style={{
-                            position: "absolute",
-                            fontSize: "0.75rem",
-                            fontWeight: "700",
-                            color: "#fff",
-                            textTransform: "uppercase",
-                            pointerEvents: "none",
-                        }}
-                    >
-                        HOME
-                    </span>
-
-                    {/* YOUR HAND ICON (UNCHANGED) */}
-                    <FaHandPointRight
-                        className="lefthands"
-                        style={{
-                            fontSize: "1.6rem",
-                            color: "red",
-                            animation: "hand-point 1.2s ease-in-out infinite",
-                            transformOrigin: "center",
-                            marginRight: "120px",
-                            position: "absolute",
-                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
-                        }}
-                    />
-                </motion.button>
-
-            </div>
-        );
-    }
-
-    if (savedData) {
+    if (!savedData) {
         return (
             <div className="qrform-container">
-                <motion.button
-                    className="cany-home-btn"
-                    onClick={() => navigate('/dashboard')}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    title="Open Cany Form"
-                    style={{
-                        position: "fixed",   // ← ONLY change (was absolute)
-                        top: 20,
-                        right: 20,
-                        width: 60,
-                        height: 60,
-                        borderRadius: "50%",
-                        backgroundColor: "red",
-                        border: "none",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                        zIndex: 9999,
-                    }}
-                >
-                    <span
-                        style={{
-                            position: "absolute",
-                            fontSize: "0.75rem",
-                            fontWeight: "700",
-                            color: "#fff",
-                            textTransform: "uppercase",
-                            pointerEvents: "none",
-                        }}
-                    >
-                        HOME
-                    </span>
-
-                    <FaHandPointRight
-                        className="lefthands"
-                        style={{
-                            fontSize: "1.6rem",
-                            color: "red",
-                            animation: "hand-point 1.2s ease-in-out infinite",
-                            transformOrigin: "center",
-                            marginRight: "120px",
-                            position: "absolute",
-                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
-                        }}
-                    />
-                </motion.button>
-
                 <div className="qrform-card">
-                    <h2>TALK IN CANDY</h2>
-                    {savedData.name && <p><b>NAME:</b> {savedData.name}</p>}
-
-                    {savedData.note && (
-                        <p><b>NOTE:</b> {savedData.note}</p>
-                    )}
-
-                    {savedData.images && savedData.images.length > 0 && (
-                        <div className="images-preview">
-                            {savedData.images.map((url: string, idx: number) => (
-                                <img
-                                    key={idx}
-                                    src={url}
-                                    alt={`Uploaded ${idx}`}
-                                    style={{ maxWidth: 200, margin: 5 }}
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    {savedData.contact && (
-                        <button
-                            className="action-btn whatsapp-btn"
-                            onClick={() =>
-                                window.open(
-                                    `https://wa.me/${savedData.contact}?text=Hi, I scanned your Candy QR`,
-                                    "_blank"
-                                )
-                            }
-                        >
-                            <FaWhatsapp className="btn-icon" />
-                            <span>Chat on WhatsApp</span>
-                        </button>
-                    )}
-
-
-
-
-                    {savedData.url && (
-                        <button
-                            className="action-btn url-btn"
-                            onClick={() => window.open(savedData.url, "_blank")}
-                        >
-                            <FaLink className="btn-icon" />
-                            <span>Visit Link</span>
-                        </button>
-                    )}
-
+                    <h2>QR Not Found</h2>
+                    <p>This QR code is not valid or has expired.</p>
+                    <button 
+                        className="submit-btn" 
+                        onClick={() => navigate('/')}
+                        style={{ marginTop: '20px' }}
+                    >
+                        Go Home
+                    </button>
                 </div>
             </div>
         );
     }
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!id || isSubmitting) return;
 
-        if (!name.trim() || !contact.trim()) {
-            showAlert("Name and WhatsApp number are required.");
-            return;
-        }
-
-        if (contact.length < 10) {
-            showAlert("Enter a valid WhatsApp number with country code.");
-            return;
-        }
-
-        setIsSubmitting(true);
-
-        try {
-            const docRef = doc(db, "submissions", id);
-            const snap = await getDoc(docRef);
-
-            if (snap.exists()) {
-                setSavedData(snap.data());
-                return;
-            }
-
-
-            const payload: any = {
-                submittedAt: Date.now(),
-            };
-
-            payload.name = name.trim();
-            payload.contact = contact.trim();
-
-            if (note.trim()) payload.note = note.trim();
-            if (url.trim()) payload.url = url.trim();
-
-            await setDoc(docRef, payload);
-
-            setIsSuccess(true);
-            setSavedData(payload);
-        } catch (err) {
-            console.error(err);
-            alert("Submission failed");
-        } finally {
-            setIsSubmitting(false);
+    // Play text-to-speech function
+    const playTextToSpeech = (text: string) => {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        } else {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
         }
     };
 
-
     return (
         <div className="qrform-container">
+            <motion.button
+                className="cany-home-btn"
+                onClick={() => navigate('/dashboard')}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                title="Open Cany Form"
+                style={{
+                    position: "fixed",
+                    top: 20,
+                    right: 20,
+                    width: 60,
+                    height: 60,
+                    borderRadius: "50%",
+                    backgroundColor: "red",
+                    border: "none",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                    zIndex: 9999,
+                }}
+            >
+                <span
+                    style={{
+                        position: "absolute",
+                        fontSize: "0.75rem",
+                        fontWeight: "700",
+                        color: "#fff",
+                        textTransform: "uppercase",
+                        pointerEvents: "none",
+                    }}
+                >
+                    HOME
+                </span>
+
+                <FaHandPointRight
+                    className="lefthands"
+                    style={{
+                        fontSize: "1.6rem",
+                        color: "red",
+                        animation: "hand-point 1.2s ease-in-out infinite",
+                        transformOrigin: "center",
+                        marginRight: "120px",
+                        position: "absolute",
+                        filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.12))",
+                    }}
+                />
+            </motion.button>
+
             <div className="qrform-card">
                 <h2>TALK IN CANDY</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Name *</label>
-                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+
+                {/* Voice Note Section */}
+                {savedData.contentMode === 'voice' && savedData.audioUrl && (
+                    <div className="audio-section">
+                        <h3>Voice Message</h3>
+                        <audio controls src={savedData.audioUrl} style={{ width: '100%' }}>
+                            Your browser does not support audio.
+                        </audio>
+                        <p className="audio-label">Tap play to listen to the voice note</p>
                     </div>
+                )}
 
-                    <div className="form-group">
-                        <label>Note</label>
-                        <textarea
-                            value={note}
-                            onChange={(e) => setNote(e.target.value)}
-                            rows={3}
-                        />
+                {/* Text to Speech Section */}
+                {savedData.contentMode === 'text' && savedData.textMessage && (
+                    <div className="text-section">
+                        <h3>Text Message</h3>
+                        <p className="message-text">{savedData.textMessage}</p>
+                        <button 
+                            className="play-audio-btn"
+                            onClick={() => playTextToSpeech(savedData.textMessage)}
+                        >
+                            🔊 Play as Audio
+                        </button>
                     </div>
+                )}
 
-                    <div className="form-group">
-                        <label>WhatsApp Number *</label>
-                        <input
-                            type="tel"
-                            placeholder="Enter number with country code, e.g. 2348119825334"
-                            value={contact}
-                            onChange={(e) => setContact(e.target.value.replace(/\D/g, ""))}
-                        />
-
-                    </div>
-
-                    <div className="form-group">
-                        <label>paste link</label>
-                        <input
-                            type="url"
-                            placeholder="https://example.com"
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                        />
-                    </div>
-
-
-                    <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : "CANDY IT"}
+                {/* WhatsApp Contact */}
+                {savedData.whatsappNumber && (
+                    <button
+                        className="action-btn whatsapp-btn"
+                        onClick={() =>
+                            window.open(
+                                `https://wa.me/${savedData.whatsappNumber}?text=Hi, I scanned your Candy QR`,
+                                "_blank"
+                            )
+                        }
+                    >
+                        <FaWhatsapp className="btn-icon" />
+                        <span>Chat on WhatsApp</span>
                     </button>
-                </form>
+                )}
+
+                {/* Social Media Link */}
+                {savedData.link && (
+                    <button
+                        className="action-btn url-btn"
+                        onClick={() => window.open(savedData.link, "_blank")}
+                    >
+                        <FaLink className="btn-icon" />
+                        <span>Visit Link</span>
+                    </button>
+                )}
             </div>
         </div>
     );

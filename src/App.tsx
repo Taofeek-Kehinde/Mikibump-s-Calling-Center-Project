@@ -65,6 +65,7 @@ function App(): JSX.Element {
       <Route path="/admin" element={<AdminLogin />} />
       <Route path="/canyform" element={<Canyform />} />
       <Route path="/form" element={<Form />} />
+      <Route path="/Qrcode/:id" element={<Qrcode />} />
       <Route path="/Qrcode" element={<Qrcode />} />
       <Route path="/qrform/:id" element={<Qrform />} />
       <Route path="/view/:id" element={<View />} />
