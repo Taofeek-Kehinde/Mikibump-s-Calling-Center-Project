@@ -289,7 +289,7 @@ export default function Qrform() {
                         onClick={() => window.open(savedData.link, "_blank")}
                     >
                         <FaLink className="btn-icon" />
-                        <span>Visit Link</span>
+                        <span>CHECK THIS OUT</span>
                     </button>
                 )}
             </div>
