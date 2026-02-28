@@ -14,6 +14,7 @@ export default function Qrcode() {
   
   // Batch QR generation states
   const [numQRs, setNumQRs] = useState(1);
+  const [customUrl, setCustomUrl] = useState("");
   const [qrList, setQrList] = useState<{ id: string; url: string }[]>([]);
 
   useEffect(() => {
@@ -100,10 +101,13 @@ export default function Qrcode() {
   // Generate batch QR codes
   const generateQRBatch = () => {
     const tempList: { id: string; url: string }[] = [];
+    const baseUrl = customUrl || window.location.origin;
 
     for (let i = 0; i < numQRs; i++) {
       const uniqueId = uuidv4().slice(0, 8);
-      const link = `${window.location.origin}/qrform/${uniqueId}`;
+      const link = customUrl 
+        ? `${customUrl}${customUrl.endsWith('/') ? '' : '/'}${uniqueId}`
+        : `${window.location.origin}/qrform/${uniqueId}`;
       tempList.push({ id: uniqueId, url: link });
     }
 
@@ -134,6 +138,17 @@ export default function Qrcode() {
           min={1}
           value={numQRs}
           onChange={(e) => setNumQRs(parseInt(e.target.value))}
+        />
+      </div>
+
+      <div className="form-groups">
+        <label>Enter URL (Optional)</label>
+        <input
+          type="url"
+          placeholder="https://example.com"
+          value={customUrl}
+          onChange={(e) => setCustomUrl(e.target.value)}
+          className="url-input"
         />
       </div>
 
