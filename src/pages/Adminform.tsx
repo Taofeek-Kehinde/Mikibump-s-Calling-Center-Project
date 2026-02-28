@@ -69,7 +69,8 @@ function Adminform(): React.ReactElement {
 
   // Process and save the recorded audio
   const processRecording = () => {
-    const blob = new Blob(audioChunks.current, { type: 'audio/webm' });
+    // Use audio/wav format for better mobile compatibility
+    const blob = new Blob(audioChunks.current, { type: 'audio/wav' });
     const url = URL.createObjectURL(blob);
     setRecordedAudioUrl(url);
     

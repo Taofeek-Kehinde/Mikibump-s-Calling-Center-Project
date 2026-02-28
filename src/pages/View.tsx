@@ -35,19 +35,41 @@ export default function View() {
   const togglePlayback = () => {
     if (!data?.audioUrl) return;
 
+    // For mobile devices, we need to handle audio differently
     if (isPlaying) {
-      audioRef.current?.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
       setIsPlaying(false);
     } else {
-      if (audioRef.current) {
-        audioRef.current.play();
-        setIsPlaying(true);
-      } else {
-        const audio = new Audio(data.audioUrl);
-        audioRef.current = audio;
-        audio.onended = () => setIsPlaying(false);
-        audio.play();
-        setIsPlaying(true);
+      // Create a new audio element with proper mobile support
+      const audio = new Audio(data.audioUrl);
+      
+      // Add error handling for mobile
+      audio.onerror = () => {
+        console.error('Audio playback error:', audio.error);
+        setIsPlaying(false);
+        alert('Unable to play audio. Please try again.');
+      };
+      
+      audio.onended = () => {
+        setIsPlaying(false);
+        audioRef.current = null;
+      };
+      
+      // Attempt to play - may need user interaction on mobile
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            audioRef.current = audio;
+            setIsPlaying(true);
+          })
+          .catch((error) => {
+            console.error('Playback failed:', error);
+            setIsPlaying(false);
+          });
       }
     }
   };

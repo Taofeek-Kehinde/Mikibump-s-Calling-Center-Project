@@ -303,56 +303,24 @@ useEffect(() => {
         transition={{ duration: 1.2, ease: "easeOut", type: "spring", stiffness: 100 }}
       >
 
-      {/* QR TALKS MAIN BUTTON */}
-<div className="scan-wrapper">
+<div className="scan-options">
 
-  <div className="scan-button" onClick={toggleQrOptions}>
-    <div className="scan-icon">📷</div>
-    <span>QR TALKS</span>
-  </div>
-
-  {showQrOptions && (
-    <div className="scan-options">
-      <div
-        className={`option-btn ${loadingQR ? "loading" : ""}`}
-        onClick={handleGenerateQR}
-      >
-        {loadingQR ? (
-          <>
-            <span className="loader"></span>
-            Loading...
-          </>
-        ) : (
-          <>🍬 GENERATE QR</>
-        )}
-      </div>
-
-      <div
-        className={`option-btn ${loadingQR ? "loading" : ""}`}
-        onClick={handleScanQR}
-      >
-        {loadingQR ? (
-          <>
-            <span className="loader"></span>
-            Loading...
-          </>
-        ) : (
-          <>🍬 SCAN QR</>
-        )}
-      </div>
-    </div>
-  )}
-
-</div>
-
-
-     <div className="live-hint-wrapper">
+  {/* LEFT - Chocolate */}
   <div
-    className={`live-hint-text ${isLive ? "live" : "offline"}`}
-    key={isLive ? "live" : "offline"} // optional, triggers re-render
+    className={`circle-btn chocolate ${loadingQR ? "loading" : ""}`}
+    onClick={handleGenerateQR}
   >
-    {typedText}
+    {loadingQR && <span className="loader"></span>}
   </div>
+
+  {/* RIGHT - Yellow */}
+  <div
+    className={`circle-btn yellow ${loadingQR ? "loading" : ""}`}
+    onClick={handleScanQR}
+  >
+    {loadingQR && <span className="loader"></span>}
+  </div>
+
 </div>
 
         {/* Header with Live Indicator */}

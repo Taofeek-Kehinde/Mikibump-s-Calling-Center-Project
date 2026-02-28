@@ -847,19 +847,87 @@ pointer-events: auto;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .scan-options {
   position: absolute;
-  top: 100%;          /* 👈 appear below button */
+  bottom: 13px;      /* pushes circles under button cleanly */
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 10px;
+  justify-content: space-between; 
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  animation: fadeDown 0.3s ease forwards;
+ width: 260px;        
+  align-items: center;
 }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .scan-options {
+    gap: 120px;
+  }
+
+  .circle-btn {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .scan-options {
+    gap: 60px;
+    bottom: 10px;
+  }
+
+  .circle-btn {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 400px) {
+  .scan-options {
+    gap: 40px;
+  }
+
+  .circle-btn {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Circle style */
+.circle-btn {
+ width: clamp(35px, 8vw, 60px);
+  height: clamp(35px, 8vw, 60px);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Chocolate left */
+.circle-btn.chocolate {
+  background: #3b2f2f;
+}
+
+/* Yellow right */
+.circle-btn.yellow {
+  background: #ffd700;
+}
+
+/* Hover */
+.circle-btn:hover {
+  transform: scale(1.1);
+}
+
 
 /* Smooth drop animation */
 @keyframes fadeDown {
