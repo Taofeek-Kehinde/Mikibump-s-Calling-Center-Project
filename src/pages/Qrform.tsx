@@ -3,9 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
-import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync, FaEye } from "react-icons/fa";
+import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
 import { createChildVoice } from "../utils/textToSpeech";
-import candyImage from "../assets/candy.jpg";
 
 import "./Qrform.css";
 
@@ -14,7 +13,6 @@ export default function Qrform() {
     const navigate = useNavigate();
     const [savedData, setSavedData] = useState<any>(null);
     const [isChecking, setIsChecking] = useState(true);
-    const [showInfo, setShowInfo] = useState(false);
     
     // Text-to-speech state
     const [isTtsPlaying, setIsTtsPlaying] = useState(false);
@@ -117,21 +115,21 @@ export default function Qrform() {
     // Generate the shareable URL
     const shareUrl = `${getBaseUrl()}/qrform/${id}`;
 
-    // Generate WhatsApp message with all info
+    // Generate WhatsApp message with all info including image
     const getWhatsAppMessage = () => {
-        let message = `Hi! Check out my Candy QR!\n\n`;
+        let message = `Hi, I scanned your Candy QR\n\n`;
         
         if (savedData.contentMode === 'voice') {
-            message += `🎤 I've left you a voice message!\n`;
+            message += `🎤 Voice message: ${shareUrl}\n\n`;
         } else if (savedData.contentMode === 'text') {
-            message += `📝 I've left you a text message!\n`;
+            message += `📝 Text message: ${shareUrl}\n\n`;
         }
         
         if (savedData.link) {
-            message += `\n🔗 My social media: ${savedData.link}\n`;
+            message += `🔗 Social media: ${savedData.link}\n`;
         }
         
-        message += `\n👋 Scan or click here to see and hear everything:\n${shareUrl}`;
+        message += `\n👋 View all info here: ${shareUrl}`;
         
         return encodeURIComponent(message);
     };
@@ -176,12 +174,6 @@ export default function Qrform() {
             audioRef.current.load();
             audioRef.current.play();
         }
-    };
-
-    // Copy link to clipboard
-    const copyLink = () => {
-        navigator.clipboard.writeText(shareUrl);
-        alert('Link copied to clipboard!');
     };
 
     return (
@@ -238,15 +230,6 @@ export default function Qrform() {
 
             <div className="qrform-card">
                 <h2>TALK IN CANDY</h2>
-
-                {/* Candy Image */}
-                <div className="candy-image-container">
-                    <img 
-                        src={candyImage} 
-                        alt="Candy" 
-                        className="candy-image"
-                    />
-                </div>
 
                 {/* Voice Note Section */}
                 {savedData.contentMode === 'voice' && savedData.audioUrl && (
@@ -311,44 +294,7 @@ export default function Qrform() {
                     </div>
                 )}
 
-                {/* View Info Button - Toggle between minimal and full view */}
-                <button
-                    className="action-btn view-info-btn"
-                    onClick={() => setShowInfo(!showInfo)}
-                >
-                    <FaEye className="btn-icon" />
-                    <span>{showInfo ? 'Hide Info' : 'View All Info'}</span>
-                </button>
-
-                {/* Show Full Information */}
-                {showInfo && (
-                    <div className="info-section">
-                        {savedData.contentMode === 'text' && savedData.textMessage && (
-                            <div className="info-message">
-                                <strong>📝 Message:</strong>
-                                <p>{savedData.textMessage}</p>
-                            </div>
-                        )}
-                        
-                        {savedData.link && (
-                            <div className="info-link">
-                                <strong>🔗 Social Media:</strong>
-                                <a href={savedData.link} target="_blank" rel="noopener noreferrer">
-                                    {savedData.link}
-                                </a>
-                            </div>
-                        )}
-                        
-                        {savedData.whatsappNumber && (
-                            <div className="info-contact">
-                                <strong>📱 WhatsApp:</strong>
-                                <span>{savedData.whatsappNumber}</span>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {/* WhatsApp Contact - Opens with full message */}
+                {/* WhatsApp Contact - Opens with message including link */}
                 {savedData.whatsappNumber && (
                     <button
                         className="action-btn whatsapp-btn"
@@ -360,7 +306,7 @@ export default function Qrform() {
                         }
                     >
                         <FaWhatsapp className="btn-icon" />
-                        <span>Share on WhatsApp</span>
+                        <span>Chat on WhatsApp</span>
                     </button>
                 )}
 
@@ -374,15 +320,6 @@ export default function Qrform() {
                         <span>CHECK ME OUT</span>
                     </button>
                 )}
-
-                {/* Copy Link Button */}
-                <button
-                    className="action-btn copy-link-btn"
-                    onClick={copyLink}
-                >
-                    <FaLink className="btn-icon" />
-                    <span>Copy Link</span>
-                </button>
             </div>
         </div>
     );
