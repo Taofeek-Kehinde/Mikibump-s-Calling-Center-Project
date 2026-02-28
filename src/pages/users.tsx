@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './users.css';
-import { FaMicrophone } from "react-icons/fa";
+import { FaMicrophone, FaTimes } from "react-icons/fa";
 
 function Users() {
   const navigate = useNavigate();
@@ -103,9 +103,14 @@ function Users() {
               value={textMessage}
               onChange={(e) => setTextMessage(e.target.value)}
             />
-            <button onClick={sendTextToWhatsapp}>
-              SEND MESSAGE
-            </button>
+            <div className="text-buttons">
+              <button onClick={sendTextToWhatsapp}>
+                SEND MESSAGE
+              </button>
+              <button className="cancel-btn" onClick={() => setShowTextInput(false)}>
+                <FaTimes />
+              </button>
+            </div>
           </div>
         )}
 
