@@ -223,16 +223,7 @@ function Form() {
           />
 
 
-          <p className='question' style={{
-            fontFamily: "sans-serif",
-            fontWeight: "500",
-            position: "relative",
-            bottom: "10px",
-            fontSize: "12px",
-            textAlign: "center",
-            userSelect: "none",
-            color: "brown"
-          }}> WHO ARE YOU SENDING IT TO?</p>
+          <p className='question'> WHO ARE YOU SENDING IT TO?</p>
 
           <input
             type="text"

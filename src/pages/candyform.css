@@ -304,7 +304,30 @@ form {
 
 @media (max-width: 600px) {
   .relationship-options {
-    gap: 25px;
+    gap: 15px;
+    flex-wrap: nowrap;
+  }
+  
+  .relationship-btns {
+    width: 35vw;
+    height: 35vw;
+    max-width: 80px;
+    max-height: 80px;
+    font-size: 0.65rem;
+  }
+  
+  .relationship-container {
+    padding: 10px 5px;
+    gap: 8px;
+  }
+
+  .middle-divider {
+    padding: 0 5px;
+    min-width: 20px;
+  }
+
+  .divider-line {
+    font-size: 16px;
   }
 }
 
@@ -355,6 +378,22 @@ form {
   color: brown;
   user-select: none;
   text-shadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
+}
+
+.question {
+  font-family: sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  text-align: center;
+  color: brown;
+  margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+  .question {
+    font-size: 14px;
+    margin: 15px 0;
+  }
 }
 
 .singbtn:hover {
