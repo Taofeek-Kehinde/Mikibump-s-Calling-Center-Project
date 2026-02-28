@@ -5,7 +5,7 @@ import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
 import QRCode from "qrcode"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHandPointLeft, faHandPointRight, faVolumeUp, faStop } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 import { FaWhatsapp } from "react-icons/fa";
 import { useAppContext } from '../context/useAppContext';
@@ -38,7 +38,6 @@ function Form() {
 
   const [message, setMessage] = useState("");
   const [wordCount, setWordCount] = useState(0);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [selectedCandy, setSelectedCandy] = useState<"CHOCOLATE" | "LOLLIPOP" | null>(null);
   const [showSharePrompt, setShowSharePrompt] = useState(false);
 
@@ -54,27 +53,6 @@ function Form() {
     
     setMessage(value);
     setWordCount(words.length);
-  };
-
-  // Preview text-to-speech
-  const handlePreviewSpeech = async () => {
-    if (!message.trim()) {
-      showAlert("Enter a message first", "error");
-      return;
-    }
-
-    if (isSpeaking) {
-      stopSpeech();
-      setIsSpeaking(false);
-    } else {
-      setIsSpeaking(true);
-      try {
-        await speakChildVoice(message);
-      } catch (error) {
-        console.error("Speech error:", error);
-      }
-      setIsSpeaking(false);
-    }
   };
 
   const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
@@ -244,16 +222,6 @@ function Form() {
             onChange={handleMessageChange}
           />
 
-          {/* Preview Speech Button */}
-          <button
-            type="button"
-            className="preview-speech-btn"
-            onClick={handlePreviewSpeech}
-            disabled={!message.trim()}
-          >
-            <FontAwesomeIcon icon={isSpeaking ? faStop : faVolumeUp} />
-            {isSpeaking ? ' STOP PREVIEW' : ' PREVIEW VOICE'}
-          </button>
 
           <p className='question' style={{
             fontFamily: "sans-serif",

@@ -130,13 +130,6 @@ function CandyView() {
         <p><strong>TIME:</strong> {formattedTime}</p>
         <p><strong>DATE:</strong> {formattedDate}</p>
 
-        {/* Show message when unlocked */}
-        {!locked && candy.message && (
-          <div className="message-content">
-            <p className="message-text">"{candy.message}"</p>
-          </div>
-        )}
-
         {locked ? (
           <button 
             className="wait-btn"
