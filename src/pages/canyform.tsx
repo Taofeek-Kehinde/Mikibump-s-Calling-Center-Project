@@ -5,48 +5,81 @@ import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
 import QRCode from "qrcode"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointLeft, faHandPointRight, faVolumeUp, faStop } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 import { FaWhatsapp } from "react-icons/fa";
 import { useAppContext } from '../context/useAppContext';
+import { speakChildVoice, stopSpeech } from '../utils/textToSpeech';
 import './candyform.css';
 
 
 
 interface FormData {
-
   recipientContact: string;
   relationship: 'CHOCOLATE' | 'LOLLIPOP';
-
 }
 
 function Form() {
-
   const navigate = useNavigate();
   const { showFreeCallsButton } = useAppContext();
   
   const [formData, setFormData] = useState<FormData>({
-
     recipientContact: '',
     relationship: 'CHOCOLATE',
-
   });
 
   useEffect(() => {
     document.body.classList.add('candyform-page');
-    return () => document.body.classList.remove('candyform-page');
+    return () => {
+      document.body.classList.remove('candyform-page');
+      stopSpeech();
+    };
   }, []);
 
-  const [spotifyLink, setSpotifyLink] = useState("");
-
+  const [message, setMessage] = useState("");
+  const [wordCount, setWordCount] = useState(0);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [selectedCandy, setSelectedCandy] = useState<"CHOCOLATE" | "LOLLIPOP" | null>(null);
   const [showSharePrompt, setShowSharePrompt] = useState(false);
 
+  // Handle message input with 15-word limit
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const words = value.trim().split(/\s+/).filter(word => word.length > 0);
+    
+    if (words.length > 15) {
+      // Don't allow more than 15 words
+      return;
+    }
+    
+    setMessage(value);
+    setWordCount(words.length);
+  };
 
+  // Preview text-to-speech
+  const handlePreviewSpeech = async () => {
+    if (!message.trim()) {
+      showAlert("Enter a message first", "error");
+      return;
+    }
+
+    if (isSpeaking) {
+      stopSpeech();
+      setIsSpeaking(false);
+    } else {
+      setIsSpeaking(true);
+      try {
+        await speakChildVoice(message);
+      } catch (error) {
+        console.error("Speech error:", error);
+      }
+      setIsSpeaking(false);
+    }
+  };
 
   const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
-    if (!formData.recipientContact || !spotifyLink) {
-      showAlert("Enter name and paste Spotify link", "error");
+    if (!formData.recipientContact || !message) {
+      showAlert("Enter name and message", "error");
       return;
     }
 
@@ -54,24 +87,26 @@ function Form() {
     setShowSharePrompt(true);
   };
 
-
   const handleShareChoice = async (option: "LINK" | "QR") => {
-
     if (!selectedCandy) return;
 
     try {
+      // 15 minutes = 15 * 60 * 1000 ms
       const unlockTime = Date.now() + 15 * 60 * 1000;
+      // 15 hours = 15 * 60 * 60 * 1000 ms
+      const expireTime = Date.now() + 15 * 60 * 60 * 1000;
 
       const docRef = await addDoc(collection(db, "candies"), {
         name: formData.recipientContact,
         relationship: selectedCandy,
-        spotifyLink: spotifyLink,
+        message: message.trim(), // Store the text message
         createdAt: Date.now(),
-        unlockTime: unlockTime
+        unlockTime: unlockTime,
+        expireTime: expireTime
       });
 
       const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
-      const message = `🎁 You got a Candy Treat! Open it here: ${candyUrl}`;
+      const messageText = `🎁 You got a Candy Treat! Open it here: ${candyUrl}`;
 
       // Check if Web Share API is available (mobile devices)
       const canUseWebShare = typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
@@ -82,7 +117,7 @@ function Form() {
           try {
             await navigator.share({
               title: 'Candy Treat',
-              text: message,
+              text: messageText,
               url: candyUrl
             });
           } catch (err) {
@@ -92,13 +127,13 @@ function Form() {
         } else {
           // Desktop fallback: copy to clipboard and open WhatsApp Web
           try {
-            await navigator.clipboard.writeText(message);
+            await navigator.clipboard.writeText(messageText);
             showAlert('Link copied to clipboard!', 'success');
             // Open WhatsApp Web
-            window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(message), '_blank');
+            window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(messageText), '_blank');
           } catch (clipErr) {
             // Fallback if clipboard fails
-            window.open('https://wa.me/?text=' + encodeURIComponent(message), '_blank');
+            window.open('https://wa.me/?text=' + encodeURIComponent(messageText), '_blank');
           }
         }
       }
@@ -131,7 +166,7 @@ function Form() {
             try {
               await navigator.share({
                 title: 'Candy Treat',
-                text: message + '\n\nOr scan the downloaded QR code!',
+                text: messageText + '\n\nOr scan the downloaded QR code!',
                 url: candyUrl
               });
             } catch (err) {
@@ -149,20 +184,20 @@ function Form() {
           
           // Open WhatsApp Web with pre-filled message
           setTimeout(() => {
-            window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(message), '_blank');
+            window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(messageText), '_blank');
           }, 500);
         }
       }
 
       setShowSharePrompt(false);
       setSelectedCandy(null);
+      stopSpeech();
 
     } catch (error) {
       console.error(error);
       showAlert("Error creating candy", "error");
     }
   };
-
 
   return (
     <motion.div
@@ -177,17 +212,17 @@ function Form() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-{showFreeCallsButton && (
-        <motion.button
-          className="cany-btns"
-          onClick={() => navigate('/form')}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          title="Open Cany Form"
-        >
-          <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
-          FREE CALLS
-        </motion.button>
+        {showFreeCallsButton && (
+          <motion.button
+            className="cany-btns"
+            onClick={() => navigate('/form')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Open Cany Form"
+          >
+            <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
+            FREE CALLS
+          </motion.button>
         )}
 
         <h1 className="form-titless" style={{
@@ -203,17 +238,28 @@ function Form() {
 
           <input
             type="text"
-            placeholder="ENTER MESSAGE"
-            value={spotifyLink}
+            placeholder={`ENTER MESSAGE (${wordCount}/15 words)`}
+            value={message}
             className='recipient-input'
-            onChange={(e) => setSpotifyLink(e.target.value)}
+            onChange={handleMessageChange}
           />
+
+          {/* Preview Speech Button */}
+          <button
+            type="button"
+            className="preview-speech-btn"
+            onClick={handlePreviewSpeech}
+            disabled={!message.trim()}
+          >
+            <FontAwesomeIcon icon={isSpeaking ? faStop : faVolumeUp} />
+            {isSpeaking ? ' STOP PREVIEW' : ' PREVIEW VOICE'}
+          </button>
 
           <p className='question' style={{
             fontFamily: "sans-serif",
             fontWeight: "500",
             position: "relative",
-            bottom: "20px",
+            bottom: "10px",
             fontSize: "12px",
             textAlign: "center",
             userSelect: "none",
@@ -271,7 +317,7 @@ function Form() {
           </div>
 
           <span className='introduction'>
-            (Your MESSAGE will be delivered in CANDY's voice after 15 minutes to build suspense and dissappears after 24 hours)
+            (Your MESSAGE will be delivered in CANDY's voice after 15 minutes and disappears after 15 hours)
           </span>
 
         </form>
@@ -284,38 +330,34 @@ function Form() {
             <p>How do you want to share?</p>
 
             <button
-  onClick={() => handleShareChoice("QR")}
-  style={{
-    background: "darkblue",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    justifyContent: "center"
-  }}
->
-  <FaWhatsapp size={18} />
-  Share as QR CODE
-</button>
+              onClick={() => handleShareChoice("QR")}
+              style={{
+                background: "darkblue",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                justifyContent: "center"
+              }}
+            >
+              <FaWhatsapp size={18} />
+              Share as QR CODE
+            </button>
 
-<button
-  onClick={() => handleShareChoice("LINK")}
-  style={{
-    background: "green",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    justifyContent: "center"
-  }}
->
-  <FaWhatsapp size={18} />
-  Share as LINK
-</button>
-
-            {/* <button onClick={() => setShowSharePrompt(false)}>
-              Cancel
-            </button> */}
+            <button
+              onClick={() => handleShareChoice("LINK")}
+              style={{
+                background: "green",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                justifyContent: "center"
+              }}
+            >
+              <FaWhatsapp size={18} />
+              Share as LINK
+            </button>
           </div>
         </div>
       )}

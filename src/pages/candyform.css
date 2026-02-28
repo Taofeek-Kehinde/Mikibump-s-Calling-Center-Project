@@ -1,4 +1,3 @@
-
 body.candyform-page {
   overflow-x: hidden;
   min-height: 100vh; 
@@ -6,27 +5,20 @@ body.candyform-page {
 
 body {
   background-image: url(../assets/candy.jpg);
-  background-position: center center;  /* perfectly center both vertically and horizontally */
-  background-size: cover;             /* make it cover the entire container */
+  background-position: center center;
+  background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;   
 }
 .form-containers {
   min-height: 100vh;
   height: auto;
-  /* Background image settings */
-      /* optional: makes background stay fixed while scrolling */
-  /* Flex centering */
   display: flex;
   justify-content: center;
   align-items: center;
-
   padding: 20px;
   font-family: 'Inter', sans-serif;
-
-  /* layering & overflow */
   position: relative;
-  /* overflow: hidden; */
 }
 
 
@@ -58,8 +50,8 @@ label.lab {
   position: relative;
   overflow-x: hidden;
   height: auto;
-max-height: none;
-  /* overflow-y: hidden; */
+  max-height: none;
+}
 
 .form-panels {
   scrollbar-gutter: stable both-edges;
@@ -131,7 +123,7 @@ max-height: none;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-    font-family:sans-serif;
+  font-family:sans-serif;
 }
 
 form {
@@ -152,23 +144,6 @@ form {
 }
 
 
-/* .section-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: left;
-  text-align: left;
-  gap: 10px;
-} */
-
-/* div.form-section{
-  background: transparent;
-} */
- 
 .section-title::before {
   content: '';
   width: 6px;
@@ -199,7 +174,7 @@ form {
   color: #555;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  text-align: left ;
+  text-align: left;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
@@ -259,23 +234,11 @@ form {
   font-weight: 500;
 }
 
-/* Container */
-/* .relationship-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px; 
-  width: 100%;
-  position: relative;
-  bottom: 20px;
-  padding: 20px;
-} */
-
 .introduction {
   display: block;           
   text-align: center;       
-  max-width: 600px;         
-  margin: -10px auto 5px auto;        
+  max-width: 600px;          
+  margin: -10px auto 5px auto;          
   font-size: 0.8rem;        
   font-weight: 500;  
   margin-top: -40px;  
@@ -285,13 +248,11 @@ form {
   animation: fadeIn 1s ease-in-out; 
 }
 
-/* Optional fade-in animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive adjustments */
 @media (max-width: 480px) {
   .introduction {
     font-size: 1rem;
@@ -300,7 +261,6 @@ form {
 }
 
 
-/* Container */
 .relationship-container {
   display: flex;
   flex-direction: column;
@@ -322,7 +282,6 @@ form {
   text-align: center;
 }
 
-/* Top Buttons */
 .relationship-options {
   display: flex;
   justify-content: center;
@@ -340,14 +299,12 @@ form {
   border-radius: 50%;
   display: flex;
   align-items: center;
-  /* margin:0 60px; */
-  /* margin-top: -30px;   */
   justify-content: center;
 }
 
 @media (max-width: 600px) {
   .relationship-options {
-    gap: 25px;   /* smaller space on phones */
+    gap: 25px;
   }
 }
 
@@ -368,11 +325,10 @@ form {
   font-size: 1.5rem;
 }
 
-/* Sing Button */
 .singbtn {
   padding: 0.75rem 1.25rem; 
-  width: 90%; /* relative width for mobile */
-  max-width: 450px; /* max width for larger screens */
+  width: 90%;
+  max-width: 450px;
   margin: 1rem auto 0 auto;
   display: block;
   background: orange;
@@ -397,8 +353,8 @@ form {
   font-size: "12px";
   font-family: sans-serif;
   color: brown;
-user-select: none;
-text-shadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
+  user-select: none;
+  text-shadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
 }
 
 .singbtn:hover {
@@ -407,8 +363,6 @@ text-shadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
   color: white;
   box-shadow: 0 10px 25px rgba(102,126,234,0.4);
 }
-
-/* Time Options */
 
 .time-options {
   display: grid;
@@ -429,13 +383,11 @@ text-shadow: "0 1px 3px rgba(0, 0, 0, 0.35)"
 }
 
 .time-btn:hover {
-  /* border-color: #667eea; */
   background: rgba(102, 126, 234, 0.05);
 }
 
 .time-btn.active {
   background: linear-gradient(135deg, #2f2f2f 0%, #4a4a4a 100%);
-  /* border-color: #667eea; */
   color: white;
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
 }
@@ -478,27 +430,21 @@ input #yourContact {
 
 .cany-btns {
   position: absolute;
-  top: 1rem;          /* instead of 12px */
-  right: 1.2rem;     /* instead of 20px */
-
+  top: 1rem;
+  right: 1.2rem;
   background: red;
   border: none;
   color: #fff;
-
   width: clamp(48px, 8vw, 70px);
   height: clamp(48px, 8vw, 70px);
   font-size: clamp(0.7rem, 2vw, 0.9rem);
-
   border-radius: 50%;
   cursor: pointer;
   font-weight: 600;
-
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
   animation: candy 1.5s ease-in-out infinite;
-
   font-family: 'Dancing Script', cursive;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -521,7 +467,6 @@ input #yourContact {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .form-panel {
     padding: 30px 20px;
@@ -592,7 +537,7 @@ input #yourContact {
 
   .form-groups input,
   .form-groups textarea {
-    padding: 10px 12px;
+    padding: 10px;
     font-size: 0.95rem;
   }
 
@@ -666,13 +611,12 @@ input #yourContact {
 
 .recipient-input{
   display: block;
-  margin: 1rem auto 0 auto; /* center horizontally with spacing */
-  width: 90%; /* relative width for mobile */
-  max-width: 450px; /* max width for larger screens */
-  padding: 0.75rem 1.25rem; /* comfortable padding */
-  border-radius: 50px; /* pill shape */
+  margin: 1rem auto 0 auto;
+  width: 90%;
+  max-width: 450px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
   font-size: 1rem;
-  /* margin-top: -10px; */
   position: relative;
   bottom: 25px;
   font-weight: 600;
@@ -690,13 +634,13 @@ input #yourContact {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 clamp(6px, 2vw, 16px); /* responsive spacing */
+  padding: 0 clamp(6px, 2vw, 16px);
 }
 
 .divider-line {
-  font-size: clamp(18px, 4vw, 32px); /* responsive font size */
+  font-size: clamp(18px, 4vw, 32px);
   font-weight: 700;
-  letter-spacing: clamp(2px, 1vw, 8px); /* responsive spacing */
+  letter-spacing: clamp(2px, 1vw, 8px);
   background: linear-gradient(180deg, chocolate, yellow);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -704,15 +648,14 @@ input #yourContact {
 
 .recipient-inputs {
    display: block;
-  margin: 1rem auto 0 auto; /* center horizontally with spacing */
-  width: 90%; /* relative width for mobile */
-  max-width: 450px; /* max width for larger screens */
-  padding: 0.75rem 1.25rem; /* comfortable padding */
-  border-radius: 50px; /* pill shape */
+  margin: 1rem auto 0 auto;
+  width: 90%;
+  max-width: 450px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
   font-size: 1rem;
-  /* margin-top: -10px; */
   position: relative;
- bottom: 55px;
+  bottom: 55px;
   font-weight: 600;
   text-align: center;
   border: 2px solid chocolate;
@@ -726,7 +669,6 @@ input #yourContact {
   color: #fff; 
   opacity: 1;
   font-size: 14px;
-  /* font-family: 'Dancing script', cursive; */
 }
 
 .recipient-inputs::placeholder {
@@ -737,38 +679,37 @@ input #yourContact {
 
 .recipient-input:focus {
   outline: none;
-  transform: scale(1.02); /* subtle pop effect */
+  transform: scale(1.02);
 }
 
 .recipient-inputs:focus {
   outline: none;
-  transform: scale(1.02); /* subtle pop effect */
+  transform: scale(1.02);
 }
 
 
-/* Responsive adjustments */
-@media (max-width: 640px) { /* small devices */
+@media (max-width: 640px) {
   .recipient-input {
     font-size: 0.9rem;
     padding: 0.65rem 1rem;
   }
 }
 
-@media (max-width: 640px) { /* small devices */
+@media (max-width: 640px) {
   .recipient-inputs {
     font-size: 0.9rem;
     padding: 0.65rem 1rem;
   }
 }
 
-@media (min-width: 641px) and (max-width: 1024px) { /* tablets */
+@media (min-width: 641px) and (max-width: 1024px) {
   .recipient-input {
     font-size: 1rem;
     padding: 0.75rem 1.25rem;
   }
 }
 
-@media (min-width: 641px) and (max-width: 1024px) { /* tablets */
+@media (min-width: 641px) and (max-width: 1024px) {
   .recipient-inputs {
     font-size: 1rem;
     padding: 0.75rem 1.25rem;
@@ -776,7 +717,7 @@ input #yourContact {
 }
 
 
-@media (min-width: 1025px) { /* desktops */
+@media (min-width: 1025px) {
   .recipient-input {
     font-size: 1.1rem;
     padding: 0.85rem 1.5rem;
@@ -784,14 +725,12 @@ input #yourContact {
 }
 
 
-@media (min-width: 1025px) { /* desktops */
+@media (min-width: 1025px) {
   .recipient-inputs {
     font-size: 1.1rem;
     padding: 0.85rem 1.5rem;
   }
 }
-}
-
 
 
 label.name,
@@ -834,4 +773,31 @@ label.date {
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+}
+
+/* Preview Speech Button */
+.preview-speech-btn {
+  display: block;
+  margin: 10px auto 0 auto;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+}
+
+.preview-speech-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+}
+
+.preview-speech-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
 }

@@ -1,11 +1,19 @@
-# TODO - Free Calls Button Visibility Control
+# TODO - Candy Form Updates
 
-## Task
-Add admin control to show/hide the FREE CALLS button in candyform.tsx
+## Implementation Plan:
 
-## Steps:
-- [ ] 1. Update src/context/AppContext.tsx - Add showFreeCallsButton state
-- [ ] 2. Update src/Admin.tsx - Add toggle control for the button
-- [ ] 3. Update src/pages/canyform.tsx - Add conditional rendering based on context
+### 1. Update canyform.tsx
+- [ ] Add 15-word limit to message input
+- [ ] Add text-to-speech preview functionality
+- [ ] Store the message text in Firestore
+- [ ] Change expiration from 24 hours to 15 hours
 
-## Status: In Progress
+### 2. Update CandyView.tsx
+- [ ] Display the message content
+- [ ] Use text-to-speech when unlocked (after 15 minutes)
+- [ ] Update button styling: red when waiting, green when ready
+- [ ] Change expiration from 24 hours to 15 hours
+- [ ] Show: candy type, name, time, date
+
+### 3. Update Firestore data structure
+- [ ] Add message field to store the text message
