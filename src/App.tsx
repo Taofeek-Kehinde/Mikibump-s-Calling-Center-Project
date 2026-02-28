@@ -10,6 +10,7 @@ import EnhancedChat from './components/EnhancedChat.tsx';
 import type { JSX } from 'react';
 import Qrcode from './pages/Qrcode.tsx';
 import Qrform from './pages/Qrform.tsx';
+import Adminform from './pages/Adminform.tsx';
 import View from './pages/View.tsx';
 import CandyDetails from './pages/CandyView.tsx';
 import QRScanner from './pages/qrscanner.tsx';
@@ -68,6 +69,8 @@ function App(): JSX.Element {
       <Route path="/Qrcode/:id" element={<Qrcode />} />
       <Route path="/Qrcode" element={<Qrcode />} />
       <Route path="/qrform/:id" element={<Qrform />} />
+      <Route path="/adminform/:id" element={<Adminform />} />
+      <Route path="/adminform" element={<Adminform />} />
       <Route path="/view/:id" element={<View />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/qrscanner" element={<QRScanner />} />

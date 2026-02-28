@@ -104,8 +104,9 @@ export default function Qrcode() {
 
     for (let i = 0; i < numQRs; i++) {
       const uniqueId = uuidv4().slice(0, 8);
+      // If custom URL is provided, use adminform route, otherwise use default qrform
       const link = customUrl 
-        ? `${customUrl}${customUrl.endsWith('/') ? '' : '/'}${uniqueId}`
+        ? `${customUrl}${customUrl.endsWith('/') ? '' : '/'}adminform/${uniqueId}`
         : `${window.location.origin}/qrform/${uniqueId}`;
       tempList.push({ id: uniqueId, url: link });
     }
