@@ -28,6 +28,8 @@ export interface AppContextType {
   setBackgroundImages: React.Dispatch<React.SetStateAction<string[]>>;
   liveStartTime: number | null;
   setLiveStartTime: (v: number | null) => void;
+  showFreeCallsButton: boolean;
+  setShowFreeCallsButton: (value: boolean) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -70,9 +72,15 @@ const setIsLive = (value: boolean) => {
     const saved = localStorage.getItem('isCountdownActive');
     return saved !== null ? JSON.parse(saved) : false;
   });
-  const [backgroundImages, setBackgroundImages] = useState<string[]>(() => {
+const [backgroundImages, setBackgroundImages] = useState<string[]>(() => {
     const saved = localStorage.getItem('backgroundImages');
     return saved !== null ? JSON.parse(saved) : [];
+  });
+
+  // Free Calls Button visibility state
+  const [showFreeCallsButton, setShowFreeCallsButton] = useState<boolean>(() => {
+    const saved = localStorage.getItem('showFreeCallsButton');
+    return saved !== null ? JSON.parse(saved) : true;
   });
 
 
@@ -188,9 +196,24 @@ const setIsLive = (value: boolean) => {
     localStorage.setItem('backgroundImages', JSON.stringify(backgroundImages));
   }, [backgroundImages]);
 
-  useEffect(() => {
+useEffect(() => {
     localStorage.setItem('isLive', JSON.stringify(isLive));
   }, [isLive]);
+
+  useEffect(() => {
+    localStorage.setItem('showFreeCallsButton', JSON.stringify(showFreeCallsButton));
+  }, [showFreeCallsButton]);
+
+  // Listen for showFreeCallsButton changes from Firebase
+  useEffect(() => {
+    const settingsRef = ref(db, "settings/showFreeCallsButton");
+    return onValue(settingsRef, (snap) => {
+      const data = snap.val();
+      if (data !== null) {
+        setShowFreeCallsButton(data);
+      }
+    });
+  }, []);
 
 
 const [liveStartTime, setLiveStartTime] = useState<number | null>(() => {
@@ -289,10 +312,12 @@ useEffect(() => {
       setCountdownTime,
       isCountdownActive,
       setIsCountdownActive,
-      backgroundImages,
+backgroundImages,
       setBackgroundImages,
       liveStartTime,
       setLiveStartTime,
+      showFreeCallsButton,
+      setShowFreeCallsButton,
     }}>
       {children}
     </AppContext.Provider>

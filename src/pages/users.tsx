@@ -96,7 +96,6 @@ function Users() {
 
 </div>
 
-        {/* ✅ TEXT INPUT DROPDOWN (added only) */}
         {showTextInput && (
           <div className="text-slide">
             <textarea

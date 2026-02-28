@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
 import QRCode from "qrcode"; 
-// import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 import { FaWhatsapp } from "react-icons/fa";
+import { useAppContext } from '../context/useAppContext';
 import './candyform.css';
 
 
@@ -21,7 +22,9 @@ interface FormData {
 
 function Form() {
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { showFreeCallsButton } = useAppContext();
+  
   const [formData, setFormData] = useState<FormData>({
 
     recipientContact: '',
@@ -174,8 +177,8 @@ function Form() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-{/* I'm coming back to this code */}
-        {/* <motion.button
+{showFreeCallsButton && (
+        <motion.button
           className="cany-btns"
           onClick={() => navigate('/form')}
           whileHover={{ scale: 1.05 }}
@@ -184,7 +187,8 @@ function Form() {
         >
           <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
           FREE CALLS
-        </motion.button> */}
+        </motion.button>
+        )}
 
         <h1 className="form-titless" style={{
           fontFamily: "sans-serif",

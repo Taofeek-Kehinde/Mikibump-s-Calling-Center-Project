@@ -18,10 +18,10 @@ function Admin() {
     setIsAudioAllowed,
     // setIsCountdownActive,
     // setCountdownTime,
-    backgroundImages,
+backgroundImages,
     setBackgroundImages,
-    // liveStartTime,
-    // setLiveStartTime,
+    showFreeCallsButton,
+    setShowFreeCallsButton,
   } = useAppContext();
 
   useEffect(() => {
@@ -77,8 +77,15 @@ const handleGoOffline = () => {
     navigate('/admin/login');
   };
 
-  const handleThemeToggle = () => {
+const handleThemeToggle = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const handleToggleFreeCallsButton = () => {
+    const newValue = !showFreeCallsButton;
+    setShowFreeCallsButton(newValue);
+    set(ref(db, "settings/showFreeCallsButton"), newValue);
+    showAlert(`FREE CALLS button ${newValue ? 'shown' : 'hidden'}`, 'success');
   };
 
 
@@ -236,10 +243,37 @@ const handleGoOffline = () => {
               </motion.button>
             </div>
 
-            <div className="image-count">
+<div className="image-count">
               <span>Images uploaded: {backgroundImages.length}</span>
             </div>
           </div>
+        </motion.div>
+
+        {/* Free Calls Button Visibility Control */}
+        <motion.div
+          className="control-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <h2 className="section-title">FREE CALLS Button Control</h2>
+          <div className="button-group">
+            <motion.button
+              className={`control-btn ${showFreeCallsButton ? 'active' : ''}`}
+              onClick={handleToggleFreeCallsButton}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={showFreeCallsButton ? { 
+                boxShadow: "0 0 20px rgba(46, 204, 113, 0.5)" 
+              } : {}}
+            >
+              <span className="btn-icon">{showFreeCallsButton ? '👁️' : '🙈'}</span>
+              <span className="btn-text">{showFreeCallsButton ? 'HIDE BUTTON' : 'SHOW BUTTON'}</span>
+            </motion.button>
+          </div>
+          <p style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+            Current status: <strong>{showFreeCallsButton ? 'VISIBLE' : 'HIDDEN'}</strong>
+          </p>
         </motion.div>
 
       </motion.div>
