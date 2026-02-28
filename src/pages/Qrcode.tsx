@@ -101,7 +101,6 @@ export default function Qrcode() {
   // Generate batch QR codes
   const generateQRBatch = () => {
     const tempList: { id: string; url: string }[] = [];
-    const baseUrl = customUrl || window.location.origin;
 
     for (let i = 0; i < numQRs; i++) {
       const uniqueId = uuidv4().slice(0, 8);
