@@ -5,6 +5,7 @@ import { FaMicrophone, FaTimes, FaVolumeUp, FaStop } from "react-icons/fa";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { v4 as uuidv4 } from "uuid";
+import { createChildVoice } from "../utils/textToSpeech";
 
 function Users(): React.ReactElement {
   const navigate = useNavigate();
@@ -155,7 +156,7 @@ function Users(): React.ReactElement {
     }
   };
 
-  // 🔊 TEXT TO SPEECH - Preview
+  // 🔊 TEXT TO SPEECH - Preview (using shared child voice)
   const playTextToSpeech = () => {
     if (!textMessage.trim()) return;
 
@@ -166,20 +167,7 @@ function Users(): React.ReactElement {
       return;
     }
 
-    const utterance = new SpeechSynthesisUtterance(textMessage);
-    utterance.rate = 0.9;
-    utterance.pitch = 1.5;
-    utterance.lang = 'en-US';
-    
-    // Try to find a child-friendly voice
-    const voices = window.speechSynthesis.getVoices();
-    const childVoice = voices.find(voice => 
-      voice.name.includes('Microsoft Aria') ||
-      voice.name.includes('Microsoft Aria')
-    );
-    if (childVoice) {
-      utterance.voice = childVoice;
-    }
+    const utterance = createChildVoice(textMessage);
     
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);

@@ -4,6 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
 import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
+import { createChildVoice } from "../utils/textToSpeech";
 
 import "./Qrform.css";
 
@@ -106,7 +107,7 @@ export default function Qrform() {
         );
     }
 
-    // Play text-to-speech function with child-like voice
+    // Play text-to-speech function with child-like voice (using shared utility)
     const playTextToSpeech = (text: string) => {
         if (window.speechSynthesis.speaking) {
             window.speechSynthesis.cancel();
@@ -115,10 +116,7 @@ export default function Qrform() {
             setIsTtsPlaying(true);
             setIsTtsCompleted(false);
             
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.9;
-            utterance.pitch = 1.5;
-            utterance.lang = 'en-US';
+            const utterance = createChildVoice(text);
             
             utterance.onend = () => {
                 setIsTtsPlaying(false);
