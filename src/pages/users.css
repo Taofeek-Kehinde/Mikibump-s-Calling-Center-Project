@@ -418,6 +418,13 @@
   margin-top: 10px;
 }
 
+.word-count {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
 /* Recording Timer */
 .recording-timer {
   margin-top: 15px;

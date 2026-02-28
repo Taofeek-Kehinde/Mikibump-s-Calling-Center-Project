@@ -78,13 +78,26 @@ export default function Qrform() {
         );
     }
 
-    // Play text-to-speech function
+    // Play text-to-speech function with child-like voice
     const playTextToSpeech = (text: string) => {
         if (window.speechSynthesis.speaking) {
             window.speechSynthesis.cancel();
         } else {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 0.9;
+            utterance.pitch = 1.5;
+            utterance.lang = 'en-US';
+            
+            // Try to find a child-friendly voice
+            const voices = window.speechSynthesis.getVoices();
+            const childVoice = voices.find(voice => 
+                voice.name.includes('Microsoft Zira') ||
+                voice.name.includes('Samantha')
+            );
+            if (childVoice) {
+                utterance.voice = childVoice;
+            }
+            
             window.speechSynthesis.speak(utterance);
         }
     };

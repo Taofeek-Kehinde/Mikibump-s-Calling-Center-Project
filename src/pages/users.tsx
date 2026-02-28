@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './users.css';
 import { FaMicrophone, FaTimes, FaVolumeUp, FaStop } from "react-icons/fa";
@@ -6,7 +6,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { v4 as uuidv4 } from "uuid";
 
-function Users() {
+function Users(): React.ReactElement {
   const navigate = useNavigate();
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [linkNumber, setLinkNumber] = useState('');
@@ -30,6 +30,7 @@ function Users() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Toggle between voice and text mode (mutually exclusive)
   const selectVoiceMode = () => {
@@ -53,10 +54,38 @@ function Users() {
     setIsPlaying(false);
   };
 
+  // Process and save the recorded audio
+  const processRecording = () => {
+    const blob = new Blob(audioChunks.current, { type: 'audio/webm' });
+    const url = URL.createObjectURL(blob);
+    setRecordedAudioUrl(url);
+    
+    // Convert to base64 for Firestore storage
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setAudioBase64(base64);
+    };
+    reader.readAsDataURL(blob);
+    
+    // Stop all tracks
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+    }
+    
+    // Clear timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    
+    setIsRecording(false);
+  };
+
   // 🎤 START RECORDING
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
       const mediaRecorder = new MediaRecorder(stream);
 
       mediaRecorderRef.current = mediaRecorder;
@@ -66,26 +95,9 @@ function Users() {
         audioChunks.current.push(event.data);
       };
 
-      mediaRecorder.onstop = async () => {
-        const blob = new Blob(audioChunks.current, { type: 'audio/webm' });
-        const url = URL.createObjectURL(blob);
-        setRecordedAudioUrl(url);
-        
-        // Convert to base64 for Firestore storage
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64 = reader.result as string;
-          setAudioBase64(base64);
-        };
-        reader.readAsDataURL(blob);
-        
-        // Stop all tracks
-        stream.getTracks().forEach(track => track.stop());
-        
-        // Clear timer
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
+      mediaRecorder.onstop = () => {
+        // Recording stopped - process the audio
+        processRecording();
       };
 
       mediaRecorder.start();
@@ -96,7 +108,7 @@ function Users() {
       timerRef.current = setInterval(() => {
         setRecordingSeconds(prev => {
           if (prev <= 1) {
-            // Auto-stop at 0 seconds
+            // Auto-stop at 0 seconds - recording is saved automatically
             stopRecording();
             return 0;
           }
@@ -111,8 +123,10 @@ function Users() {
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+    if (mediaRecorderRef.current) {
+      if (mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+      }
       setIsRecording(false);
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -154,7 +168,18 @@ function Users() {
 
     const utterance = new SpeechSynthesisUtterance(textMessage);
     utterance.rate = 0.9;
-    utterance.pitch = 1;
+    utterance.pitch = 1.5;
+    utterance.lang = 'en-US';
+    
+    // Try to find a child-friendly voice
+    const voices = window.speechSynthesis.getVoices();
+    const childVoice = voices.find(voice => 
+      voice.name.includes('Microsoft Zira') ||
+      voice.name.includes('Samantha')
+    );
+    if (childVoice) {
+      utterance.voice = childVoice;
+    }
     
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -166,6 +191,11 @@ function Users() {
   const stopTextToSpeech = () => {
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
+  };
+
+  // Word count helper
+  const getWordCount = (text: string): number => {
+    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
   };
 
   // 📝 SUBMIT - SAVE DATA AND GENERATE QR
@@ -258,6 +288,9 @@ function Users() {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
     };
   }, []);
 
@@ -304,14 +337,8 @@ function Users() {
                     <button 
                       className={`record-btn ${isRecording ? 'recording' : ''}`}
                       onClick={isRecording ? stopRecording : startRecording}
-                      disabled={isRecording && recordingSeconds <= 0}
                     >
-                      {isRecording 
-                        ? recordingSeconds <= 0 
-                          ? '⏹ Time Up!' 
-                          : '⏹ Stop Recording'
-                        : '🎤 Start Recording'
-                      }
+                      {isRecording ? '⏹ Stop Recording' : '🎤 Start Recording'}
                     </button>
                   ) : (
                     <div className="recorded-audio">
@@ -353,11 +380,19 @@ function Users() {
             {contentMode === 'text' && (
               <div className="text-section">
                 <textarea
-                  placeholder="Type your message here..."
+                  placeholder="Type your message here... (max 15 words)"
                   value={textMessage}
-                  onChange={(e) => setTextMessage(e.target.value)}
+                  onChange={(e) => {
+                    const words = e.target.value.trim().split(/\s+/).filter(word => word.length > 0);
+                    if (words.length <= 15) {
+                      setTextMessage(e.target.value);
+                    }
+                  }}
                   rows={4}
                 />
+                <div className="word-count">
+                  {getWordCount(textMessage)} / 15 words
+                </div>
                 <button 
                   className="speak-btn"
                   onClick={isSpeaking ? stopTextToSpeech : playTextToSpeech}
