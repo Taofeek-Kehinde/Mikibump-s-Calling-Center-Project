@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
-import { FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
+import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
 import { createChildVoice } from "../utils/textToSpeech";
 
 import "./Qrform.css";
@@ -11,8 +11,12 @@ import "./Qrform.css";
 export default function Qrform() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [savedData, setSavedData] = useState<any>(null);
     const [isChecking, setIsChecking] = useState(true);
+    
+    // Check if opened from WhatsApp
+    const fromWhatsApp = searchParams.get('from') === 'whatsapp';
     
     // Text-to-speech state
     const [isTtsPlaying, setIsTtsPlaying] = useState(false);
@@ -106,6 +110,24 @@ export default function Qrform() {
             </div>
         );
     }
+
+    // Generate the shareable URL with WhatsApp parameter
+    const getShareUrl = () => {
+        return `${window.location.origin}/qrform/${id}?from=whatsapp`;
+    };
+
+    // Generate WhatsApp message
+    const getWhatsAppMessage = () => {
+        let message = `🎁 You've received a Candy!\n\n`;
+        
+        if (savedData.contentMode === 'voice') {
+            message += `🎤 Tap the link to listen to the voice message:\n${getShareUrl()}`;
+        } else if (savedData.contentMode === 'text') {
+            message += `💬 Tap the link to hear the message:\n${getShareUrl()}`;
+        }
+        
+        return encodeURIComponent(message);
+    };
 
     // Play text-to-speech function with child-like voice (using shared utility)
     const playTextToSpeech = (text: string) => {
@@ -265,6 +287,22 @@ export default function Qrform() {
                             </button>
                         )}
                     </div>
+                )}
+
+                {/* WhatsApp Button - Only show when NOT opened from WhatsApp */}
+                {!fromWhatsApp && savedData.whatsappNumber && (
+                    <button
+                        className="action-btn whatsapp-btn"
+                        onClick={() =>
+                            window.open(
+                                `https://wa.me/${savedData.whatsappNumber}?text=${getWhatsAppMessage()}`,
+                                "_blank"
+                            )
+                        }
+                    >
+                        <FaWhatsapp className="btn-icon" />
+                        <span>Share on WhatsApp</span>
+                    </button>
                 )}
 
                 {/* Social Media Link */}
