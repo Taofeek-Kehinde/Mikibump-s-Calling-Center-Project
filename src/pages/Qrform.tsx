@@ -22,11 +22,6 @@ export default function Qrform() {
     const [isVoicePlaying, setIsVoicePlaying] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    // Get the current base URL for sharing
-    const getBaseUrl = () => {
-        return window.location.origin;
-    };
-
     useEffect(() => {
         const checkQR = async () => {
             if (!id) {

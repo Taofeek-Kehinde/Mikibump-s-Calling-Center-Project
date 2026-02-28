@@ -29,6 +29,7 @@ function Dashboard() {
   const [offlineElapsedTime, setOfflineElapsedTime] = useState<number>(0);
  const [showQrOptions, setShowQrOptions] = useState(false);
 const [loadingQR, setLoadingQR] = useState(false);
+const [loadQR, setLoadQr] = useState(false);
  const toggleQrOptions = () => {
   setShowQrOptions(!showQrOptions);
 };
@@ -204,9 +205,9 @@ useEffect(() => {
 
 
  const handleScanQR = () => {
-  if (loadingQR) return;
+  if (loadQR) return;
 
-  setLoadingQR(true);
+  setLoadQr(true);
 
   setTimeout(() => {
     navigate('/qrscanner');
