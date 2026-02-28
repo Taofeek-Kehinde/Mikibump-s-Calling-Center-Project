@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import './users.css';
 import { FaMicrophone, FaTimes, FaVolumeUp, FaStop } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -9,6 +9,8 @@ import { createChildVoice } from "../utils/textToSpeech";
 
 function Adminform(): React.ReactElement {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const [customUrl, setCustomUrl] = useState<string>('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [linkNumber, setLinkNumber] = useState('');
 
@@ -36,6 +38,15 @@ function Adminform(): React.ReactElement {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
+  // Get customUrl from query parameter on page load
+  useEffect(() => {
+    const urlParam = searchParams.get('customUrl');
+    if (urlParam) {
+      setCustomUrl(decodeURIComponent(urlParam));
+      setLinkNumber(decodeURIComponent(urlParam));
+    }
+  }, [searchParams]);
+
   // Check if this is an existing submission
   useEffect(() => {
     const checkExistingSubmission = async () => {
@@ -47,6 +58,7 @@ function Adminform(): React.ReactElement {
             const data = snap.data();
             setWhatsappNumber(data.whatsappNumber || '');
             setLinkNumber(data.link || '');
+            setCustomUrl(data.customUrl || '');
             if (data.contentMode === 'voice' && data.audioUrl) {
               setAudioBase64(data.audioUrl);
               setRecordedAudioUrl(data.audioUrl);
@@ -288,11 +300,12 @@ function Adminform(): React.ReactElement {
       // Generate unique ID for this submission
       const submissionId = id || uuidv4().slice(0, 8);
       
-      // Prepare payload
+      // Prepare payload - include customUrl if provided
       const payload: any = {
         id: submissionId,
         whatsappNumber: whatsappNumber.trim(),
-        link: linkNumber.trim() || null,
+        link: customUrl || linkNumber.trim() || null,
+        customUrl: customUrl || null,
         contentMode: contentMode,
         createdAt: Date.now(),
       };
@@ -531,14 +544,30 @@ function Adminform(): React.ReactElement {
               required
             />
 
-            <label className="whatsapp-label">Social Media/Web (OPTIONAL)</label>
-            <input
-              type="url"
-              className="whatsapp-input"
-              placeholder="Paste Link to social media or web address"
-              value={linkNumber}
-              onChange={(e) => setLinkNumber(e.target.value)}
-            />
+            {/* Show custom URL if provided, otherwise show regular link input */}
+            {customUrl ? (
+              <div>
+                <label className="whatsapp-label">Your Custom URL</label>
+                <input
+                  type="text"
+                  className="whatsapp-input"
+                  value={customUrl}
+                  disabled
+                  style={{ backgroundColor: '#333' }}
+                />
+              </div>
+            ) : (
+              <>
+                <label className="whatsapp-label">Social Media/Web (OPTIONAL)</label>
+                <input
+                  type="url"
+                  className="whatsapp-input"
+                  placeholder="Paste Link to social media or web address"
+                  value={linkNumber}
+                  onChange={(e) => setLinkNumber(e.target.value)}
+                />
+              </>
+            )}
 
             <button type="submit" className="candy-button" disabled={isProcessing}>
               {isProcessing ? 'PROCESSING...' : submissionSaved ? 'UPDATE' : 'CANDY IT'}
