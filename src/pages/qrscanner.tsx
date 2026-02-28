@@ -25,8 +25,14 @@ export default function QRScanner() {
         scannerRef.current.stop();
       }
       
-      // Navigate to the scanned URL (e.g., /qrform/:id)
-      navigate(text);
+      // Check if it's a full URL (http/https) or a relative path
+      if (text.startsWith('http://') || text.startsWith('https://')) {
+        // It's a full URL - navigate using window.location
+        window.location.href = text;
+      } else {
+        // It's a relative path - use React Router
+        navigate(text);
+      }
     }
   };
 
