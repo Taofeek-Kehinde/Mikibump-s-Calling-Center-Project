@@ -12,7 +12,7 @@ import Qrcode from './pages/Qrcode.tsx';
 import Qrform from './pages/Qrform.tsx';
 import View from './pages/View.tsx';
 import CandyDetails from './pages/CandyView.tsx';
-import QRScanner from './pages/qrscanner';
+import QRScanner from './pages/qrscanner.tsx';
 import Users from './pages/users.tsx';
 
 function App(): JSX.Element {
