@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import './users.css';
-import { FaMicrophone, FaTimes, FaVolumeUp, FaStop } from "react-icons/fa";
+import { FaMicrophone, FaTimes } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { v4 as uuidv4 } from "uuid";
-import { createChildVoice } from "../utils/textToSpeech";
 
 function Adminform(): React.ReactElement {
   const { id } = useParams();
@@ -14,9 +13,6 @@ function Adminform(): React.ReactElement {
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [linkNumber, setLinkNumber] = useState('');
 
-  // Mode: 'voice' | 'text' | null
-  const [contentMode, setContentMode] = useState<'voice' | 'text' | null>(null);
-  const [textMessage, setTextMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
@@ -27,8 +23,6 @@ function Adminform(): React.ReactElement {
   const [recordingSeconds, setRecordingSeconds] = useState(15);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Speech synthesis for text-to-speech preview
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [submissionSaved, setSubmissionSaved] = useState(false);
   const [savedSubmissionId, setSavedSubmissionId] = useState<string | null>(null);
@@ -62,10 +56,6 @@ function Adminform(): React.ReactElement {
             if (data.contentMode === 'voice' && data.audioUrl) {
               setAudioBase64(data.audioUrl);
               setRecordedAudioUrl(data.audioUrl);
-              setContentMode('voice');
-            } else if (data.contentMode === 'text' && data.textMessage) {
-              setTextMessage(data.textMessage);
-              setContentMode('text');
             }
             setSubmissionSaved(true);
             setSavedSubmissionId(id);
@@ -78,28 +68,6 @@ function Adminform(): React.ReactElement {
 
     checkExistingSubmission();
   }, [id]);
-
-  // Toggle between voice and text mode (mutually exclusive)
-  const selectVoiceMode = () => {
-    setContentMode('voice');
-    setTextMessage('');
-    setRecordedAudioUrl(null);
-    setAudioBase64(null);
-    setRecordingSeconds(15);
-  };
-
-  const selectTextMode = () => {
-    setContentMode('text');
-    setRecordedAudioUrl(null);
-    setAudioBase64(null);
-    setRecordingSeconds(15);
-    // Stop any playing audio
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    setIsPlaying(false);
-  };
 
   // Process and save the recorded audio
   const processRecording = () => {
@@ -143,7 +111,6 @@ function Adminform(): React.ReactElement {
       };
 
       mediaRecorder.onstop = () => {
-        // Recording stopped - process the audio
         processRecording();
       };
 
@@ -155,7 +122,6 @@ function Adminform(): React.ReactElement {
       timerRef.current = setInterval(() => {
         setRecordingSeconds(prev => {
           if (prev <= 1) {
-            // Auto-stop at 0 seconds - recording is saved automatically
             stopRecording();
             return 0;
           }
@@ -202,41 +168,11 @@ function Adminform(): React.ReactElement {
     }
   };
 
-  // 🔊 TEXT TO SPEECH - Preview (using shared child voice)
-  const playTextToSpeech = () => {
-    if (!textMessage.trim()) return;
-
-    // Stop if already speaking
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-      return;
-    }
-
-    const utterance = createChildVoice(textMessage);
-    
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const stopTextToSpeech = () => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-  };
-
-  // Word count helper
-  const getWordCount = (text: string): number => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
-  };
-
   // Share as image
   const shareAsImage = async () => {
     const shareData = {
       title: 'TALK IN CANDY',
-      text: `Check out my message: ${textMessage || 'Voice message attached'}`,
+      text: `Check out my voice message!`,
       url: `${window.location.origin}/view/${savedSubmissionId}`
     };
 
@@ -247,7 +183,6 @@ function Adminform(): React.ReactElement {
         console.log('Share cancelled or failed');
       }
     } else {
-      // Fallback: copy URL to clipboard
       const url = `${window.location.origin}/view/${savedSubmissionId}`;
       navigator.clipboard.writeText(url);
       alert('Link copied to clipboard!');
@@ -279,54 +214,31 @@ function Adminform(): React.ReactElement {
       return;
     }
 
-    if (!contentMode) {
-      alert('Please select either Voice Note or Enter Text');
-      return;
-    }
-
-    if (contentMode === 'voice' && !audioBase64) {
+    if (!audioBase64) {
       alert('Please record a voice note first');
-      return;
-    }
-
-    if (contentMode === 'text' && !textMessage.trim()) {
-      alert('Please enter a text message');
       return;
     }
 
     setIsProcessing(true);
 
     try {
-      // Generate unique ID for this submission
       const submissionId = id || uuidv4().slice(0, 8);
       
-      // Prepare payload - include customUrl if provided
       const payload: any = {
         id: submissionId,
         whatsappNumber: whatsappNumber.trim(),
         link: customUrl || linkNumber.trim() || null,
         customUrl: customUrl || null,
-        contentMode: contentMode,
+        contentMode: 'voice',
+        audioUrl: audioBase64,
         createdAt: Date.now(),
       };
 
-      // Handle voice or text content
-      if (contentMode === 'voice' && audioBase64) {
-        payload.audioUrl = audioBase64;
-        payload.textMessage = null;
-      } else if (contentMode === 'text') {
-        payload.textMessage = textMessage.trim();
-        payload.audioUrl = null;
-      }
-
-      // Save to Firestore
       const docRef = doc(db, "submissions", submissionId);
       await setDoc(docRef, payload);
 
       setSavedSubmissionId(submissionId);
       setSubmissionSaved(true);
-      
-      // Show share options
       setShowShareOptions(true);
 
     } catch (error) {
@@ -339,8 +251,6 @@ function Adminform(): React.ReactElement {
 
   // Clear selection
   const clearSelection = () => {
-    setContentMode(null);
-    setTextMessage('');
     setRecordedAudioUrl(null);
     setAudioBase64(null);
     setRecordingSeconds(15);
@@ -349,10 +259,6 @@ function Adminform(): React.ReactElement {
       audioRef.current = null;
     }
     setIsPlaying(false);
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    }
-    setIsSpeaking(false);
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -376,132 +282,76 @@ function Adminform(): React.ReactElement {
         <h1 className="users-header">TALK IN CANDY</h1>
         
         <div className="record-icon-container">
-          {/* 🎤 MICROPHONE - Voice Mode */}
+          {/* 🎤 MICROPHONE - Voice Mode Only */}
           <div 
-            className={`record-circle ${contentMode === 'voice' ? 'active' : ''}`}
-            onClick={submissionSaved ? undefined : selectVoiceMode}
-            style={contentMode === 'voice' ? { backgroundColor: '#e91e63' } : {}}
+            className={`record-circle active`}
+            style={{ backgroundColor: '#e91e63' }}
           >
             <div className="record-icon">
               <FaMicrophone />
             </div>
           </div>
+        </div>
 
-          {/* 📝 ENTER TEXT - Text Mode */}
-          <div 
-            className={`record-circle ${contentMode === 'text' ? 'active' : ''}`}
-            onClick={submissionSaved ? undefined : selectTextMode}
-            style={contentMode === 'text' ? { backgroundColor: '#e91e63' } : {}}
-          >
-            <div className="record-text-circle">
-              ENTER TEXT
+        {/* Show recording content */}
+        <div className="content-section">
+          {!submissionSaved && (
+            <button className="clear-btn" onClick={clearSelection}>
+              <FaTimes /> Clear
+            </button>
+          )}
+
+          <div className="voice-section">
+            <div className="record-controls">
+              {!recordedAudioUrl ? (
+                !submissionSaved && (
+                  <button 
+                    className={`record-btn ${isRecording ? 'recording' : ''}`}
+                    onClick={isRecording ? stopRecording : startRecording}
+                  >
+                    {isRecording ? '⏹ Stop Recording' : '🎤 Start Recording'}
+                  </button>
+                )
+              ) : (
+                <div className="recorded-audio">
+                  <button className="play-btn" onClick={togglePlayback}>
+                    {isPlaying ? '⏸ Stop' : '▶ Play Recording'}
+                  </button>
+                  {!submissionSaved && (
+                    <button className="re-record-btn" onClick={() => {
+                      setRecordedAudioUrl(null);
+                      setAudioBase64(null);
+                      setRecordingSeconds(15);
+                      startRecording();
+                    }}>
+                      🔄 Re-record
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
+            
+            {isRecording && (
+              <div className="recording-timer">
+                <p className="recording-status">🔴 Recording...</p>
+                <div className="timer-display">
+                  <span className="timer-seconds">{recordingSeconds}</span>
+                  <span className="timer-label">seconds left</span>
+                </div>
+                <div className="timer-progress">
+                  <div 
+                    className="timer-progress-bar" 
+                    style={{ width: `${(recordingSeconds / 15) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
+            
+            {audioBase64 && <p className="audio-saved">✓ Audio saved</p>}
           </div>
         </div>
 
-        {/* Show content based on mode */}
-        {contentMode && (
-          <div className="content-section">
-            {!submissionSaved && (
-              <button className="clear-btn" onClick={clearSelection}>
-                <FaTimes /> Clear
-              </button>
-            )}
-
-            {contentMode === 'voice' && (
-              <div className="voice-section">
-                <div className="record-controls">
-                  {!recordedAudioUrl ? (
-                    !submissionSaved && (
-                      <button 
-                        className={`record-btn ${isRecording ? 'recording' : ''}`}
-                        onClick={isRecording ? stopRecording : startRecording}
-                      >
-                        {isRecording ? '⏹ Stop Recording' : '🎤 Start Recording'}
-                      </button>
-                    )
-                  ) : (
-                    <div className="recorded-audio">
-                      <button className="play-btn" onClick={togglePlayback}>
-                        {isPlaying ? '⏸ Stop' : '▶ Play Recording'}
-                      </button>
-                      {!submissionSaved && (
-                        <button className="re-record-btn" onClick={() => {
-                          setRecordedAudioUrl(null);
-                          setAudioBase64(null);
-                          setRecordingSeconds(15);
-                          startRecording();
-                        }}>
-                          🔄 Re-record
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-                
-                {isRecording && (
-                  <div className="recording-timer">
-                    <p className="recording-status">🔴 Recording...</p>
-                    <div className="timer-display">
-                      <span className="timer-seconds">{recordingSeconds}</span>
-                      <span className="timer-label">seconds left</span>
-                    </div>
-                    <div className="timer-progress">
-                      <div 
-                        className="timer-progress-bar" 
-                        style={{ width: `${(recordingSeconds / 15) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                )}
-                
-                {audioBase64 && <p className="audio-saved">✓ Audio saved</p>}
-              </div>
-            )}
-
-            {contentMode === 'text' && (
-              <div className="text-section">
-                <textarea
-                  placeholder="Type your message here... (max 15 words)"
-                  value={textMessage}
-                  onChange={(e) => {
-                    if (submissionSaved) return;
-                    const words = e.target.value.trim().split(/\s+/).filter(word => word.length > 0);
-                    if (words.length <= 15) {
-                      setTextMessage(e.target.value);
-                    }
-                  }}
-                  readOnly={submissionSaved}
-                  rows={4}
-                />
-                <div className="word-count">
-                  {getWordCount(textMessage)} / 15 words
-                </div>
-                {!submissionSaved && (
-                  <button 
-                    className="speak-btn"
-                    onClick={isSpeaking ? stopTextToSpeech : playTextToSpeech}
-                    disabled={!textMessage.trim()}
-                  >
-                    {isSpeaking ? (
-                      <>🔊 <FaStop /> Stop Audio</>
-                    ) : (
-                      <>🔊 <FaVolumeUp /> Preview Audio</>
-                    )}
-                  </button>
-                )}
-                {isSpeaking && <p className="speaking-status">🔊 Playing audio...</p>}
-              </div>
-            )}
-          </div>
-        )}
-
-        <p className="shoot-text">
-          {contentMode === 'voice' ? 'VOICE NOTE MODE' : contentMode === 'text' ? 'TEXT TO SPEECH MODE' : 'SELECT AN OPTION'}
-        </p>
-        <p className='sec-text'>
-          {contentMode === 'text' ? '(Your text will be converted to audio when scanned)' : ''}
-        </p>
+        <p className="shoot-text">VOICE NOTE MODE</p>
         
         {/* Share Options Modal */}
         {showShareOptions && (
