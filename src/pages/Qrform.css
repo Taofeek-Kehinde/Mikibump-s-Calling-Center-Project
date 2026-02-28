@@ -399,27 +399,49 @@ h2 {
   border-radius: 10px;
 }
 
-/* Play Audio Button */
+/* Play Audio Button - Big Circle with Icon */
 .play-audio-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 25px;
-  padding: 12px 25px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  font-size: 2rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
 }
 
 .play-audio-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
 }
 
 .play-audio-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.95);
+}
+
+/* Audio Controls Container */
+.audio-controls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+/* Replace Button */
+.replace-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+}
+
+.replace-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
 }
