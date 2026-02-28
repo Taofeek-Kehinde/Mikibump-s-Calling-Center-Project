@@ -9,7 +9,7 @@ import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-i
 import { showAlert } from '../utils/showAlert';
 import { FaWhatsapp } from "react-icons/fa";
 import { useAppContext } from '../context/useAppContext';
-import { speakChildVoice, stopSpeech } from '../utils/textToSpeech';
+import { stopSpeech } from '../utils/textToSpeech';
 import './candyform.css';
 
 
