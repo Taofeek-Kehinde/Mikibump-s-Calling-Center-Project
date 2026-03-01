@@ -228,10 +228,7 @@ export default function Qrform() {
 
                 {/* Voice Note Section */}
                 {savedData.contentMode === 'voice' && savedData.audioUrl && (
-                    <div className="audio-section" style={{
-                        background: "darkblue",
-                        border: "50%"
-                    }}>
+                    <div className="audio-section">
                         <audio 
                             ref={audioRef}
                             src={savedData.audioUrl}
@@ -241,14 +238,14 @@ export default function Qrform() {
                         </audio>
                         <div className="audio-controls">
                             <button 
-                                className="play-audio-btn"
+                                className="play-audio-btns"
                                 onClick={toggleVoicePlayback}
                                 title={isVoicePlaying ? "Pause" : "Play"}
                             >
                                 {isVoicePlaying ? <FaPause /> : <FaPlay />}
                             </button>
                             <button 
-                                className="play-audio-btn replace-btn"
+                                className="play-audio-btns replace-btn"
                                 onClick={replaceVoice}
                                 title="Replace"
                             >
@@ -263,7 +260,7 @@ export default function Qrform() {
                     <div className="text-section">
                         {isTtsCompleted ? (
                             <button 
-                                className="play-audio-btn"
+                                className="play-audio-btns"
                                 onClick={() => playTextToSpeech(savedData.textMessage)}
                                 title="Replay"
                             >
@@ -271,7 +268,7 @@ export default function Qrform() {
                             </button>
                         ) : isTtsPlaying ? (
                             <button 
-                                className="play-audio-btn"
+                                className="play-audio-btns"
                                 onClick={() => {
                                     window.speechSynthesis.cancel();
                                     setIsTtsPlaying(false);
@@ -282,7 +279,7 @@ export default function Qrform() {
                             </button>
                         ) : (
                             <button 
-                                className="play-audio-btn"
+                                className="play-audio-btns"
                                 onClick={() => playTextToSpeech(savedData.textMessage)}
                                 title="Play"
                             >

@@ -400,7 +400,7 @@ h2 {
 }
 
 /* Play Audio Button - Big Circle with Icon */
-.play-audio-btn {
+.play-audio-btns {
   background: darkblue;
   color: white;
   border: none;
@@ -415,12 +415,12 @@ h2 {
   justify-content: center;
 }
 
-.play-audio-btn:hover {
+.play-audio-btns:hover {
   transform: scale(1.1);
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
 }
 
-.play-audio-btn:active {
+.play-audio-btns:active {
   transform: scale(0.95);
 }
 
