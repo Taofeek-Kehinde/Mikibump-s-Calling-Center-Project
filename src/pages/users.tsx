@@ -347,7 +347,7 @@ function Users(): React.ReactElement {
                 
                 {isRecording && (
                   <div className="recording-timer">
-                    <p className="recording-status">🔴 Recording...</p>
+                    <p className="recording-status">🔴</p>
                     <div className="timer-display">
                       <span className="timer-seconds">{recordingSeconds}</span>
                       <span className="timer-label">seconds left</span>

@@ -63,7 +63,7 @@ export default function Qrcode() {
 
   // If we have an ID from the URL (submission was just made)
   if (id && submissionData) {
-    const qrUrl = `${window.location.origin}/adminform/${id}`;
+    const qrUrl = `${window.location.origin}/view/${id}`;
     
     return (
       <div className="qr-wrap">
@@ -105,8 +105,8 @@ export default function Qrcode() {
 
     for (let i = 0; i < numQRs; i++) {
       const uniqueId = uuidv4().slice(0, 8);
-      // QR code points to the Adminform page where users can record audio
-      const link = `${window.location.origin}/adminform/${uniqueId}${customUrl ? `?customUrl=${encodeURIComponent(customUrl)}` : ''}`;
+      // QR code points to the View page where users can listen to voice note or text to speech
+      const link = `${window.location.origin}/view/${uniqueId}${customUrl ? `?customUrl=${encodeURIComponent(customUrl)}` : ''}`;
       
       // Create a placeholder document in Firestore with the custom URL
       if (customUrl) {
