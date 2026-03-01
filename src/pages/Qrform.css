@@ -401,7 +401,7 @@ h2 {
 
 /* Play Audio Button - Big Circle with Icon */
 .play-audio-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #1a1a2e;
   color: white;
   border: none;
   border-radius: 50%;
