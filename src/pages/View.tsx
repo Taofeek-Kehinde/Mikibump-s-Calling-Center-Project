@@ -32,45 +32,38 @@ export default function View() {
     fetchData();
   }, [id]);
 
-  const togglePlayback = () => {
-    if (!data?.audioUrl) return;
-
-    // For mobile devices, we need to handle audio differently
-    if (isPlaying) {
+  // Create audio element when data is loaded
+  useEffect(() => {
+    if (data?.audioUrl && !audioRef.current) {
+      const audio = new Audio(data.audioUrl);
+      audio.onended = () => setIsPlaying(false);
+      audio.onerror = () => {
+        console.error('Audio error:', audio.error);
+        setIsPlaying(false);
+      };
+      audioRef.current = audio;
+    }
+    
+    return () => {
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+        audioRef.current = null;
       }
+    };
+  }, [data]);
+
+  const togglePlayback = () => {
+    if (!data?.audioUrl || !audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
       setIsPlaying(false);
     } else {
-      // Create a new audio element with proper mobile support
-      const audio = new Audio(data.audioUrl);
-      
-      // Add error handling for mobile
-      audio.onerror = () => {
-        console.error('Audio playback error:', audio.error);
-        setIsPlaying(false);
-        alert('Unable to play audio. Please try again.');
-      };
-      
-      audio.onended = () => {
-        setIsPlaying(false);
-        audioRef.current = null;
-      };
-      
-      // Attempt to play - may need user interaction on mobile
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            audioRef.current = audio;
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            console.error('Playback failed:', error);
-            setIsPlaying(false);
-          });
-      }
+      audioRef.current.play().catch((error) => {
+        console.error('Playback failed:', error);
+      });
+      setIsPlaying(true);
     }
   };
 

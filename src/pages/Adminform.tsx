@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './users.css';
-import { FaMicrophone, FaTimes } from "react-icons/fa";
+import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { v4 as uuidv4 } from "uuid";
@@ -9,10 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 function Adminform(): React.ReactElement {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [customUrl, setCustomUrl] = useState<string>('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
-  const [linkNumber, setLinkNumber] = useState('');
 
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -31,15 +28,6 @@ function Adminform(): React.ReactElement {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  // Get customUrl from query parameter on page load
-  useEffect(() => {
-    const urlParam = searchParams.get('customUrl');
-    if (urlParam) {
-      setCustomUrl(decodeURIComponent(urlParam));
-      setLinkNumber(decodeURIComponent(urlParam));
-    }
-  }, [searchParams]);
-
   // Check if this is an existing submission
   useEffect(() => {
     const checkExistingSubmission = async () => {
@@ -50,8 +38,6 @@ function Adminform(): React.ReactElement {
           if (snap.exists()) {
             const data = snap.data();
             setWhatsappNumber(data.whatsappNumber || '');
-            setLinkNumber(data.link || '');
-            setCustomUrl(data.customUrl || '');
             if (data.contentMode === 'voice' && data.audioUrl) {
               setAudioBase64(data.audioUrl);
               setRecordedAudioUrl(data.audioUrl);
@@ -66,6 +52,26 @@ function Adminform(): React.ReactElement {
 
     checkExistingSubmission();
   }, [id]);
+
+  // Create audio element when recordedAudioUrl is available (for mobile compatibility)
+  useEffect(() => {
+    if (recordedAudioUrl && !audioRef.current) {
+      const audio = new Audio(recordedAudioUrl);
+      audio.onended = () => setIsPlaying(false);
+      audio.onerror = () => {
+        console.error('Audio error:', audio.error);
+        setIsPlaying(false);
+      };
+      audioRef.current = audio;
+    }
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [recordedAudioUrl]);
 
   // Process and save the recorded audio
   const processRecording = () => {
@@ -95,7 +101,7 @@ function Adminform(): React.ReactElement {
     setIsRecording(false);
   };
 
-  // 🎤 START RECORDING - no real-time playback
+  // START RECORDING
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -120,7 +126,7 @@ function Adminform(): React.ReactElement {
       
       // Start countdown timer - from 15 to 0
       timerRef.current = setInterval(() => {
-        setRecordingSeconds(prev => {
+        setRecordingSeconds((prev) => {
           if (prev <= 1) {
             stopRecording();
             return 0;
@@ -147,28 +153,23 @@ function Adminform(): React.ReactElement {
     }
   };
 
-  // 🔊 PLAY/STOP RECORDED AUDIO
+  // PLAY/STOP RECORDED AUDIO - mobile compatible
   const togglePlayback = () => {
-    if (!recordedAudioUrl) return;
+    if (!recordedAudioUrl || !audioRef.current) return;
 
     if (isPlaying) {
-      audioRef.current?.pause();
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
       setIsPlaying(false);
     } else {
-      if (audioRef.current) {
-        audioRef.current.play();
-        setIsPlaying(true);
-      } else {
-        const audio = new Audio(recordedAudioUrl);
-        audioRef.current = audio;
-        audio.onended = () => setIsPlaying(false);
-        audio.play();
-        setIsPlaying(true);
-      }
+      audioRef.current.play().catch((error) => {
+        console.error('Playback failed:', error);
+      });
+      setIsPlaying(true);
     }
   };
 
-  // 📝 SUBMIT - SAVE DATA AND REDIRECT TO THANKS
+  // SUBMIT - SAVE DATA AND REDIRECT TO THANKS
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -190,8 +191,6 @@ function Adminform(): React.ReactElement {
       const payload: any = {
         id: submissionId,
         whatsappNumber: whatsappNumber.trim(),
-        link: customUrl || linkNumber.trim() || null,
-        customUrl: customUrl || null,
         contentMode: 'voice',
         audioUrl: audioBase64,
         createdAt: Date.now(),
@@ -211,7 +210,7 @@ function Adminform(): React.ReactElement {
     }
   };
 
-  // Clear selection
+  // Clear selection - cancel audio
   const clearSelection = () => {
     setRecordedAudioUrl(null);
     setAudioBase64(null);
@@ -224,6 +223,35 @@ function Adminform(): React.ReactElement {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
+    // Stop recording if in progress
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsRecording(false);
+  };
+
+  // Restart recording
+  const restartRecording = () => {
+    setRecordedAudioUrl(null);
+    setAudioBase64(null);
+    setRecordingSeconds(15);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    setIsPlaying(false);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    // Stop any existing stream
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsRecording(false);
+    // Start new recording
+    startRecording();
   };
 
   // Cleanup on unmount
@@ -238,16 +266,44 @@ function Adminform(): React.ReactElement {
     };
   }, []);
 
+  // If submission is already saved, show simple view with play button and WhatsApp number only
+  if (submissionSaved) {
+    return (
+      <div className="users-page">
+        <div className="users-container">
+          <h1 className="users-header">TALK IN CANDY</h1>
+
+          <div className="content-section">
+            <div className="voice-section">
+              <div className="record-controls">
+                <div className="recorded-audio">
+                  <button className="play-btn" onClick={togglePlayback}>
+                    {isPlaying ? <FaPause /> : <FaPlay />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="users-form">
+            <label className="whatsapp-label">WHATSAPP NUMBER</label>
+            <p className="whatsapp-display">{whatsappNumber}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Original form for new submissions - with icons only
   return (
     <div className="users-page">
       <div className="users-container">
         <h1 className="users-header">TALK IN CANDY</h1>
         
         <div className="record-icon-container">
-          {/* 🎤 MICROPHONE - Voice Mode Only */}
           <div 
             className={`record-circle active`}
-            style={{ backgroundColor: '#e91e63' }}
+            style={{ backgroundColor: isRecording ? '#ff0000' : '#e91e63' }}
           >
             <div className="record-icon">
               <FaMicrophone />
@@ -255,47 +311,34 @@ function Adminform(): React.ReactElement {
           </div>
         </div>
 
-        {/* Show recording content */}
         <div className="content-section">
-          {!submissionSaved && (
-            <button className="clear-btn" onClick={clearSelection}>
-              <FaTimes /> Clear
-            </button>
-          )}
-
           <div className="voice-section">
             <div className="record-controls">
               {!recordedAudioUrl ? (
-                !submissionSaved && (
-                  <button 
-                    className={`record-btn ${isRecording ? 'recording' : ''}`}
-                    onClick={isRecording ? stopRecording : startRecording}
-                  >
-                    {isRecording ? '⏹ Stop Recording' : '🎤 Start Recording'}
-                  </button>
-                )
+                <button 
+                  className={`record-btn ${isRecording ? 'recording' : ''}`}
+                  onClick={isRecording ? stopRecording : startRecording}
+                >
+                  {isRecording ? <FaPause /> : <FaPlay />}
+                </button>
               ) : (
                 <div className="recorded-audio">
                   <button className="play-btn" onClick={togglePlayback}>
-                    {isPlaying ? '⏸ Stop' : '▶ Play Recording'}
+                    {isPlaying ? <FaPause /> : <FaPlay />}
                   </button>
-                  {!submissionSaved && (
-                    <button className="re-record-btn" onClick={() => {
-                      setRecordedAudioUrl(null);
-                      setAudioBase64(null);
-                      setRecordingSeconds(15);
-                      startRecording();
-                    }}>
-                      🔄 Re-record
-                    </button>
-                  )}
+                  <button className="re-record-btn" onClick={restartRecording}>
+                    <FaRedo />
+                  </button>
+                  <button className="clear-btn" onClick={clearSelection}>
+                    <FaTimes />
+                  </button>
                 </div>
               )}
             </div>
             
             {isRecording && (
               <div className="recording-timer">
-                <p className="recording-status">🔴 Recording...</p>
+                <p className="recording-status">Recording...</p>
                 <div className="timer-display">
                   <span className="timer-seconds">{recordingSeconds}</span>
                   <span className="timer-label">seconds left</span>
@@ -308,12 +351,8 @@ function Adminform(): React.ReactElement {
                 </div>
               </div>
             )}
-            
-            {audioBase64 && <p className="audio-saved">✓ Audio saved</p>}
           </div>
         </div>
-
-        <p className="shoot-text">VOICE NOTE MODE</p>
 
         <form onSubmit={handleSubmit} className="users-form">
           <label className="whatsapp-label">WHATSAPP NUMBER*</label>
@@ -326,33 +365,8 @@ function Adminform(): React.ReactElement {
             required
           />
 
-          {/* Show custom URL if provided, otherwise show regular link input */}
-          {customUrl ? (
-            <div>
-              <label className="whatsapp-label">Your Custom URL</label>
-              <input
-                type="text"
-                className="whatsapp-input"
-                value={customUrl}
-                disabled
-                style={{ backgroundColor: '#333' }}
-              />
-            </div>
-          ) : (
-            <>
-              <label className="whatsapp-label">Social Media/Web (OPTIONAL)</label>
-              <input
-                type="url"
-                className="whatsapp-input"
-                placeholder="Paste Link to social media or web address"
-                value={linkNumber}
-                onChange={(e) => setLinkNumber(e.target.value)}
-              />
-            </>
-          )}
-
           <button type="submit" className="candy-button" disabled={isProcessing}>
-            {isProcessing ? 'PROCESSING...' : submissionSaved ? 'UPDATE' : 'CANDY IT'}
+            {isProcessing ? 'PROCESSING...' : 'CANDY IT'}
           </button>
 
           <p className='footer'>(Print your QR code after generating and stick it on your product, flyer, promotional item, gift, or anything!)</p>

@@ -63,7 +63,7 @@ export default function Qrcode() {
 
   // If we have an ID from the URL (submission was just made)
   if (id && submissionData) {
-    const qrUrl = `${window.location.origin}/qrform/${id}`;
+    const qrUrl = `${window.location.origin}/adminform/${id}`;
     
     return (
       <div className="qr-wrap">
