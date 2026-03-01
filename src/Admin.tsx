@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaMoon, FaSun, FaSignOutAlt, FaUpload } from 'react-icons/fa';
+import { FaMoon, FaSun, FaSignOutAlt, FaUpload, FaQrcode } from 'react-icons/fa';
 import { useAppContext } from './context/useAppContext';
 import { showAlert } from './utils/showAlert';
 import { ref, set } from "firebase/database";
@@ -81,11 +81,15 @@ const handleThemeToggle = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  const handleToggleFreeCallsButton = () => {
+const handleToggleFreeCallsButton = () => {
     const newValue = !showFreeCallsButton;
     setShowFreeCallsButton(newValue);
     set(ref(db, "settings/showFreeCallsButton"), newValue);
     showAlert(`FREE CALLS button ${newValue ? 'shown' : 'hidden'}`, 'success');
+  };
+
+  const handleGoToQrcode = () => {
+    navigate('/qrcode');
   };
 
 
@@ -271,9 +275,30 @@ const handleThemeToggle = () => {
               <span className="btn-text">{showFreeCallsButton ? 'HIDE BUTTON' : 'SHOW BUTTON'}</span>
             </motion.button>
           </div>
-          <p style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+<p style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
             Current status: <strong>{showFreeCallsButton ? 'VISIBLE' : 'HIDDEN'}</strong>
           </p>
+        </motion.div>
+
+        {/* QR Code Navigation Button */}
+        <motion.div
+          className="control-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <h2 className="section-title">QR Code Generator</h2>
+          <div className="button-group">
+            <motion.button
+              className="control-btn"
+              onClick={handleGoToQrcode}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="btn-icon"><FaQrcode /></span>
+              <span className="btn-text">Go to QR Code</span>
+            </motion.button>
+          </div>
         </motion.div>
 
       </motion.div>

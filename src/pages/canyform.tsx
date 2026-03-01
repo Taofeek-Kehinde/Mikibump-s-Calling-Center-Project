@@ -5,11 +5,11 @@ import { db } from "../firebase2";
 import { collection, addDoc } from "firebase/firestore";
 import QRCode from "qrcode"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHandPointLeft, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointLeft, faHandPointRight, faVolumeUp, faStop } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '../utils/showAlert';
 import { FaWhatsapp } from "react-icons/fa";
 import { useAppContext } from '../context/useAppContext';
-import { stopSpeech } from '../utils/textToSpeech';
+import { stopSpeech, createChildVoice } from '../utils/textToSpeech';
 import './candyform.css';
 
 
@@ -40,6 +40,23 @@ function Form() {
   const [wordCount, setWordCount] = useState(0);
   const [selectedCandy, setSelectedCandy] = useState<"CHOCOLATE" | "LOLLIPOP" | null>(null);
   const [showSharePrompt, setShowSharePrompt] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  // Toggle text-to-speech preview
+  const toggleSpeak = () => {
+    if (!message.trim()) return;
+    
+    if (isSpeaking) {
+      stopSpeech();
+      setIsSpeaking(false);
+    } else {
+      const utterance = createChildVoice(message);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+    }
+  };
 
   // Handle message input with 15-word limit
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +64,6 @@ function Form() {
     const words = value.trim().split(/\s+/).filter(word => word.length > 0);
     
     if (words.length > 15) {
-      // Don't allow more than 15 words
       return;
     }
     
@@ -69,15 +85,13 @@ function Form() {
     if (!selectedCandy) return;
 
     try {
-      // 15 minutes = 15 * 60 * 1000 ms
       const unlockTime = Date.now() + 15 * 60 * 1000;
-      // 15 hours = 15 * 60 * 60 * 1000 ms
       const expireTime = Date.now() + 15 * 60 * 60 * 1000;
 
       const docRef = await addDoc(collection(db, "candies"), {
         name: formData.recipientContact,
         relationship: selectedCandy,
-        message: message.trim(), // Store the text message
+        message: message.trim(),
         createdAt: Date.now(),
         unlockTime: unlockTime,
         expireTime: expireTime
@@ -86,12 +100,10 @@ function Form() {
       const candyUrl = `${window.location.origin}/candy/${docRef.id}`;
       const messageText = `🎁 You got a Candy Treat! Open it here: ${candyUrl}`;
 
-      // Check if Web Share API is available (mobile devices)
       const canUseWebShare = typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
 
       if (option === "LINK") {
         if (canUseWebShare) {
-          // Use native share on mobile
           try {
             await navigator.share({
               title: 'Candy Treat',
@@ -99,18 +111,14 @@ function Form() {
               url: candyUrl
             });
           } catch (err) {
-            // User cancelled or error - do nothing
             console.log('Share cancelled or failed:', err);
           }
         } else {
-          // Desktop fallback: copy to clipboard and open WhatsApp Web
           try {
             await navigator.clipboard.writeText(messageText);
             showAlert('Link copied to clipboard!', 'success');
-            // Open WhatsApp Web
             window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(messageText), '_blank');
           } catch (clipErr) {
-            // Fallback if clipboard fails
             window.open('https://wa.me/?text=' + encodeURIComponent(messageText), '_blank');
           }
         }
@@ -124,7 +132,6 @@ function Form() {
         });
 
         if (canUseWebShare) {
-          // Convert data URL to blob for sharing
           const response = await fetch(qrDataUrl);
           const blob = await response.blob();
           const file = new File([blob], 'candy-qr.png', { type: 'image/png' });
@@ -140,7 +147,6 @@ function Form() {
               console.log('Share cancelled or failed:', err);
             }
           } else {
-            // Fallback: share as link with QR description
             try {
               await navigator.share({
                 title: 'Candy Treat',
@@ -152,7 +158,6 @@ function Form() {
             }
           }
         } else {
-          // Desktop fallback: download QR and show WhatsApp link
           const link = document.createElement('a');
           link.href = qrDataUrl;
           link.download = `candy-qr-${docRef.id}.png`;
@@ -160,7 +165,6 @@ function Form() {
           
           showAlert('QR code downloaded! Now you can send it via WhatsApp.', 'success');
           
-          // Open WhatsApp Web with pre-filled message
           setTimeout(() => {
             window.open('https://web.whatsapp.com/send?text=' + encodeURIComponent(messageText), '_blank');
           }, 500);
@@ -214,13 +218,24 @@ function Form() {
 
         <form>
 
-          <input
-            type="text"
-            placeholder={`ENTER MESSAGE (${wordCount}/15 words)`}
-            value={message}
-            className='recipient-input'
-            onChange={handleMessageChange}
-          />
+          <div className="recipient-input-wrapper">
+            <input
+              type="text"
+              placeholder={`ENTER MESSAGE `}
+              value={message}
+              className='recipient-input'
+              onChange={handleMessageChange}
+            />
+            <button
+              type="button"
+              onClick={toggleSpeak}
+              disabled={!message.trim()}
+              className="speak-btn"
+              title={isSpeaking ? 'Stop' : 'Listen to message'}
+            >
+              <FontAwesomeIcon icon={isSpeaking ? faStop : faVolumeUp} />
+            </button>
+          </div>
 
 
           <p className='question'> WHO ARE YOU SENDING IT TO?</p>
