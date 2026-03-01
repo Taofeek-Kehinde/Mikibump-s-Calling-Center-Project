@@ -228,7 +228,10 @@ export default function Qrform() {
 
                 {/* Voice Note Section */}
                 {savedData.contentMode === 'voice' && savedData.audioUrl && (
-                    <div className="audio-section">
+                    <div className="audio-section" style={{
+                        background: "darkblue",
+                        border: "50%"
+                    }}>
                         <audio 
                             ref={audioRef}
                             src={savedData.audioUrl}
