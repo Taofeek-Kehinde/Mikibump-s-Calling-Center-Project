@@ -324,7 +324,7 @@ if (submissionSaved) {
         </h2>
 
         {/* PLAY BUTTON */}
-       <div style={{ marginBottom: "30px" }}>
+      <div style={{ marginBottom: "30px", display: "flex", justifyContent: "center" }}>
   <div
     onClick={togglePlayback}
     style={{
@@ -336,14 +336,13 @@ if (submissionSaved) {
       justifyContent: "center",
       alignItems: "center",
       cursor: "pointer",
-      boxShadow: "0 8px 20px rgba(0,0,0,0.35)",
-      transition: "0.3s ease"
+      boxShadow: "0 8px 20px rgba(0,0,0,0.35)"
     }}
   >
     {isPlaying ? (
-      <FaPause size={32} color="#f4a300" />
+      <FaPause size={34} color="#f4a300" />
     ) : (
-      <FaPlay size={32} color="#f4a300" style={{ marginLeft: "4px" }} />
+      <FaPlay size={34} color="#f4a300" />
     )}
   </div>
 </div>
