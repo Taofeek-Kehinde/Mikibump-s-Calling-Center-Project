@@ -57,28 +57,34 @@ function Adminform(): React.ReactElement {
 
   // Create audio element when recordedAudioUrl is available (for mobile compatibility)
   useEffect(() => {
-    if (recordedAudioUrl && !audioRef.current) {
-      const audio = new Audio(recordedAudioUrl);
-      audio.onended = () => setIsPlaying(false);
-      audio.onerror = () => {
-        console.error('Audio error:', audio.error);
-        setIsPlaying(false);
-      };
-      audioRef.current = audio;
-    }
-    
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
+  if (recordedAudioUrl) {
+    const audio = new Audio(recordedAudioUrl);
+
+    audio.onended = () => setIsPlaying(false);
+    audio.onerror = (e) => {
+      console.error("Audio error:", e);
+      setIsPlaying(false);
     };
-  }, [recordedAudioUrl]);
+
+    audioRef.current = audio;
+  }
+
+  return () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+  };
+}, [recordedAudioUrl]);
+
+
 
   // Process and save the recorded audio
   const processRecording = () => {
     // Use audio/wav format for better mobile compatibility
-    const blob = new Blob(audioChunks.current, { type: 'audio/wav' });
+    const blob = new Blob(audioChunks.current, {
+  type: mediaRecorderRef.current?.mimeType || 'audio/webm'
+});
     const url = URL.createObjectURL(blob);
     setRecordedAudioUrl(url);
     
@@ -109,7 +115,11 @@ function Adminform(): React.ReactElement {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      const mediaRecorder = new MediaRecorder(stream);
+      const options = {
+  mimeType: 'audio/webm'
+};
+
+const mediaRecorder = new MediaRecorder(stream, options);
 
       mediaRecorderRef.current = mediaRecorder;
       audioChunks.current = [];
