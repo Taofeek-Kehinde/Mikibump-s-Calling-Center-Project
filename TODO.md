@@ -1,17 +1,21 @@
-# TODO - QR Code Admin Form Updates
+# TODO List
 
-## Task: Update QR code flow to direct to adminform.tsx with full viewing capabilities
+## Task: QR Code - URL Button Logic
 
-### Changes Required:
+### Understanding:
+1. When scanning QR code, user goes to Adminform.tsx to fill form (voice note + WhatsApp number)
+2. After form submission:
+   - If URL was provided in QR generator → Show "CHECK THIS OUT" button + "TALK TO ME" button
+   - If NO URL provided → Show only "TALK TO ME" button
 
-1. [ ] **Qrcode.tsx** - Change QR code URL from `/qrform/:id` to `/adminform/:id`
-   - Line that generates QR URL: `const qrUrl = \`${window.location.origin}/qrform/${id}\`;`
-   
-2. [ ] **Adminform.tsx** - Add WhatsApp button and "CHECK THIS OUT" button when viewing saved submission
-   - Add WhatsApp "TALK TO ME" button (like in Qrform.tsx)
-   - Add "CHECK THIS OUT" button if link exists in saved data
-   - Currently only shows WhatsApp number text, needs buttons instead
+### Implementation Done:
+- [x] Added customUrl state and useSearchParams hook to Adminform.tsx
+- [x] Added useEffect to get customUrl from query parameter
+- [x] Updated handleSubmit to save customUrl along with form data
 
-### Implementation Steps:
-1. Edit Qrcode.tsx to change the URL path
-2. Edit Adminform.tsx to add action buttons for saved submissions
+### How it works:
+1. QR with URL: QR contains `/adminform/{id}?customUrl={url}`, Adminform saves url to Firestore, shows both buttons
+2. QR without URL: QR contains `/adminform/{id}`, Adminform shows form, saves submission without link, shows only "TALK TO ME" button
+
+### Files Modified:
+- src/pages/Adminform.tsx - Added customUrl handling from query parameters

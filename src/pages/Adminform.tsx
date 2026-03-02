@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import './users.css';
 import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes, FaWhatsapp, FaLink } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -9,8 +9,10 @@ import { v4 as uuidv4 } from "uuid";
 function Adminform(): React.ReactElement {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [savedData, setSavedData] = useState<any>(null);
+  const [customUrl, setCustomUrl] = useState<string | null>(null);
 
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -28,6 +30,14 @@ function Adminform(): React.ReactElement {
   const audioChunks = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+
+  // Get customUrl from query parameter
+  useEffect(() => {
+    const urlParam = searchParams.get('customUrl');
+    if (urlParam) {
+      setCustomUrl(decodeURIComponent(urlParam));
+    }
+  }, [searchParams]);
 
   // Check if this is an existing submission
   useEffect(() => {
@@ -200,23 +210,23 @@ const mediaRecorder = new MediaRecorder(stream, options);
     try {
       const submissionId = id || uuidv4().slice(0, 8);
       
-      // Preserve existing link if available
-      const existingLink = savedData?.link;
+      // Use customUrl from query parameter, or preserve existing link if available
+      const linkToSave = customUrl || savedData?.link || null;
       
       const payload: any = {
         id: submissionId,
         whatsappNumber: whatsappNumber.trim(),
         contentMode: 'voice',
         audioUrl: audioBase64,
-        link: existingLink || null,
+        link: linkToSave,
         createdAt: Date.now(),
       };
 
       const docRef = doc(db, "submissions", submissionId);
      await setDoc(docRef, payload, { merge: true });
 
-      // Navigate to Thanks page after successful submission
-      navigate('/thanks');
+      // Navigate to Adminform with the submission ID to show the result view with buttons
+      navigate(`/adminform/${submissionId}`);
 
     } catch (error) {
       console.error('Error saving data:', error);
