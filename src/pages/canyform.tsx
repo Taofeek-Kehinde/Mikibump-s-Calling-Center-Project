@@ -37,7 +37,6 @@ function Form() {
   }, []);
 
   const [message, setMessage] = useState("");
-  const [wordCount, setWordCount] = useState(0);
   const [selectedCandy, setSelectedCandy] = useState<"CHOCOLATE" | "LOLLIPOP" | null>(null);
   const [showSharePrompt, setShowSharePrompt] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -68,7 +67,6 @@ function Form() {
     }
     
     setMessage(value);
-    setWordCount(words.length);
   };
 
   const handleCandyClick = async (type: "CHOCOLATE" | "LOLLIPOP") => {
