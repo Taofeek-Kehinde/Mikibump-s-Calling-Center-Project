@@ -283,74 +283,130 @@ const mediaRecorder = new MediaRecorder(stream, options);
   }, []);
 
   // If submission is already saved, show view with play button, WhatsApp button, and CHECK THIS OUT button
-  if (submissionSaved) {
-    // Generate WhatsApp message
-    const getWhatsAppMessage = () => {
-      return encodeURIComponent("Hi, I scanned your QR.");
-    };
+if (submissionSaved) {
 
-    // Get the link from saved data
-    const savedLink = (savedData as any)?.link;
+  const getWhatsAppMessage = () => {
+    return encodeURIComponent("Hi, I scanned your QR.");
+  };
 
-    return (
-      <div className="users-page">
-        <div className="users-container">
-          <h1 className="users-header">TALK IN CANDY</h1>
+  const savedLink = (savedData as any)?.link;
 
-          <div className="content-section">
-            <div className="voice-section">
-              <div className="record-controls">
-                <div className="recorded-audio">
-                  <button className="play-btn" onClick={togglePlayback}>
-                    {isPlaying ? <FaPause /> : <FaPlay />}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(180deg, #0f1c2e, #1b3358)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "20px"
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "400px",
+          background: "#f4a300",
+          borderRadius: "20px",
+          padding: "30px 20px",
+          textAlign: "center",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+        }}
+      >
+        {/* TITLE */}
+        <h2
+          style={{
+            fontFamily: "cursive",
+            marginBottom: "25px"
+          }}
+        >
+          TALK IN CANDY
+        </h2>
 
-          {/* WhatsApp TALK TO ME Button */}
-          {whatsappNumber && (
-            <button
-              className="candy-button"
-              onClick={() =>
-                window.open(
-                  `https://wa.me/${whatsappNumber}?text=${getWhatsAppMessage()}`,
-                  "_blank"
-                )
-              }
-              style={{ marginTop: '20px', backgroundColor: '#25D366' }}
-            >
-              <FaWhatsapp style={{ marginRight: '8px' }} />
-              TALK TO ME
-            </button>
-          )}
-
-          {/* CHECK THIS OUT Button - if link exists */}
-          {savedLink && (
-            <button
-              className="candy-button"
-              onClick={() => window.open(savedLink, "_blank")}
-              style={{ marginTop: '15px', backgroundColor: '#e91e63' }}
-            >
-              <FaLink style={{ marginRight: '8px' }} />
-              CHECK THIS OUT
-            </button>
-          )}
-
-          <div className="users-form">
-            <label className="whatsapp-label">WHATSAPP NUMBER</label>
-            <p className="whatsapp-display">{whatsappNumber}</p>
-          </div>
+        {/* PLAY BUTTON */}
+        <div style={{ marginBottom: "25px" }}>
+          <button
+            onClick={togglePlayback}
+            style={{
+              width: "85px",
+              height: "85px",
+              borderRadius: "50%",
+              border: "none",
+              background: "white",
+              fontSize: "28px",
+              cursor: "pointer",
+              boxShadow: "0 6px 15px rgba(0,0,0,0.3)"
+            }}
+          >
+            {isPlaying ? <FaPause /> : <FaPlay />}
+          </button>
         </div>
 
-        {/* Global Footer */}
+        {/* TALK TO ME BUTTON */}
+        {whatsappNumber && (
+          <button
+            onClick={() =>
+              window.open(
+                `https://wa.me/${whatsappNumber}?text=${getWhatsAppMessage()}`,
+                "_blank"
+              )
+            }
+            style={{
+              width: "100%",
+              padding: "15px",
+              borderRadius: "12px",
+              border: "none",
+              background: "#25D366",
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "16px",
+              marginBottom: savedLink ? "15px" : "0",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer"
+            }}
+          >
+            <FaWhatsapp />
+            TALK TO ME
+          </button>
+        )}
+
+        {/* CHECK THIS OUT BUTTON */}
+        {savedLink && (
+          <button
+            onClick={() => window.open(savedLink, "_blank")}
+            style={{
+              width: "100%",
+              padding: "15px",
+              borderRadius: "12px",
+              border: "none",
+              background: "#111",
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "16px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer"
+            }}
+          >
+            <FaLink />
+            CHECK THIS OUT
+          </button>
+        )}
+      </div>
+      {/* Global Footer */}
         <div className="global-footer">
           ©️ MIKI +2349033666403
         </div>
-      </div>
-    );
-  }
+    </div>
+  );
+}
+
+      
 
   // Original form for new submissions - with icons only
   return (
