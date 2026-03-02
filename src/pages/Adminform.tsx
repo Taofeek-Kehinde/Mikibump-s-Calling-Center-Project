@@ -324,23 +324,29 @@ if (submissionSaved) {
         </h2>
 
         {/* PLAY BUTTON */}
-        <div style={{ marginBottom: "25px" }}>
-          <button
-            onClick={togglePlayback}
-            style={{
-              width: "85px",
-              height: "85px",
-              borderRadius: "50%",
-              border: "none",
-              background: "white",
-              fontSize: "28px",
-              cursor: "pointer",
-              boxShadow: "0 6px 15px rgba(0,0,0,0.3)"
-            }}
-          >
-            {isPlaying ? <FaPause /> : <FaPlay />}
-          </button>
-        </div>
+       <div style={{ marginBottom: "30px" }}>
+  <div
+    onClick={togglePlayback}
+    style={{
+      width: "90px",
+      height: "90px",
+      borderRadius: "50%",
+      background: "#ffffff",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+      boxShadow: "0 8px 20px rgba(0,0,0,0.35)",
+      transition: "0.3s ease"
+    }}
+  >
+    {isPlaying ? (
+      <FaPause size={32} color="#f4a300" />
+    ) : (
+      <FaPlay size={32} color="#f4a300" style={{ marginLeft: "4px" }} />
+    )}
+  </div>
+</div>
 
         {/* TALK TO ME BUTTON */}
         {whatsappNumber && (
