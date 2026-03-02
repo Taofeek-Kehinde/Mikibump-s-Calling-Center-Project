@@ -118,12 +118,12 @@ export default function Qrform() {
 
     // Generate WhatsApp message
     const getWhatsAppMessage = () => {
-        let message = `🎁 You've received a Candy!\n\n`;
+        let message = `Hi, I scanned your QR.\n\n`;
         
         if (savedData.contentMode === 'voice') {
-            message += `🎤 Tap the link to listen to the voice message:\n${getShareUrl()}`;
+            message += ` Tap the link to listen to the voice message:\n${getShareUrl()}`;
         } else if (savedData.contentMode === 'text') {
-            message += `💬 Tap the link to hear the message:\n${getShareUrl()}`;
+            message += `Hi, I scanned your QR. :\n${getShareUrl()}`;
         }
         
         return encodeURIComponent(message);
