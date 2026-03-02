@@ -112,22 +112,14 @@ export default function Qrform() {
     }
 
     // Generate the shareable URL with WhatsApp parameter
-    const getShareUrl = () => {
-        return `${window.location.origin}/qrform/${id}?from=whatsapp`;
-    };
+    // const getShareUrl = () => {
+    //     return `${window.location.origin}/qrform/${id}?from=whatsapp`;
+    // };
 
     // Generate WhatsApp message
     const getWhatsAppMessage = () => {
-        let message = `Hi, I scanned your QR.\n\n`;
-        
-        if (savedData.contentMode === 'voice') {
-            message += ` Tap the link to listen to the voice message:\n${getShareUrl()}`;
-        } else if (savedData.contentMode === 'text') {
-            message += `Hi, I scanned your QR. :\n${getShareUrl()}`;
-        }
-        
-        return encodeURIComponent(message);
-    };
+    return encodeURIComponent("Hi, I scanned your QR.");
+};
 
     // Play text-to-speech function with child-like voice (using shared utility)
     const playTextToSpeech = (text: string) => {
