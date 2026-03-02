@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './users.css';
-import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes } from "react-icons/fa";
+import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes, FaWhatsapp, FaLink } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { v4 as uuidv4 } from "uuid";
@@ -10,6 +10,7 @@ function Adminform(): React.ReactElement {
   const { id } = useParams();
   const navigate = useNavigate();
   const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [savedData, setSavedData] = useState<any>(null);
 
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -37,6 +38,7 @@ function Adminform(): React.ReactElement {
           const snap = await getDoc(docRef);
           if (snap.exists()) {
             const data = snap.data();
+            setSavedData(data);
             setWhatsappNumber(data.whatsappNumber || '');
             if (data.contentMode === 'voice' && data.audioUrl) {
               setAudioBase64(data.audioUrl);
@@ -188,11 +190,15 @@ function Adminform(): React.ReactElement {
     try {
       const submissionId = id || uuidv4().slice(0, 8);
       
+      // Preserve existing link if available
+      const existingLink = savedData?.link;
+      
       const payload: any = {
         id: submissionId,
         whatsappNumber: whatsappNumber.trim(),
         contentMode: 'voice',
         audioUrl: audioBase64,
+        link: existingLink || null,
         createdAt: Date.now(),
       };
 
@@ -266,8 +272,16 @@ function Adminform(): React.ReactElement {
     };
   }, []);
 
-  // If submission is already saved, show simple view with play button and WhatsApp number only
+  // If submission is already saved, show view with play button, WhatsApp button, and CHECK THIS OUT button
   if (submissionSaved) {
+    // Generate WhatsApp message
+    const getWhatsAppMessage = () => {
+      return encodeURIComponent("Hi, I scanned your QR.");
+    };
+
+    // Get the link from saved data
+    const savedLink = (savedData as any)?.link;
+
     return (
       <div className="users-page">
         <div className="users-container">
@@ -284,6 +298,35 @@ function Adminform(): React.ReactElement {
               </div>
             </div>
           </div>
+
+          {/* WhatsApp TALK TO ME Button */}
+          {whatsappNumber && (
+            <button
+              className="candy-button"
+              onClick={() =>
+                window.open(
+                  `https://wa.me/${whatsappNumber}?text=${getWhatsAppMessage()}`,
+                  "_blank"
+                )
+              }
+              style={{ marginTop: '20px', backgroundColor: '#25D366' }}
+            >
+              <FaWhatsapp style={{ marginRight: '8px' }} />
+              TALK TO ME
+            </button>
+          )}
+
+          {/* CHECK THIS OUT Button - if link exists */}
+          {savedLink && (
+            <button
+              className="candy-button"
+              onClick={() => window.open(savedLink, "_blank")}
+              style={{ marginTop: '15px', backgroundColor: '#e91e63' }}
+            >
+              <FaLink style={{ marginRight: '8px' }} />
+              CHECK THIS OUT
+            </button>
+          )}
 
           <div className="users-form">
             <label className="whatsapp-label">WHATSAPP NUMBER</label>

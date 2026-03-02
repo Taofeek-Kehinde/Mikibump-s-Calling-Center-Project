@@ -1,19 +1,17 @@
-# TODO - Candy Form Updates
+# TODO - QR Code Admin Form Updates
 
-## Implementation Plan:
+## Task: Update QR code flow to direct to adminform.tsx with full viewing capabilities
 
-### 1. Update canyform.tsx
-- [ ] Add 15-word limit to message input
-- [ ] Add text-to-speech preview functionality
-- [ ] Store the message text in Firestore
-- [ ] Change expiration from 24 hours to 15 hours
+### Changes Required:
 
-### 2. Update CandyView.tsx
-- [ ] Display the message content
-- [ ] Use text-to-speech when unlocked (after 15 minutes)
-- [ ] Update button styling: red when waiting, green when ready
-- [ ] Change expiration from 24 hours to 15 hours
-- [ ] Show: candy type, name, time, date
+1. [ ] **Qrcode.tsx** - Change QR code URL from `/qrform/:id` to `/adminform/:id`
+   - Line that generates QR URL: `const qrUrl = \`${window.location.origin}/qrform/${id}\`;`
+   
+2. [ ] **Adminform.tsx** - Add WhatsApp button and "CHECK THIS OUT" button when viewing saved submission
+   - Add WhatsApp "TALK TO ME" button (like in Qrform.tsx)
+   - Add "CHECK THIS OUT" button if link exists in saved data
+   - Currently only shows WhatsApp number text, needs buttons instead
 
-### 3. Update Firestore data structure
-- [ ] Add message field to store the text message
+### Implementation Steps:
+1. Edit Qrcode.tsx to change the URL path
+2. Edit Adminform.tsx to add action buttons for saved submissions
