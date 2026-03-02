@@ -213,7 +213,7 @@ const mediaRecorder = new MediaRecorder(stream, options);
       };
 
       const docRef = doc(db, "submissions", submissionId);
-      await setDoc(docRef, payload);
+     await setDoc(docRef, payload, { merge: true });
 
       // Navigate to Thanks page after successful submission
       navigate('/thanks');
