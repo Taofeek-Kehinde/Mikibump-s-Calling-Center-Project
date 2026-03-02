@@ -237,6 +237,7 @@ form {
 .introduction {
   display: block;           
   text-align: center;       
+  user-select: none;
   max-width: 600px;          
   margin: -10px auto 5px auto;          
   font-size: 0.8rem;        

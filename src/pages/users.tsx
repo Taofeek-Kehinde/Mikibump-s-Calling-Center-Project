@@ -432,6 +432,11 @@ function Users(): React.ReactElement {
           <p className='footer'>(Print your QR code after generating and stick it on your product, flyer, promotional item, gift, or anything!)</p>
         </form>
       </div>
+
+        <div className="global-footer">
+  ©️ MIKI +2349033666403
+</div>
+
     </div>
   );
 }

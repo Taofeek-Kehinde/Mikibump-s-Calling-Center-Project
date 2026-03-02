@@ -290,6 +290,11 @@ function Adminform(): React.ReactElement {
             <p className="whatsapp-display">{whatsappNumber}</p>
           </div>
         </div>
+
+        {/* Global Footer */}
+        <div className="global-footer">
+          ©️ MIKI +2349033666403
+        </div>
       </div>
     );
   }
@@ -371,6 +376,11 @@ function Adminform(): React.ReactElement {
 
           <p className='footer'>(Print your QR code after generating and stick it on your product, flyer, promotional item, gift, or anything!)</p>
         </form>
+      </div>
+
+      {/* Global Footer */}
+      <div className="global-footer">
+        ©️ MIKI +2349033666403
       </div>
     </div>
   );

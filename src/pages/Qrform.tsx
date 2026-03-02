@@ -3,7 +3,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { motion } from "framer-motion";
-import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo, FaSync } from "react-icons/fa";
+import { FaWhatsapp, FaLink, FaHandPointRight, FaPlay, FaPause, FaRedo} from "react-icons/fa";
 import { createChildVoice } from "../utils/textToSpeech";
 
 import "./Qrform.css";
@@ -164,12 +164,12 @@ export default function Qrform() {
     };
 
     // Replace/reload voice
-    const replaceVoice = () => {
-        if (audioRef.current) {
-            audioRef.current.load();
-            audioRef.current.play();
-        }
-    };
+    // const replaceVoice = () => {
+    //     if (audioRef.current) {
+    //         audioRef.current.load();
+    //         audioRef.current.play();
+    //     }
+    // };
 
     return (
         <div className="qrform-container">
@@ -244,13 +244,13 @@ export default function Qrform() {
                             >
                                 {isVoicePlaying ? <FaPause /> : <FaPlay />}
                             </button>
-                            <button 
+                            {/* <button 
                                 className="play-audio-btns replace-btn"
                                 onClick={replaceVoice}
                                 title="Replace"
                             >
                                 <FaSync />
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 )}
@@ -301,7 +301,7 @@ export default function Qrform() {
                         }
                     >
                         <FaWhatsapp className="btn-icon" />
-                        <span>Share on WhatsApp</span>
+                        <span>Chat on WhatsApp</span>
                     </button>
                 )}
 

@@ -186,6 +186,11 @@ export default function Qrcode() {
           </div>
         ))}
       </div>
+
+        <div className="global-footer">
+  ©️ MIKI +2349033666403
+</div>
+
     </div>
   );
 }

@@ -193,6 +193,11 @@ function AdminLogin() {
           />
         ))}
       </div>
+
+      {/* Global Footer */}
+      <div className="global-footer">
+        ©️ MIKI +2349033666403
+      </div>
     </div>
   );
 }

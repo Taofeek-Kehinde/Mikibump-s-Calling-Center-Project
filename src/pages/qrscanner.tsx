@@ -201,9 +201,12 @@ export default function QRScanner() {
           </>
         )}
       </div>
+      
     </div>
+    
   );
 }
+
 
 const styles = {
   container: {
