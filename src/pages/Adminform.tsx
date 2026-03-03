@@ -229,8 +229,8 @@ const mediaRecorder = new MediaRecorder(stream, options);
       const docRef = doc(db, "submissions", submissionId);
      await setDoc(docRef, payload, { merge: true });
 
-      // Navigate to Adminform with the submission ID to show the result view with buttons
-      navigate(`/adminform/${submissionId}`);
+      // Navigate to Thanks page after saving, with the submission ID
+      navigate(`/thanks?id=${submissionId}`);
 
     } catch (error) {
       console.error('Error saving data:', error);

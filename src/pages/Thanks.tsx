@@ -1,9 +1,47 @@
 // import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaHandPointRight } from 'react-icons/fa';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { FaHandPointRight, FaQrcode } from 'react-icons/fa';
+import { QRCodeCanvas } from 'qrcode.react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase2';
 
 export default function Thanks() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [submissionData, setSubmissionData] = useState<any>(null);
+  
+  const submissionId = searchParams.get('id');
+
+  useEffect(() => {
+    const fetchSubmission = async () => {
+      if (submissionId) {
+        try {
+          const docRef = doc(db, "submissions", submissionId);
+          const snap = await getDoc(docRef);
+          if (snap.exists()) {
+            setSubmissionData(snap.data());
+          }
+        } catch (err) {
+          console.error("Error fetching submission:", err);
+        }
+      }
+    };
+
+    fetchSubmission();
+  }, [submissionId]);
+
+  // Download QR code function
+  const downloadQR = () => {
+    const canvas = document.getElementById("thanks-qr-canvas") as HTMLCanvasElement;
+    if (canvas) {
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `TalkinCandy-${submissionId}.png`;
+      link.click();
+    }
+  };
 
   return (
     <div style={{
@@ -30,27 +68,73 @@ export default function Thanks() {
         color: '#FFFFFF',
         fontFamily: 'Dancing Script, cursive',
         textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+        marginBottom: '30px',
       }}>
         LET CANDY DO THE TALKIN
       </p>
 
-      <div 
+      {/* Show QR Code if we have a submission ID */}
+      {submissionId && (
+        <div style={{
+          background: 'white',
+          padding: '20px',
+          borderRadius: '15px',
+          marginBottom: '20px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+        }}>
+          <QRCodeCanvas 
+            id="thanks-qr-canvas" 
+            value={`${window.location.origin}/adminform/${submissionId}`} 
+            size={200} 
+          />
+          <p style={{
+            marginTop: '10px',
+            color: '#333',
+            fontWeight: 'bold',
+          }}>
+            ID: {submissionId}
+          </p>
+        </div>
+      )}
+
+      {/* Download QR Button */}
+      {submissionId && (
+        <button
+          onClick={downloadQR}
+          style={{
+            background: '#FF0000',
+            color: 'white',
+            border: 'none',
+            padding: '15px 30px',
+            borderRadius: '25px',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            marginBottom: '20px',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+          }}
+        >
+          <FaQrcode />
+          Download QR Code
+        </button>
+      )}
+
+      <p style={{
+        fontSize: '1rem',
+        color: '#333',
+        textAlign: 'center',
+        maxWidth: '300px',
+        marginBottom: '20px',
+      }}>
+        Print your QR code and stick it on your product, flyer, gift, or anywhere!
+      </p>
+
+      <div className='any-btns'
         onClick={() => navigate('/')}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          right: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          background: '#FF0000',
-          padding: '10px 20px',
-          borderRadius: '25px',
-          cursor: 'pointer',
-          color: 'white',
-          fontWeight: 'bold',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-        }}
+       
       >
         <FaHandPointRight size={24} />
         <span>HOME</span>
