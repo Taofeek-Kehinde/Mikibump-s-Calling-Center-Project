@@ -16,6 +16,7 @@ import View from './pages/View.tsx';
 import CandyDetails from './pages/CandyView.tsx';
 import QRScanner from './pages/qrscanner.tsx';
 import Users from './pages/users.tsx';
+import Thank from "./pages/thank.tsx";
 
 function App(): JSX.Element {
   const [typedText, setTypedText] = useState('');
@@ -77,6 +78,7 @@ function App(): JSX.Element {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/qrscanner" element={<QRScanner />} />
       <Route path="/candy/:id" element={<CandyDetails />} />
+      <Route path="/thank" element={<Thank />} />
       <Route path="/chat" element={<EnhancedChat />} />
       <Route path="/users" element={<Users />} />
       <Route path="/" element={

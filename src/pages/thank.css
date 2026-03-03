@@ -1,0 +1,108 @@
+/* Full page */
+.thank-container {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(to bottom, #0f1b3d, #102a4c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Top right section */
+.top-right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hand icon */
+.hand-icon {
+  color: red;
+  font-size: 22px;
+  animation: bounce 1.5s infinite;
+}
+
+/* Home button */
+.home-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.home-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Center content */
+.content {
+  text-align: center;
+  animation: fadeSlide 1s ease forwards;
+}
+
+.title {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  color: orange;
+  font-size: 20px;
+}
+
+/* Animation */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Tablets */
+@media (min-width: 768px) {
+  .title {
+    font-size: 36px;
+  }
+
+  .subtitle {
+    font-size: 24px;
+  }
+
+  .home-btn {
+    padding: 12px 24px;
+  }
+}
+
+/* Large Screens */
+@media (min-width: 1024px) {
+  .title {
+    font-size: 42px;
+  }
+
+  .subtitle {
+    font-size: 26px;
+  }
+}
