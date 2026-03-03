@@ -33,13 +33,20 @@
   background-color: red;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 50px;
+
+  width: 80px;        /* equal width */
+  height: 80px;       /* equal height */
+
+  border-radius: 50%; /* makes it perfect circle */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s ease;
 }
-
 .home-btn:hover {
   transform: scale(1.05);
 }

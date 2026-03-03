@@ -1,24 +1,17 @@
-// import React from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { FaHandPointRight, FaQrcode } from 'react-icons/fa';
-import { QRCodeCanvas } from 'qrcode.react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { FaHandPointRight, FaWhatsapp, FaLink } from 'react-icons/fa';
 
 export default function Thanks() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   
-  const submissionId = searchParams.get('id');
+  // Get submission data from location state
+  const submissionData = location.state?.submissionData || {};
+  const whatsappNumber = submissionData.whatsappNumber || '';
+  const customUrl = submissionData.link || '';
 
-  // Download QR code function
-  const downloadQR = () => {
-    const canvas = document.getElementById("thanks-qr-canvas") as HTMLCanvasElement;
-    if (canvas) {
-      const image = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = `TalkinCandy-${submissionId}.png`;
-      link.click();
-    }
+  const getWhatsAppMessage = () => {
+    return encodeURIComponent("Hi, I scanned your QR.");
   };
 
   return (
@@ -30,6 +23,7 @@ export default function Thanks() {
       justifyContent: 'center',
       alignItems: 'center',
       padding: '20px',
+      position: 'relative',
     }}>
       <h1 style={{
         fontSize: '3rem',
@@ -46,76 +40,135 @@ export default function Thanks() {
         color: '#FFFFFF',
         fontFamily: 'Dancing Script, cursive',
         textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-        marginBottom: '30px',
+        marginBottom: '50px',
       }}>
         LET CANDY DO THE TALKIN
       </p>
 
-      {/* Show QR Code if we have a submission ID */}
-      {submissionId && (
-        <div style={{
-          background: 'white',
-          padding: '20px',
-          borderRadius: '15px',
-          marginBottom: '20px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-        }}>
-          <QRCodeCanvas 
-            id="thanks-qr-canvas" 
-            value={`${window.location.origin}/adminform/${submissionId}`} 
-            size={200} 
-          />
-          <p style={{
-            marginTop: '10px',
-            color: '#333',
-            fontWeight: 'bold',
-          }}>
-            ID: {submissionId}
-          </p>
-        </div>
-      )}
-
-      {/* Download QR Button */}
-      {submissionId && (
-        <button
-          onClick={downloadQR}
-          style={{
-            background: '#FF0000',
-            color: 'white',
-            border: 'none',
-            padding: '15px 30px',
-            borderRadius: '25px',
-            fontSize: '1.1rem',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            marginBottom: '20px',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-          }}
-        >
-          <FaQrcode />
-          Download QR Code
-        </button>
-      )}
-
-      <p style={{
-        fontSize: '1rem',
-        color: '#333',
-        textAlign: 'center',
+      {/* Buttons Container */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '15px',
+        width: '100%',
         maxWidth: '300px',
-        marginBottom: '20px',
+        marginBottom: '30px',
       }}>
-        Print your QR code and stick it on your product, flyer, gift, or anywhere!
-      </p>
+        {/* CHAT WITH ME Button */}
+        {whatsappNumber && (
+          <button
+            onClick={() =>
+              window.open(
+                `https://wa.me/${whatsappNumber}?text=${getWhatsAppMessage()}`,
+                "_blank"
+              )
+            }
+            style={{
+              width: '100%',
+              padding: '15px',
+              borderRadius: '12px',
+              border: 'none',
+              background: '#25D366',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+            }}
+          >
+            <FaWhatsapp size={20} />
+            CHAT WITH ME
+          </button>
+        )}
 
-      <div className='any-btns'
+        {/* CHECK ME OUT Button - Only show if URL exists */}
+        {customUrl && (
+          <button
+            onClick={() => window.open(customUrl, "_blank")}
+            style={{
+              width: '100%',
+              padding: '15px',
+              borderRadius: '12px',
+              border: 'none',
+              background: '#333333',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 6px 15px rgba(0,0,0,0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+            }}
+          >
+            <FaLink size={20} />
+            CHECK ME OUT
+          </button>
+        )}
+      </div>
+
+      <div 
         onClick={() => navigate('/')}
-       
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: '#FF0000',
+          padding: '10px 20px',
+          borderRadius: '25px',
+          cursor: 'pointer',
+          color: 'white',
+          fontWeight: 'bold',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+          transition: 'transform 0.2s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.05)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
       >
         <FaHandPointRight size={24} />
         <span>HOME</span>
+      </div>
+
+      {/* Global Footer */}
+      <div style={{
+        position: 'absolute',
+        bottom: '20px',
+        textAlign: 'center',
+        color: '#333',
+        fontWeight: 'bold',
+        fontSize: '14px',
+      }}>
+        ©️ MIKI +2349033666403
       </div>
     </div>
   );

@@ -86,7 +86,7 @@ export default function Qrcode() {
             Download QR Code
           </button>
 
-          <button className="home-btn" onClick={() => navigate('/users')}>
+          <button className="home-btnsss" onClick={() => navigate('/users')}>
             Create Another
           </button>
 
@@ -101,30 +101,11 @@ export default function Qrcode() {
   // Generate batch QR codes
   const generateQRBatch = async () => {
     const tempList: { id: string; url: string }[] = [];
-    const { setDoc, doc } = await import("firebase/firestore");
 
     for (let i = 0; i < numQRs; i++) {
       const uniqueId = uuidv4().slice(0, 8);
-      // QR code points to the Qrform page where users can listen to voice note or text to speech
+      // QR code points to the Adminform page where users can fill in their details
       const link = `${window.location.origin}/adminform/${uniqueId}${customUrl ? `?customUrl=${encodeURIComponent(customUrl)}` : ''}`;
-      
-      // Create a placeholder document in Firestore with the custom URL
-      if (customUrl) {
-        try {
-          await setDoc(doc(db, "submissions", uniqueId), {
-            id: uniqueId,
-            customUrl: customUrl,
-            link: customUrl,
-            whatsappNumber: '',
-            contentMode: 'voice',
-            audioUrl: null,
-            createdAt: Date.now(),
-          });
-        } catch (err) {
-          console.error("Error creating placeholder:", err);
-        }
-      }
-      
       tempList.push({ id: uniqueId, url: link });
     }
 

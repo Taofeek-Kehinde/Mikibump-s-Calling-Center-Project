@@ -18,6 +18,7 @@ import QRScanner from './pages/qrscanner.tsx';
 import Users from './pages/users.tsx';
 import Thank from "./pages/thank.tsx";
 
+
 function App(): JSX.Element {
   const [typedText, setTypedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);

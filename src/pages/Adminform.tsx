@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import './users.css';
-import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes, FaWhatsapp, FaLink } from "react-icons/fa";
+import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes, FaWhatsapp, FaLink, FaVolumeUp, FaStop } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { v4 as uuidv4 } from "uuid";
+import { createChildVoice, stopSpeech } from "../utils/textToSpeech";
 
 function Adminform(): React.ReactElement {
   const { id } = useParams();
@@ -20,6 +21,12 @@ function Adminform(): React.ReactElement {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
   
+  // Content mode: 'voice' or 'text'
+  const [contentMode, setContentMode] = useState<'voice' | 'text'>('voice');
+  // Text message for text-to-speech
+  const [textMessage, setTextMessage] = useState('');
+  const [isTtsPlaying, setIsTtsPlaying] = useState(false);
+
   // Recording timer - countdown from 15
   const [recordingSeconds, setRecordingSeconds] = useState(15);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,15 +57,26 @@ function Adminform(): React.ReactElement {
             const data = snap.data();
             setSavedData(data);
             setWhatsappNumber(data.whatsappNumber || '');
-            if (data.contentMode === 'voice' && data.audioUrl) {
-              setAudioBase64(data.audioUrl);
-              setRecordedAudioUrl(data.audioUrl);
+            // Only consider the submission "saved" if it has actual content or whatsapp number
+            const hasContent = !!(data.whatsappNumber || data.audioUrl || data.textMessage);
+            if (hasContent) {
+              // set content mode and relevant data
+              if (data.contentMode === 'text') {
+                setContentMode('text');
+                setTextMessage(data.textMessage || '');
+              } else if (data.contentMode === 'voice' && data.audioUrl) {
+                setContentMode('voice');
+                setAudioBase64(data.audioUrl);
+                setRecordedAudioUrl(data.audioUrl);
+              }
+              setSubmissionSaved(true);
+            } else {
+              // placeholder only: do not mark as saved; allow the user to fill the form
+              // but if the doc contains a link, keep it available
+              if (data.link) {
+                setCustomUrl(data.link);
+              }
             }
-            // If there's a link in saved data, use it as customUrl
-            if (data.link) {
-              setCustomUrl(data.link);
-            }
-            setSubmissionSaved(true);
           }
         } catch (err) {
           console.error("Error checking submission:", err);
@@ -195,7 +213,25 @@ const mediaRecorder = new MediaRecorder(stream, options);
     }
   };
 
-  // SUBMIT - SAVE DATA AND REDIRECT TO THANKS
+  // Text-to-speech playback
+  const toggleTtsPlayback = () => {
+    // prefer the saved textMessage when present
+    const textToSpeak = textMessage || (savedData && savedData.textMessage) || '';
+    if (!textToSpeak) return;
+
+    if (isTtsPlaying) {
+      stopSpeech();
+      setIsTtsPlaying(false);
+    } else {
+      setIsTtsPlaying(true);
+      const utterance = createChildVoice(textToSpeak);
+      utterance.onend = () => setIsTtsPlaying(false);
+      utterance.onerror = () => setIsTtsPlaying(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  // SUBMIT - SAVE DATA AND REDIRECT TO THANK
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -204,8 +240,14 @@ const mediaRecorder = new MediaRecorder(stream, options);
       return;
     }
 
-    if (!audioBase64) {
+    // Validate based on content mode
+    if (contentMode === 'voice' && !audioBase64) {
       alert('Please record a voice note first');
+      return;
+    }
+
+    if (contentMode === 'text' && !textMessage.trim()) {
+      alert('Please enter a text message');
       return;
     }
 
@@ -220,17 +262,28 @@ const mediaRecorder = new MediaRecorder(stream, options);
       const payload: any = {
         id: submissionId,
         whatsappNumber: whatsappNumber.trim(),
-        contentMode: 'voice',
-        audioUrl: audioBase64,
+        contentMode: contentMode,
         link: linkToSave,
         createdAt: Date.now(),
       };
 
+      // Add voice or text content
+      if (contentMode === 'voice') {
+        payload.audioUrl = audioBase64;
+      } else {
+        payload.textMessage = textMessage.trim();
+      }
+
       const docRef = doc(db, "submissions", submissionId);
      await setDoc(docRef, payload, { merge: true });
 
-      // Navigate to Thanks page after saving, with the submission ID
-      navigate(`/thanks?id=${submissionId}`);
+      // Navigate to Thank page with submission data
+      navigate('/thank', { 
+        state: { 
+          submissionData: payload,
+          submissionId: submissionId
+        } 
+      });
 
     } catch (error) {
       console.error('Error saving data:', error);
@@ -242,23 +295,30 @@ const mediaRecorder = new MediaRecorder(stream, options);
 
   // Clear selection - cancel audio
   const clearSelection = () => {
-    setRecordedAudioUrl(null);
-    setAudioBase64(null);
-    setRecordingSeconds(15);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
+    if (contentMode === 'voice') {
+      setRecordedAudioUrl(null);
+      setAudioBase64(null);
+      setRecordingSeconds(15);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      setIsPlaying(false);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      // Stop recording if in progress
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+      setIsRecording(false);
+    } else {
+      // clear text mode
+      setTextMessage('');
+      stopSpeech();
+      setIsTtsPlaying(false);
     }
-    setIsPlaying(false);
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-    // Stop recording if in progress
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    setIsRecording(false);
   };
 
   // Restart recording
@@ -296,13 +356,8 @@ const mediaRecorder = new MediaRecorder(stream, options);
     };
   }, []);
 
-  // If submission is already saved AND has actual content (BOTH audio AND whatsapp), show view with play button, WhatsApp button
-  // If it's just a placeholder (no audio OR no whatsapp), show the empty form to fill in
-const hasActualContent = savedData && 
-  ((savedData as any)?.audioUrl && 
-   ((savedData as any)?.whatsappNumber && (savedData as any)?.whatsappNumber.trim() !== ''));
-
-if (submissionSaved && hasActualContent) {
+  // If submission is already saved, show view with play button, WhatsApp button, and CHECK THIS OUT button
+if (submissionSaved) {
 
   const getWhatsAppMessage = () => {
     return encodeURIComponent("Hi, I scanned your QR.");
@@ -344,26 +399,50 @@ if (submissionSaved && hasActualContent) {
 
         {/* PLAY BUTTON */}
       <div style={{ marginBottom: "30px", display: "flex", justifyContent: "center" }}>
-  <div
-    onClick={togglePlayback}
-    style={{
-      width: "90px",
-      height: "90px",
-      borderRadius: "50%",
-      background: "#ffffff",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      cursor: "pointer",
-      boxShadow: "0 8px 20px rgba(0,0,0,0.35)"
-    }}
-  >
-    {isPlaying ? (
-      <FaPause size={34} color="#f4a300" />
-    ) : (
-      <FaPlay size={34} color="#f4a300" />
-    )}
-  </div>
+      { /* Play button - show TTS for text, audio player for voice */ }
+      {((savedData as any)?.contentMode === 'text') ? (
+        <div
+          onClick={toggleTtsPlayback}
+          style={{
+            width: "90px",
+            height: "90px",
+            borderRadius: "50%",
+            background: "#ffffff",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.35)"
+          }}
+        >
+          {isTtsPlaying ? (
+            <FaStop size={34} color="#f4a300" />
+          ) : (
+            <FaVolumeUp size={34} color="#f4a300" />
+          )}
+        </div>
+      ) : (
+        <div
+          onClick={togglePlayback}
+          style={{
+            width: "90px",
+            height: "90px",
+            borderRadius: "50%",
+            background: "#ffffff",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.35)"
+          }}
+        >
+          {isPlaying ? (
+            <FaPause size={34} color="#f4a300" />
+          ) : (
+            <FaPlay size={34} color="#f4a300" />
+          )}
+        </div>
+      )}
 </div>
 
         {/* TALK TO ME BUTTON */}
