@@ -1,35 +1,13 @@
 // import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { FaHandPointRight, FaQrcode } from 'react-icons/fa';
 import { QRCodeCanvas } from 'qrcode.react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase2';
 
 export default function Thanks() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [submissionData, setSubmissionData] = useState<any>(null);
   
   const submissionId = searchParams.get('id');
-
-  useEffect(() => {
-    const fetchSubmission = async () => {
-      if (submissionId) {
-        try {
-          const docRef = doc(db, "submissions", submissionId);
-          const snap = await getDoc(docRef);
-          if (snap.exists()) {
-            setSubmissionData(snap.data());
-          }
-        } catch (err) {
-          console.error("Error fetching submission:", err);
-        }
-      }
-    };
-
-    fetchSubmission();
-  }, [submissionId]);
 
   // Download QR code function
   const downloadQR = () => {
