@@ -54,6 +54,10 @@ function Adminform(): React.ReactElement {
               setAudioBase64(data.audioUrl);
               setRecordedAudioUrl(data.audioUrl);
             }
+            // If there's a link in saved data, use it as customUrl
+            if (data.link) {
+              setCustomUrl(data.link);
+            }
             setSubmissionSaved(true);
           }
         } catch (err) {
@@ -292,8 +296,13 @@ const mediaRecorder = new MediaRecorder(stream, options);
     };
   }, []);
 
-  // If submission is already saved, show view with play button, WhatsApp button, and CHECK THIS OUT button
-if (submissionSaved) {
+  // If submission is already saved AND has actual content (BOTH audio AND whatsapp), show view with play button, WhatsApp button
+  // If it's just a placeholder (no audio OR no whatsapp), show the empty form to fill in
+const hasActualContent = savedData && 
+  ((savedData as any)?.audioUrl && 
+   ((savedData as any)?.whatsappNumber && (savedData as any)?.whatsappNumber.trim() !== ''));
+
+if (submissionSaved && hasActualContent) {
 
   const getWhatsAppMessage = () => {
     return encodeURIComponent("Hi, I scanned your QR.");
