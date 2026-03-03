@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import './users.css';
-import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes, FaWhatsapp, FaLink, FaVolumeUp, FaStop } from "react-icons/fa";
+import { FaMicrophone, FaPlay, FaPause, FaRedo, FaTimes, FaWhatsapp, FaLink, FaVolumeUp, FaStop, FaHandPointRight } from "react-icons/fa";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { v4 as uuidv4 } from "uuid";
@@ -373,9 +373,33 @@ if (submissionSaved) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "20px"
+        padding: "20px",
+        position: "relative"
       }}
     >
+      {/* HOME BUTTON - Top Right */}
+      <div
+        onClick={() => navigate("/")}
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          background: "#FF0000",
+          padding: "10px 20px",
+          borderRadius: "25px",
+          cursor: "pointer",
+          color: "white",
+          fontWeight: "bold",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+        }}
+      >
+        <FaHandPointRight size={24} />
+        <span>HOME</span>
+      </div>
+
       <div
         style={{
           width: "100%",
@@ -514,6 +538,30 @@ if (submissionSaved) {
   // Original form for new submissions - with icons only
   return (
     <div className="users-page">
+      {/* HOME BUTTON - Top Right */}
+      <div
+        onClick={() => navigate("/")}
+        style={{
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          background: "#FF0000",
+          padding: "10px 20px",
+          borderRadius: "25px",
+          cursor: "pointer",
+          color: "white",
+          fontWeight: "bold",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+          zIndex: 1000
+        }}
+      >
+        <FaHandPointRight size={24} />
+        <span>HOME</span>
+      </div>
+
       <div className="users-container">
         <h1 className="users-header">TALK IN CANDY</h1>
         
