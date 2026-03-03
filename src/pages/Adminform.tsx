@@ -230,7 +230,7 @@ const mediaRecorder = new MediaRecorder(stream, options);
      await setDoc(docRef, payload, { merge: true });
 
       // Navigate to Thanks page after saving, with the submission ID
-      navigate(`/thank?id=${submissionId}`);
+      navigate(`/thanks?id=${submissionId}`);
 
     } catch (error) {
       console.error('Error saving data:', error);

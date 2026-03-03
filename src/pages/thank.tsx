@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaHandPointRight } from "react-icons/fa";
-
+ import "./thank.css";
+ 
 export default function Thank() {
   const navigate = useNavigate();
 
