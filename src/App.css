@@ -21,14 +21,15 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 56px;
-  height: 56px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.18);
   z-index: 20;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
+
 
 .loading-favicon:hover {
   transform: scale(1.05);

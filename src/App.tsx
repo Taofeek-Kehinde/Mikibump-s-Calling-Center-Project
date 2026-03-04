@@ -88,7 +88,17 @@ function App(): JSX.Element {
           {showDashboard && <Dashboard />}
           {!showDashboard && (
             <div className="app">
-              <img src={favicon} alt="logo" className="loading-favicon" />
+              <img src={favicon} alt="logo" 
+              style={{
+      position: "absolute",
+      top: "16px",
+      right: "16px",
+      width: window.innerWidth <= 768 ? "80px" : "100px",
+      height: "auto",
+      borderRadius: "12px",
+      boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
+      zIndex: 20
+    }} />
               <motion.h1
                 className="mikibumps-title"
                 initial={{
