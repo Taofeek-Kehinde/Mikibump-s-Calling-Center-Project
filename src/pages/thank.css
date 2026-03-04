@@ -86,7 +86,6 @@
   50% { transform: translateY(-6px); }
 }
 
-/* ================= RESPONSIVE ================= */
 
 /* Tablets */
 @media (min-width: 768px) {

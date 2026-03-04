@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Dashboard from './assets/dashboard.tsx';
+import favicon from './assets/favicon.png';
 import AdminLogin from './pages/AdminLogin.tsx';
 import Canyform from './pages/canyform.tsx';
 import Form from './pages/Form.tsx';
@@ -87,6 +88,7 @@ function App(): JSX.Element {
           {showDashboard && <Dashboard />}
           {!showDashboard && (
             <div className="app">
+              <img src={favicon} alt="logo" className="loading-favicon" />
               <motion.h1
                 className="mikibumps-title"
                 initial={{

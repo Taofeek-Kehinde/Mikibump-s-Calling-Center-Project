@@ -156,29 +156,27 @@ function Users(): React.ReactElement {
     }
   };
 
-  // 🔊 TEXT TO SPEECH - Preview (using shared child voice)
-  const playTextToSpeech = () => {
-    if (!textMessage.trim()) return;
-
-    // Stop if already speaking
+  // 🔊 TEXT TO SPEECH - Preview (toggle speak / stop)
+  const stopSpeech = () => {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-      return;
     }
-
-    const utterance = createChildVoice(textMessage);
-    
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(false);
   };
 
-  const stopTextToSpeech = () => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
+  const toggleSpeak = () => {
+    if (!textMessage.trim()) return;
+    
+    if (isSpeaking) {
+      stopSpeech();
+      setIsSpeaking(false);
+    } else {
+      const utterance = createChildVoice(textMessage);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+    }
   };
 
   // Word count helper
@@ -367,31 +365,33 @@ function Users(): React.ReactElement {
 
             {contentMode === 'text' && (
               <div className="text-section">
-                <textarea
-                  placeholder="Type your message here... (max 15 words)"
-                  value={textMessage}
-                  onChange={(e) => {
-                    const words = e.target.value.trim().split(/\s+/).filter(word => word.length > 0);
-                    if (words.length <= 15) {
-                      setTextMessage(e.target.value);
-                    }
-                  }}
-                  rows={4}
-                />
+                <div className="recipient-input-wrapper">
+                  <textarea
+                    className="recipient-input"
+                    placeholder="Type your message here... (max 15 words)"
+                    value={textMessage}
+                    onChange={(e) => {
+                      const words = e.target.value.trim().split(/\s+/).filter(word => word.length > 0);
+                      if (words.length <= 15) {
+                        setTextMessage(e.target.value);
+                      }
+                    }}
+                    rows={4}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={toggleSpeak}
+                    disabled={!textMessage.trim()}
+                    className="speak-btn"
+                    title={isSpeaking ? 'Stop' : 'Listen to message'}
+                  >
+                    <span className="speak-icon">{isSpeaking ? <FaStop /> : <FaVolumeUp />}</span>
+                  </button>
+                </div>
                 <div className="word-count">
                   {getWordCount(textMessage)} / 15 words
                 </div>
-                <button 
-                  className="speak-btn"
-                  onClick={isSpeaking ? stopTextToSpeech : playTextToSpeech}
-                  disabled={!textMessage.trim()}
-                >
-                  {isSpeaking ? (
-                    <>🔊 <FaStop /> Stop Audio</>
-                  ) : (
-                    <>🔊 <FaVolumeUp /> Preview Audio</>
-                  )}
-                </button>
                 {isSpeaking && <p className="speaking-status">🔊 Playing audio...</p>}
               </div>
             )}
