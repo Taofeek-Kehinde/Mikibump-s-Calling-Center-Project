@@ -40,12 +40,8 @@ const [loadQR, setLoadQr] = useState(false);
     playAudio,
     stopAudio,
     setLastSeen,
-    liveStartTime,
-    setLiveStartTime,
     countdownTime,
     setCountdownTime,
-    // isCountdownActive,
-    setIsCountdownActive
   } = useAppContext();
 
   const prevIsLiveRef = useRef(isLive);
@@ -117,31 +113,9 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, [isLive]);
 
-  // Countdown timer decrement
-useEffect(() => {
-  if (!isLive || !liveStartTime) return;
-
-  const interval = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - liveStartTime) / 1000);
-    const remaining = 900 - elapsed; // 15 minutes
-
-    if (remaining > 0) {
-      setCountdownTime(remaining);
-    } else {
-      // AUTO OFFLINE
-      setCountdownTime(0);
-      setIsCountdownActive(false);
-
-      const now = new Date();
-      localStorage.setItem("lastSeen", now.toISOString());
-
-      setLiveStartTime(null);
-      localStorage.removeItem("liveStartTime");
-    }
-  }, 1000);
-
-  return () => clearInterval(interval);
-}, [isLive, liveStartTime]);
+  // Countdown timer - using AppContext countdownTime
+  // The countdown is now managed by AppContext with liveStartTime
+  // When 15 minutes (900 seconds) elapse, it automatically goes offline
 
 
 useEffect(() => {

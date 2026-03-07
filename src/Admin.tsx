@@ -47,12 +47,17 @@ const handleGoLive = () => {
 };
 
 const handleGoOffline = () => {
-  const now = new Date().toISOString();
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  const timeString = `${hours}:${minutes}:${seconds}`;
 
   set(ref(db, "liveStatus"), {
     isLive: false,
     remaining: 0,
-    lastSeen: now
+    lastSeen: timeString // <-- store hh:mm:ss directly
   });
   // Stop music when going offline
   set(ref(db, 'music'), { url: '/music/music.mp3', playing: false });

@@ -83,45 +83,91 @@ const [backgroundImages, setBackgroundImages] = useState<string[]>(() => {
     return saved !== null ? JSON.parse(saved) : true;
   });
 
-
-  useEffect(() => {
-  const statusRef = ref(db, "liveStatus");
-
-  return onValue(statusRef, (snap) => {
-    const data = snap.val();
-    if (!data) return;
-
-    _setIsLive(data.isLive);
-    setCountdownTime(data.remaining ?? 900);
-    setIsCountdownActive(data.isLive);
-    setLastSeen(data.lastSeen || null);
+  // Live start time state - must be declared before useEffects that use it
+  const [liveStartTime, setLiveStartTime] = useState<number | null>(() => {
+    const saved = localStorage.getItem("liveStartTime");
+    return saved ? JSON.parse(saved) : null;
   });
-}, []);
+
+  // Persist liveStartTime to localStorage whenever it changes
+  useEffect(() => {
+    if (liveStartTime !== null) {
+      localStorage.setItem("liveStartTime", JSON.stringify(liveStartTime));
+    } else {
+      localStorage.removeItem("liveStartTime");
+    }
+  }, [liveStartTime]);
+
+  useEffect(() => {
+    const statusRef = ref(db, "liveStatus");
+
+    return onValue(statusRef, (snap) => {
+      const data = snap.val();
+      if (!data) return;
+
+      _setIsLive(data.isLive);
+      setCountdownTime(data.remaining ?? 900);
+      setIsCountdownActive(data.isLive);
+      setLastSeen(data.lastSeen || null);
+      
+      // Also sync liveStartTime from Firebase
+      if (data.liveStartTime && data.isLive) {
+        setLiveStartTime(data.liveStartTime);
+      }
+    });
+  }, []);
 
 
   useEffect(() => {
-  if (!isCountdownActive) return;
+  // When going live, set the liveStartTime if not already set
+  if (isLive && !liveStartTime) {
+    const now = Date.now();
+    setLiveStartTime(now);
+    setCountdownTime(900); // 15 minutes
+    setIsCountdownActive(true);
+    // Also update Firebase
+    set(ref(db, "liveStatus/liveStartTime"), now);
+    set(ref(db, "liveStatus/remaining"), 900);
+  }
+  
+  // When going offline, clear the liveStartTime
+  if (!isLive && liveStartTime) {
+    setLiveStartTime(null);
+    setIsCountdownActive(false);
+    localStorage.removeItem("liveStartTime");
+    set(ref(db, "liveStatus/liveStartTime"), null);
+  }
+}, [isLive, liveStartTime]);
+
+useEffect(() => {
+  if (!isLive || !isCountdownActive) return;
 
   const timer = setInterval(() => {
-    setCountdownTime(prev => {
-      if (prev <= 1) {
-        const now = new Date().toISOString();       
-        // set(ref(db, "liveStatus/isLive"), false);
+    if (!liveStartTime) return;
+    
+    const elapsed = Math.floor((Date.now() - liveStartTime) / 1000);
+    const remaining = 900 - elapsed; // 15 minutes = 900 seconds
 
-        set(ref(db, "liveStatus/remaining"), 0);
-        set(ref(db, "liveStatus/lastSeen"), now);
-        setLastSeen(now);
-        return 0;
-      }
-
-      const next = prev - 1;
-      set(ref(db, "liveStatus/remaining"), next);
-      return next;
-    });
+    if (remaining <= 0) {
+      // AUTO OFFLINE - Time is up!
+      const now = new Date().toISOString();
+      set(ref(db, "liveStatus/isLive"), false);
+      set(ref(db, "liveStatus/remaining"), 0);
+      set(ref(db, "liveStatus/liveStartTime"), null);
+      set(ref(db, "liveStatus/lastSeen"), now);
+      setLastSeen(now);
+      setLiveStartTime(null);
+      setIsCountdownActive(false);
+      setCountdownTime(0);
+      localStorage.removeItem("liveStartTime");
+    } else {
+      setCountdownTime(remaining);
+      set(ref(db, "liveStatus/remaining"), remaining);
+    }
   }, 1000);
 
   return () => clearInterval(timer);
-}, [isCountdownActive]);
+}, [isLive, isCountdownActive, liveStartTime]);
 
 
 
@@ -216,11 +262,6 @@ useEffect(() => {
   }, []);
 
 
-const [liveStartTime, setLiveStartTime] = useState<number | null>(() => {
-  const saved = localStorage.getItem("liveStartTime");
-  return saved ? JSON.parse(saved) : null;
-});
-
   // Playback helpers
   const playAudio = useCallback(async (url?: string) => {
     if (!audioRef.current) audioRef.current = new Audio();
@@ -278,10 +319,12 @@ useEffect(() => {
     const savedLive = localStorage.getItem("isLive");
     const savedCountdown = localStorage.getItem("countdownTime");
     const savedActive = localStorage.getItem("isCountdownActive");
+    const savedLiveStartTime = localStorage.getItem("liveStartTime");
 
     if (savedLive !== null) setIsLive(JSON.parse(savedLive));
     if (savedCountdown !== null) setCountdownTime(JSON.parse(savedCountdown));
     if (savedActive !== null) setIsCountdownActive(JSON.parse(savedActive));
+    if (savedLiveStartTime !== null) setLiveStartTime(JSON.parse(savedLiveStartTime));
   };
 
   window.addEventListener("storage", handleStorageChange);

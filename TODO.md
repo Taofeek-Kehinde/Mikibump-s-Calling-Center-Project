@@ -1,21 +1,22 @@
-# TODO List
+# LiveStartTime Fix TODO
 
-## Task: QR Code - URL Button Logic
+## Task: Fix liveStartTime countdown not working properly
 
-### Understanding:
-1. When scanning QR code, user goes to Adminform.tsx to fill form (voice note + WhatsApp number)
-2. After form submission:
-   - If URL was provided in QR generator → Show "CHECK THIS OUT" button + "TALK TO ME" button
-   - If NO URL provided → Show only "TALK TO ME" button
+### Issues Identified:
+1. `liveStartTime` is not being saved to localStorage when it changes (missing useEffect)
+2. Two conflicting countdown mechanisms - one in Dashboard.tsx and one in AppContext.tsx
 
-### Implementation Done:
-- [x] Added customUrl state and useSearchParams hook to Adminform.tsx
-- [x] Added useEffect to get customUrl from query parameter
-- [x] Updated handleSubmit to save customUrl along with form data
+### Steps Completed:
 
-### How it works:
-1. QR with URL: QR contains `/adminform/{id}?customUrl={url}`, Adminform saves url to Firestore, shows both buttons
-2. QR without URL: QR contains `/adminform/{id}`, Adminform shows form, saves submission without link, shows only "TALK TO ME" button
+- [x] 1. Add useEffect in AppContext.tsx to persist liveStartTime to localStorage
+- [x] 2. Fix the countdown logic in AppContext.tsx to properly sync with Firebase
+- [x] 3. Remove conflicting countdown logic from dashboard.tsx
+- [x] 4. Add liveStartTime to storage sync for cross-tab support
 
-### Files Modified:
-- src/pages/Adminform.tsx - Added customUrl handling from query parameters
+### How the fix works:
+1. When `isLive` becomes `true`, the AppContext sets `liveStartTime` to the current timestamp and saves it to both localStorage and Firebase
+2. The countdown timer uses the `liveStartTime` to calculate remaining time (15 minutes = 900 seconds)
+3. Every second, it updates the remaining time in both state and Firebase
+4. When remaining time reaches 0, it automatically sets `isLive` to `false` in Firebase, making the app go offline
+5. The `liveStartTime` is synced across tabs via localStorage storage events
+
