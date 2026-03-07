@@ -219,9 +219,9 @@ function Form() {
           <div className="recipient-input-wrapper">
             <input
               type="text"
-              placeholder={`ENTER MESSAGE `}
+              placeholder={`ENTER MESSAGE (15 WORDS ONLY) `}
               value={message}
-              className='recipient-input'
+              className='recipient-inputss'
               onChange={handleMessageChange}
             />
             <button

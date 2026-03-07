@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase2";
 import { speakChildVoice, stopSpeech } from '../utils/textToSpeech';
+import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandPointRight } from '@fortawesome/free-solid-svg-icons';
+
 import './Candyview.css';
 
 interface CandyData {
@@ -16,6 +20,7 @@ interface CandyData {
 
 function CandyView() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [candy, setCandy] = useState<CandyData | null>(null);
   const [locked, setLocked] = useState(true);
   const [expired, setExpired] = useState(false);
@@ -110,8 +115,22 @@ function CandyView() {
   const formattedTime = date.toLocaleTimeString();
   const formattedDate = date.toDateString();
 
+
+
+  
+
   return (
     <div className="candy-page">
+      <motion.button
+        className="cany-btns"
+        onClick={() => navigate('/')}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        title="Go Home"
+      >
+        <FontAwesomeIcon icon={faHandPointRight} className="lefthand" />
+        HOME
+      </motion.button>
       <div className="candy-card">
 
         <h2 className="candy-title">TALK IN CANDY</h2>
@@ -158,4 +177,8 @@ function CandyView() {
 
 }
 
+
+
 export default CandyView;
+
+

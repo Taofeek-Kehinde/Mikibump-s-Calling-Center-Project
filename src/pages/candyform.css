@@ -769,7 +769,7 @@ input #yourContact {
 }
 
 
-.recipient-inputs {
+.recipient-inputs{
    display: block;
   margin: 1rem auto 0 auto;
   width: 90%;
@@ -923,4 +923,34 @@ label.date {
   background: #ccc;
   cursor: not-allowed;
   box-shadow: none;
+}
+
+.recipient-inputss {
+   display: block;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  padding-right: 50px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  border: 2px solid chocolate;
+  font-family: sans-serif;
+  color: #fff;
+  background: chocolate;
+  box-shadow: 0 4px 10px rgba(75, 72, 72, 0.1);
+  transition: all 0.3s ease;
+}
+
+
+
+.recipient-inputss::placeholder {
+   color: #fff; 
+  opacity: 1;
+  font-size: 14px;
+}
+
+.recipient-inputss:focus {
+  outline: none;
+  transform: scale(1.02);
 }
